@@ -9,35 +9,36 @@
         body { background: linear-gradient(135deg, #ff6600, #ff9933); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; font-family: sans-serif; }
         .login-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 100%; max-width: 400px; }
         .form-label { font-size: 13px; font-weight: bold; color: #555; margin-bottom: 5px; }
-        .form-control { border-radius: 10px; margin-bottom: 15px; border: 2px solid #eee; }
+        .form-control { border-radius: 10px; margin-bottom: 15px; border: 2px solid #eee; padding: 10px; }
         .btn-masuk { background: #ff6600; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; transition: 0.3s; }
         .btn-masuk:disabled { background: #ccc; }
     </style>
 </head>
 <body>
 
-<div class="login-card">
+<div class="login-card shadow-lg">
     <div class="text-center mb-4">
         <h2 class="fw-bold mb-0">🛒 GIBRAN STORE</h2>
-        <p class="text-muted small">Lengkapi data untuk mulai belanja</p>
+        <p class="text-muted small">Lengkapi data pengiriman</p>
     </div>
 
     <form id="formLogin">
         <label class="form-label">Nama Lengkap</label>
-        <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama..." required>
+        <input type="text" id="nama" class="form-control" placeholder="Nama Anda" required>
 
         <label class="form-label">Nomor HP (WhatsApp)</label>
-        <input type="number" name="hp" id="hp" class="form-control" placeholder="08123xxx" required>
+        <input type="number" id="hp" class="form-control" placeholder="08123456xxx" required>
 
-        <label class="form-label">Alamat Rumah / No. Rumah</label>
-        <textarea name="alamat" id="alamat" class="form-control" rows="2" placeholder="Contoh: Jl. Anggrek No. 15" required></textarea>
+        <label class="form-label">Alamat Lengkap / No. Rumah</label>
+        <textarea id="alamat" class="form-control" rows="2" placeholder="Alamat lengkap untuk pengiriman..." required></textarea>
 
-        <button type="submit" id="btnSubmit" class="btn-masuk">SIMPAN & MULAI BELANJA</button>
+        <button type="submit" id="btnSubmit" class="btn-masuk">MASUK & MULAI BELANJA</button>
     </form>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec';
+    // LINK SCRIPT BARU KAMU
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwrfPJASMS4L6EQjqlRrf4qWbYJS39WdH97ZZrY-gaGoRem5rZU54ZhedWwKzZr8lBJbA/exec';
     const form = document.getElementById('formLogin');
     const btnSubmit = document.getElementById('btnSubmit');
 
@@ -47,7 +48,7 @@
         btnSubmit.innerText = "Mendaftarkan...";
 
         const dataKirim = {
-            sheet: "User", // Memberi tahu Apps Script untuk masuk ke sheet 'User'
+            sheet: "User", // Nama sheet tujuan
             tanggal: new Date().toLocaleString('id-ID'),
             nama: document.getElementById('nama').value,
             hp: document.getElementById('hp').value,
@@ -60,21 +61,23 @@
             body: JSON.stringify(dataKirim)
         })
         .then(() => {
-            // Simpan ke memori HP agar dashboard bisa panggil namanya
+            // Simpan data di memori browser
             localStorage.setItem('namaUser', dataKirim.nama);
             localStorage.setItem('hpUser', dataKirim.hp);
             localStorage.setItem('alamatUser', dataKirim.alamat);
             
+            // Lanjut ke Dashboard
             window.location.href = 'dashboard.html';
         })
         .catch(error => {
-            alert('Waduh error Bran! Coba lagi.');
+            console.error('Error!', error.message);
+            alert('Gagal menyimpan data. Coba lagi, Bran!');
             btnSubmit.disabled = false;
-            btnSubmit.innerText = "SIMPAN & MULAI BELANJA";
+            btnSubmit.innerText = "MASUK & MULAI BELANJA";
         });
     });
 
-    // Jika sudah pernah login, langsung ke dashboard
+    // Jika sudah ada data nama, langsung skip login ke dashboard
     if(localStorage.getItem('namaUser')) {
         window.location.href = 'dashboard.html';
     }
