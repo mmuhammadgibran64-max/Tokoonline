@@ -3,98 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metode Pembayaran - GIBRAN STORE</title>
+    <title>Pembayaran - GIBRAN STORE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; }
-        .navbar-gibran { background: #ff6600; padding: 10px; }
-        .payment-card { 
-            border: 2px solid #ddd; 
-            border-radius: 15px; 
-            transition: 0.3s; 
-            cursor: pointer;
-            background: white;
-        }
-        .payment-card:hover:not(.disabled) { border-color: #ff6600; background: #fff5ed; }
-        .disabled { opacity: 0.6; cursor: not-allowed; background: #eee; }
-        .badge-soon { background: #6c757d; font-size: 0.7rem; }
-        .btn-konfirmasi { background-color: #ff6600; border: none; color: white; font-weight: bold; width: 100%; padding: 12px; border-radius: 10px; }
+        .navbar-gibran { background: #ff6600; padding: 15px; color: white; text-align: center; font-weight: bold; }
+        .btn-konfirmasi { background: #ff6600; border: none; color: white; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; }
+        .metode-card { border: 2px solid #ddd; border-radius: 10px; cursor: pointer; background: white; transition: 0.2s; }
+        .metode-card.active { border-color: #ff6600; background: #fff5ed; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-dark navbar-gibran shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="dashboard.html">⬅️ Pilih Metode Bayar</a>
-        </div>
-    </nav>
+    <div class="navbar-gibran shadow-sm">Detail Pembayaran</div>
 
     <div class="container mt-4">
-        <div class="card shadow-sm p-3 mb-4">
-            <h6 class="text-muted small mb-1">Total yang harus dibayar:</h6>
-            <h3 class="fw-bold text-dark" id="display-total">Rp 0</h3>
+        <div class="card p-3 mb-3 border-0 shadow-sm">
+            <p class="mb-1 text-muted small">Total yang harus dibayar:</p>
+            <h2 class="fw-bold text-dark" id="txtTotal">Rp 0</h2>
+            <hr>
+            <p class="mb-1 small"><strong>Nama:</strong> Muhammad Gibran</p>
+            <p class="mb-0 small"><strong>Pesanan:</strong> <span id="txtPesanan"></span></p>
         </div>
 
         <h6 class="fw-bold mb-3">Pilih Metode Pembayaran:</h6>
-
-        <div class="card payment-card p-3 mb-3" onclick="pilihMetode('Cash')">
+        
+        <div class="metode-card p-3 mb-2 active">
             <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="h5">💵</span>
-                    <span class="fw-bold ms-2">Tunai / Cash</span>
-                </div>
-                <input type="radio" name="pay" id="radioCash">
-            </div>
-            <small class="text-muted mt-2 d-block">Bayar langsung di tempat saat ambil barang.</small>
-        </div>
-
-        <div class="card payment-card p-3 mb-3 disabled">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="h5">📱</span>
-                    <span class="fw-bold ms-2">QRIS / E-Wallet</span>
-                    <span class="badge badge-soon ms-2">Segera Hadir</span>
-                </div>
-                <input type="radio" disabled>
+                <span>💵 Tunai / Cash</span>
+                <input type="radio" checked>
             </div>
         </div>
 
-        <div class="card payment-card p-3 mb-3 disabled">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="h5">🏦</span>
-                    <span class="fw-bold ms-2">Transfer Bank</span>
-                    <span class="badge badge-soon ms-2">Segera Hadir</span>
-                </div>
-                <input type="radio" disabled>
-            </div>
+        <div class="metode-card p-3 mb-2 text-muted" style="opacity: 0.5; cursor: not-allowed;">
+            <span>📱 QRIS (Segera Hadir)</span>
         </div>
 
-        <button class="btn-konfirmasi mt-4" onclick="selesaikanPembayaran()">Konfirmasi Pembayaran</button>
+        <button class="btn-konfirmasi mt-4" id="btnSelesai" onclick="kirimDanSelesai()">Konfirmasi & Bayar</button>
     </div>
 
     <script>
-        // Ambil data total dari dashboard (melalui localStorage)
-        let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-        if(riwayat.length > 0) {
-            let totalTerakhir = riwayat[riwayat.length - 1].harga;
-            document.getElementById('display-total').innerText = 'Rp ' + totalTerakhir.toLocaleString();
-        }
+        const pesanan = localStorage.getItem('detailPesanan') || 'Tidak ada pesanan';
+        let total = parseInt(localStorage.getItem('totalTerakhir')) || 0;
 
-        let metodeTerpilih = "";
+        document.getElementById('txtPesanan').innerText = pesanan;
+        document.getElementById('txtTotal').innerText = 'Rp ' + total.toLocaleString();
 
-        function pilihMetode(metode) {
-            metodeTerpilih = metode;
-            document.getElementById('radioCash').checked = true;
-        }
+        function kirimDanSelesai() {
+            const btn = document.getElementById('btnSelesai');
+            btn.disabled = true;
+            btn.innerText = "Mengirim Pesanan...";
 
-        function selesaikanPembayaran() {
-            if (metodeTerpilih === "Cash") {
-                alert('Pesanan dikonfirmasi! Silakan siapkan uang tunai saat pengambilan.');
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec'; 
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    nama: 'Muhammad Gibran',
+                    pesanan: pesanan,
+                    total: total
+                })
+            })
+            .then(() => {
+                // Simpan ke riwayat lokal
+                let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+                riwayat.push({ tgl: new Date().toLocaleString(), barang: pesanan, harga: total });
+                localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
+                
+                alert('Pesanan Berhasil! Silakan bayar cash saat menerima barang.');
                 window.location.href = 'riwayat.html';
-            } else {
-                alert('Silakan pilih metode Cash (Metode lain belum tersedia).');
-            }
+            })
+            .catch(() => {
+                alert('Ada sedikit kendala, tapi pesanan tetap dicatat di Riwayat.');
+                window.location.href = 'riwayat.html';
+            });
         }
     </script>
 </body>
