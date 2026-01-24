@@ -13,20 +13,13 @@
         .star { font-size: 35px; cursor: pointer; color: #ddd; transition: 0.2s; }
         .star.active { color: #ffcc00; }
         .btn-dashboard { background: #ff6600; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; text-decoration: none; display: block; margin-top: 20px; transition: 0.3s; }
-        .btn-dashboard:hover { background: #e65c00; color: white; }
-        .thank-you-msg { background: #fff5ed; border-radius: 15px; padding: 15px; margin-top: 15px; font-size: 14px; color: #555; border: 1px solid #ffdec2; }
     </style>
 </head>
 <body>
-
     <div class="success-card">
         <div class="icon-check">✅</div>
         <h3 class="fw-bold">Pesanan Terkirim!</h3>
-        
-        <div class="thank-you-msg">
-            <b>Terima Kasih, <span id="userName">Sobat</span>!</b><br>
-            Pesananmu sudah masuk ke sistem kami. Tim GIBRAN STORE akan segera memproses dan mengantarkannya ke alamatmu.
-        </div>
+        <p class="text-muted">Terima kasih <span id="userName"></span> sudah belanja di Gibran Store. Pesananmu segera kami antar!</p>
 
         <div class="rating">
             <p class="mb-1 small fw-bold">Beri Rating Pengalaman Belanja:</p>
@@ -35,33 +28,21 @@
             <span class="star" onclick="rate(3)">★</span>
             <span class="star" onclick="rate(4)">★</span>
             <span class="star" onclick="rate(5)">★</span>
-            <p id="rateStatus" class="small text-muted mt-1" style="display:none;">Terima kasih atas penilaiannya!</p>
         </div>
 
         <a href="dashboard.html" class="btn-dashboard">BALIK KE DASHBOARD</a>
-        <small class="text-muted d-block mt-3">Butuh bantuan? Hubungi Admin (WA)</small>
     </div>
 
     <script>
-        // Ambil nama user
-        document.getElementById('userName').innerText = localStorage.getItem('namaUser') || 'Pelanggan';
-
-        // Fungsi Rating
+        document.getElementById('userName').innerText = localStorage.getItem('namaUser') || 'Sobat';
         function rate(n) {
             const stars = document.querySelectorAll('.star');
             stars.forEach((s, i) => {
                 if (i < n) s.classList.add('active');
                 else s.classList.remove('active');
             });
-            document.getElementById('rateStatus').style.display = 'block';
-            
-            // Simpan rating ke memori (opsional)
-            localStorage.setItem('ratingTerakhir', n);
+            alert("Terima kasih atas rating " + n + " bintangnya!");
         }
-
-        // Membersihkan data belanjaan terakhir agar keranjang kosong lagi
-        // localStorage.removeItem('detailPesanan');
-        // localStorage.removeItem('totalTerakhir');
     </script>
 </body>
 </html>
