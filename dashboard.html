@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN STORE - Order ke Sheets</title>
+    <title>GIBRAN STORE - Order</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: sans-serif; }
+        body { background-color: #f8f9fa; }
         .navbar-gibran { background: #ff6600; padding: 10px; }
         .product-card { border: none; border-radius: 12px; background: white; transition: 0.3s; }
         .btn-beli { background-color: #ff6600; border: none; color: white; font-weight: bold; }
         .harga { color: #ff6600; font-weight: bold; }
-        .fixed-bottom { background: white; border-top: 2px solid #ff6600; }
+        .fixed-bottom { background: white; border-top: 2px solid #ff6600; display: none; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-gibran shadow-sm sticky-top">
+    <nav class="navbar navbar-expand navbar-dark navbar-gibran shadow-sm sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand fw-bold" href="dashboard.html">🛒 GIBRAN STORE</a>
-            <div class="d-flex">
-                <a href="dashboard.html" class="nav-link text-white me-3 small">Menu</a>
-                <a href="pengaturan.html" class="nav-link text-white me-3 small">⚙️</a>
+            <div class="navbar-nav">
+                <a href="dashboard.html" class="nav-link text-white me-2 small">Menu</a>
+                <a href="pengaturan.html" class="nav-link text-white me-2 small">⚙️</a>
                 <a href="riwayat.html" class="nav-link text-white small">📜 Riwayat</a>
             </div>
         </div>
@@ -29,9 +29,9 @@
 
     <div class="container mt-4 mb-5 pb-5">
         <h5 class="fw-bold">Daftar Menu Jualan</h5>
-        <div class="row g-3" id="daftar-produk">
+        <div class="row g-3">
             <script>
-                const menu = [
+                const produk = [
                     {n: 'Peye Kacang (Kecil)', h: 5000},
                     {n: 'Peye Kacang (Besar)', h: 10000},
                     {n: 'Slondok', h: 20000},
@@ -43,26 +43,28 @@
                     {n: 'Aqua Galon', h: 22000}
                 ];
 
-                document.write(menu.map(p => `
-                    <div class="col-6 col-md-4">
-                        <div class="card product-card shadow-sm p-2 text-center h-100">
-                            <h6 class="fw-bold small">${p.n}</h6>
-                            <p class="harga mb-2 small">Rp ${p.h.toLocaleString()}</p>
-                            <button class="btn btn-beli btn-sm w-100" onclick="tambahKeKeranjang('${p.n}', ${p.h})">Tambah</button>
+                produk.forEach(p => {
+                    document.write(`
+                        <div class="col-6 col-md-4">
+                            <div class="card product-card shadow-sm p-2 text-center h-100">
+                                <h6 class="fw-bold small">${p.n}</h6>
+                                <p class="harga mb-2 small">Rp ${p.h.toLocaleString()}</p>
+                                <button class="btn btn-beli btn-sm w-100" onclick="tambahKeKeranjang('${p.n}', ${p.h})">Tambah</button>
+                            </div>
                         </div>
-                    </div>
-                `).join(''));
+                    `);
+                });
             </script>
         </div>
     </div>
 
-    <div class="fixed-bottom p-3 shadow-lg" id="keranjang-info" style="display: none;">
+    <div class="fixed-bottom p-3 shadow-lg" id="bar-keranjang">
         <div class="d-flex justify-content-between align-items-center container">
             <div>
-                <span id="item-count" class="fw-bold text-success">0 Item</span>
-                <div id="total-harga" class="fw-bold h5 mb-0">Rp 0</div>
+                <span id="jml-item" class="fw-bold text-success small">0 Item terpilih</span>
+                <div id="total-bayar" class="fw-bold h6 mb-0">Rp 0</div>
             </div>
-            <button class="btn btn-beli px-4" id="btnBayar" onclick="kirimKeSheet()">Proses ke Order</button>
+            <button class="btn btn-beli px-4" id="btnProses" onclick="kirimKeSheet()">Proses ke Order</button>
         </div>
     </div>
 
@@ -71,38 +73,47 @@
 
         function tambahKeKeranjang(nama, harga) {
             keranjang.push({ nama, harga });
-            const info = document.getElementById('keranjang-info');
-            const itemCount = document.getElementById('item-count');
-            const totalHarga = document.getElementById('total-harga');
-
-            info.style.display = 'block';
-            itemCount.innerText = keranjang.length + ' Item terpilih';
-            let total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-            totalHarga.innerText = 'Rp ' + total.toLocaleString();
+            document.getElementById('bar-keranjang').style.display = 'block';
+            document.getElementById('jml-item').innerText = keranjang.length + ' Item terpilih';
+            let total = keranjang.reduce((s, i) => s + i.harga, 0);
+            document.getElementById('total-bayar').innerText = 'Rp ' + total.toLocaleString();
         }
 
         function kirimKeSheet() {
-            const btn = document.getElementById('btnBayar');
+            const btn = document.getElementById('btnProses');
             btn.disabled = true;
             btn.innerText = "Mengirim...";
 
-            // Ambil nama dari pengaturan (jika ada)
-            const namaPembeli = localStorage.getItem('namaUser') || 'Pelanggan';
-            const total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-            const detailPesanan = keranjang.map(i => i.nama).join(', ');
-
-            // URL Web App Google Script kamu nanti ditaruh di sini
-            const scriptURL = 'URL_GOOGLE_SCRIPT_KAMU'; 
-
-            alert('Pesanan ' + detailPesanan + ' akan dicatat ke sheet Order!');
+            const detail = keranjang.map(i => i.nama).join(', ');
+            const total = keranjang.reduce((s, i) => s + i.harga, 0);
             
-            // Simpan ke riwayat lokal dulu
-            let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-            riwayat.push({ tanggal: new Date().toLocaleString(), produk: detailPesanan, total: total });
-            localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
+            // LINK WEB APP KAMU SUDAH SAYA PASANG DI SINI
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec'; 
 
-            // Pindah ke halaman sukses atau riwayat
-            window.location.href = 'riwayat.html';
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // Untuk menghindari masalah CORS
+                body: JSON.stringify({
+                    nama: localStorage.getItem('namaUser') || 'Pelanggan',
+                    pesanan: detail,
+                    total: total
+                })
+            })
+            .then(() => {
+                // Simpan ke riwayat lokal (Browser)
+                let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+                riwayat.push({ tgl: new Date().toLocaleString(), barang: detail, harga: total });
+                localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
+                
+                alert('Berhasil! Pesanan Anda sudah masuk ke sheet Order.');
+                window.location.href = 'riwayat.html';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan, cek koneksi atau Apps Script.');
+                btn.disabled = false;
+                btn.innerText = "Proses ke Order";
+            });
         }
     </script>
 </body>
