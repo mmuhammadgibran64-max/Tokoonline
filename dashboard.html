@@ -7,17 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f4f7f6; padding-bottom: 100px; }
-        .header { background: #ff6600; color: white; padding: 20px; border-radius: 0 0 25px 25px; }
-        .product-card { border: none; border-radius: 20px; background: white; transition: 0.2s; text-align: center; }
-        .product-card:active { transform: scale(0.95); }
+        .header { background: #ff6600; color: white; padding: 20px; border-radius: 0 0 25px 25px; display: flex; justify-content: space-between; align-items: center; }
+        .product-card { border: none; border-radius: 20px; background: white; transition: 0.2s; text-align: center; height: 100%; }
         .btn-beli { background: #ff6600; color: white; border: none; border-radius: 10px; width: 100%; font-weight: bold; padding: 8px; }
-        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #333; color: white; padding: 15px; border-radius: 20px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #333; color: white; padding: 15px; border-radius: 20px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; }
     </style>
 </head>
 <body>
-    <div class="header d-flex justify-content-between align-items-center">
+    <div class="header">
         <div><h5 class="fw-bold mb-0">GIBRAN STORE</h5><small id="userNama"></small></div>
-        <div><a href="pengaturan.html" class="text-white text-decoration-none">⚙️</a></div>
+        <div class="d-flex gap-3">
+            <a href="riwayat.html" class="text-white text-decoration-none">📜</a>
+            <a href="pengaturan.html" class="text-white text-decoration-none">⚙️</a>
+        </div>
     </div>
 
     <div class="container mt-4">
@@ -33,7 +35,7 @@
                 menu.forEach(p => {
                     document.write(`<div class="col-6"><div class="card product-card p-3 shadow-sm">
                         <div style="font-size:30px">${p.i}</div><h6 class="fw-bold small mt-2">${p.n}</h6>
-                        <p class="text-orange fw-bold small" style="color:#ff6600">Rp ${p.h.toLocaleString()}</p>
+                        <p class="fw-bold small" style="color:#ff6600">Rp ${p.h.toLocaleString()}</p>
                         <button class="btn-beli" onclick="tambah('${p.n}', ${p.h})">Tambah</button>
                     </div></div>`);
                 });
@@ -47,7 +49,7 @@
     </div>
 
     <script>
-        document.getElementById('userNama').innerText = "Halo, " + localStorage.getItem('namaUser');
+        document.getElementById('userNama').innerText = "Halo, " + (localStorage.getItem('namaUser') || 'Pelanggan');
         let keranjang = [];
         function tambah(n, h) {
             keranjang.push({n, h});
