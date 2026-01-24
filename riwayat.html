@@ -3,34 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan</title>
+    <title>Riwayat - GIBRAN STORE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f4f7f6; font-family: sans-serif; }
-        .header { background: #ff6600; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 0 0 20px 20px; }
-        .card-pesanan { background: white; border-radius: 15px; padding: 15px; margin: 15px; border-left: 5px solid #ff6600; shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    </style>
 </head>
-<body>
-    <div class="header">📜 RIWAYAT PESANAN</div>
-    <div id="wadahRiwayat"></div>
-    <div class="p-3">
-        <a href="dashboard.html" class="btn btn-outline-dark w-100 fw-bold py-2" style="border-radius:12px;">🏠 Kembali ke Menu</a>
-    </div>
+<body class="bg-light">
+    <div class="p-3 bg-white shadow-sm fw-bold">📜 Riwayat Pesanan</div>
+    <div id="list" class="container mt-3"></div>
+    <div class="p-3"><button class="btn btn-dark w-100" onclick="window.location.href='dashboard.html'">Kembali</button></div>
     <script>
         const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-        const wadah = document.getElementById('wadahRiwayat');
-        if (data.length === 0) {
-            wadah.innerHTML = '<p class="text-center mt-5 text-muted">Belum ada pesanan.</p>';
+        const wadah = document.getElementById('list');
+        if(data.length === 0) {
+            wadah.innerHTML = '<p class="text-center mt-5">Kosong</p>';
         } else {
-            data.reverse().forEach(item => {
-                wadah.innerHTML += `<div class="card-pesanan shadow-sm">
-                    <div class="small text-muted">${item.tgl}</div>
-                    <div class="fw-bold text-dark my-1">${item.barang}</div>
-                    <div class="d-flex justify-content-between">
-                        <b style="color:#ff6600">Rp ${parseInt(item.harga).toLocaleString()}</b>
-                        <span class="badge bg-success">SELESAI</span>
-                    </div>
+            data.reverse().forEach(i => {
+                wadah.innerHTML += `<div class="card p-3 mb-2 border-0 shadow-sm rounded-3">
+                    <small class="text-muted">${i.tgl}</small><br><b>${i.barang}</b><br>
+                    <span class="text-success fw-bold">Rp ${parseInt(i.harga).toLocaleString()}</span>
                 </div>`;
             });
         }
