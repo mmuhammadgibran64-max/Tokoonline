@@ -8,48 +8,32 @@
     <style>
         body { background: #f4f7f6; font-family: sans-serif; }
         .header { background: #ff6600; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 0 0 20px 20px; }
-        .card-pesanan { background: white; border-radius: 15px; padding: 15px; margin: 15px; border-left: 5px solid #ff6600; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .btn-kembali { background: white; color: #ff6600; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; width: calc(100% - 30px); margin: 0 15px; }
+        .card-pesanan { background: white; border-radius: 15px; padding: 15px; margin: 15px; border-left: 5px solid #ff6600; shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
-
-    <div class="header mb-3">📜 RIWAYAT PESANAN</div>
-    
-    <div id="wadahRiwayat">
-        </div>
-
-    <a href="dashboard.html" class="btn btn-kembali shadow-sm mt-3 text-center d-block">🏠 Kembali ke Menu</a>
-
+    <div class="header">📜 RIWAYAT PESANAN</div>
+    <div id="wadahRiwayat"></div>
+    <div class="p-3">
+        <a href="dashboard.html" class="btn btn-outline-dark w-100 fw-bold py-2" style="border-radius:12px;">🏠 Kembali ke Menu</a>
+    </div>
     <script>
-        // Fungsi utama ambil data
-        function tampilkanRiwayat() {
-            const wadah = document.getElementById('wadahRiwayat');
-            const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-
-            if (data.length === 0) {
-                wadah.innerHTML = '<div class="text-center mt-5 text-muted">Belum ada pesanan yang tersimpan.</div>';
-                return;
-            }
-
-            // Urutkan dari yang terbaru
-            let html = "";
+        const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+        const wadah = document.getElementById('wadahRiwayat');
+        if (data.length === 0) {
+            wadah.innerHTML = '<p class="text-center mt-5 text-muted">Belum ada pesanan.</p>';
+        } else {
             data.reverse().forEach(item => {
-                html += `
-                <div class="card-pesanan">
-                    <div class="small text-muted">${item.tgl || '-'}</div>
-                    <div class="fw-bold text-dark my-1">${item.barang || 'Produk'}</div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-bold" style="color:#ff6600">Rp ${parseInt(item.harga).toLocaleString()}</span>
+                wadah.innerHTML += `<div class="card-pesanan shadow-sm">
+                    <div class="small text-muted">${item.tgl}</div>
+                    <div class="fw-bold text-dark my-1">${item.barang}</div>
+                    <div class="d-flex justify-content-between">
+                        <b style="color:#ff6600">Rp ${parseInt(item.harga).toLocaleString()}</b>
                         <span class="badge bg-success">SELESAI</span>
                     </div>
                 </div>`;
             });
-            wadah.innerHTML = html;
         }
-
-        // Jalankan saat halaman dibuka
-        tampilkanRiwayat();
     </script>
 </body>
 </html>
