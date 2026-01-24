@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN STORE - Dashboard</title>
+    <title>GIBRAN STORE - Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; }
         .navbar-gibran { background: #ff6600; padding: 10px; }
-        .product-card { border: none; border-radius: 12px; background: white; transition: 0.3s; }
+        .product-card { border: none; border-radius: 12px; background: white; transition: 0.3s; height: 100%; }
         .btn-beli { background-color: #ff6600; border: none; color: white; font-weight: bold; }
         .harga { color: #ff6600; font-weight: bold; }
         .fixed-bottom { background: white; border-top: 2px solid #ff6600; display: none; z-index: 1000; }
@@ -21,7 +21,6 @@
             <a class="navbar-brand fw-bold" href="dashboard.html">🛒 GIBRAN STORE</a>
             <div class="navbar-nav">
                 <a href="dashboard.html" class="nav-link text-white me-2 small">Menu</a>
-                <a href="pengaturan.html" class="nav-link text-white me-2 small">⚙️</a>
                 <a href="riwayat.html" class="nav-link text-white small">📜 Riwayat</a>
             </div>
         </div>
@@ -43,10 +42,10 @@
                     {n: 'Aqua Galon', h: 22000}
                 ];
 
-                produk.forEach(p => {
+                produk.forEach((p, index) => {
                     document.write(`
                         <div class="col-6 col-md-4">
-                            <div class="card product-card shadow-sm p-2 text-center h-100">
+                            <div class="card product-card shadow-sm p-2 text-center">
                                 <h6 class="fw-bold small">${p.n}</h6>
                                 <p class="harga mb-2 small">Rp ${p.h.toLocaleString()}</p>
                                 <button class="btn btn-beli btn-sm w-100" onclick="tambahKeKeranjang('${p.n}', ${p.h})">Tambah</button>
@@ -64,7 +63,7 @@
                 <span id="jml-item" class="fw-bold text-success small">0 Item terpilih</span>
                 <div id="total-bayar" class="fw-bold h6 mb-0">Rp 0</div>
             </div>
-            <button class="btn btn-beli px-4" id="btnProses" onclick="kirimKeSheet()">Proses ke Order</button>
+            <button class="btn btn-beli px-4" id="btnProses" onclick="lanjutKePembayaran()">Proses Order</button>
         </div>
     </div>
 
@@ -74,49 +73,19 @@
         function tambahKeKeranjang(nama, harga) {
             keranjang.push({ nama, harga });
             document.getElementById('bar-keranjang').style.display = 'block';
-            document.getElementById('jml-item').innerText = keranjang.length + ' Item terpilih';
+            
             let total = keranjang.reduce((s, i) => s + i.harga, 0);
+            
+            document.getElementById('jml-item').innerText = keranjang.length + ' Item terpilih';
             document.getElementById('total-bayar').innerText = 'Rp ' + total.toLocaleString();
             
-            // Simpan sementara total harga untuk dipakai di halaman pembayaran
+            // Simpan data ke memori browser
             localStorage.setItem('totalTerakhir', total);
             localStorage.setItem('detailPesanan', keranjang.map(i => i.nama).join(', '));
         }
 
-        function kirimKeSheet() {
-            const btn = document.getElementById('btnProses');
-            btn.disabled = true;
-            btn.innerText = "Mengirim...";
-
-            const detail = localStorage.getItem('detailPesanan');
-            const total = localStorage.getItem('totalTerakhir');
-            
-            // URL Google Apps Script kamu
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec'; 
-
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({
-                    nama: localStorage.getItem('namaUser') || 'Pelanggan',
-                    pesanan: detail,
-                    total: total
-                })
-            })
-            .then(() => {
-                // Simpan ke riwayat lokal
-                let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                riwayat.push({ tgl: new Date().toLocaleString(), barang: detail, harga: parseInt(total) });
-                localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
-                
-                // ALUR: SETELAH KIRIM SHEET, PINDAH KE PEMBAYARAN
-                window.location.href = 'pembayaran.html';
-            })
-            .catch(() => {
-                alert('Gagal kirim, coba lagi.');
-                btn.disabled = false;
-                btn.innerText = "Proses ke Order";
-            });
+        function lanjutKePembayaran() {
+            window.location.href = 'pembayaran.html';
         }
     </script>
 </body>
