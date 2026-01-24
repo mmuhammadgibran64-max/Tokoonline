@@ -10,28 +10,26 @@
         .navbar-gibran { background: #ff6600; padding: 15px; color: white; text-align: center; font-weight: bold; }
         .btn-konfirmasi { background: #ff6600; border: none; color: white; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; }
         .metode-card { border: 2px solid #ddd; border-radius: 10px; background: white; }
-        .metode-card.active { border-color: #ff6600; background: #fff5ed; }
+        .active { border-color: #ff6600; background: #fff5ed; }
     </style>
 </head>
 <body>
-    <div class="navbar-gibran shadow-sm">Metode Pembayaran</div>
+    <div class="navbar-gibran">Konfirmasi Pembayaran</div>
     <div class="container mt-4">
         <div class="card p-3 mb-3 border-0 shadow-sm text-center">
             <p class="mb-1 text-muted small">Total Tagihan:</p>
             <h2 class="fw-bold" id="txtTotal">Rp 0</h2>
         </div>
-
-        <h6 class="fw-bold mb-3">Pilih Pembayaran:</h6>
+        <h6 class="fw-bold mb-3">Metode Pembayaran:</h6>
         <div class="metode-card p-3 mb-2 active">
             <div class="d-flex justify-content-between align-items-center">
                 <span>💵 Tunai (Cash)</span>
                 <input type="radio" checked>
             </div>
         </div>
-        <div class="metode-card p-3 mb-2 text-muted" style="opacity: 0.5;">
+        <div class="metode-card p-3 mb-2 text-muted small" style="opacity: 0.5;">
             <span>📱 QRIS (Segera Hadir)</span>
         </div>
-
         <button class="btn-konfirmasi mt-4" id="btnSelesai" onclick="bayar()">Bayar Sekarang</button>
     </div>
 
@@ -43,7 +41,6 @@
         function bayar() {
             const btn = document.getElementById('btnSelesai');
             btn.disabled = true; btn.innerText = "Mengirim...";
-            
             const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec';
 
             fetch(scriptURL, {
@@ -51,12 +48,10 @@
                 body: JSON.stringify({ nama: 'Muhammad Gibran', pesanan: pesanan, total: total })
             }).then(() => {
                 let r = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                r.push({ tgl: new Date().toLocaleString(), barang: pesanan, harga: total });
+                r.push({ tgl: new Date().toLocaleString(), barang: pesanan, harga: parseInt(total) });
                 localStorage.setItem('riwayatPesanan', JSON.stringify(r));
                 window.location.href = 'selesai-pembayaran.html';
-            }).catch(() => {
-                window.location.href = 'selesai-pembayaran.html';
-            });
+            }).catch(() => { window.location.href = 'selesai-pembayaran.html'; });
         }
     </script>
 </body>
