@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - GIBRAN STORE</title>
+    <title>GIBRAN STORE - Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #ff6600; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; font-family: sans-serif; }
+        body { background: #ff6600; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .card-login { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .btn-masuk { background: #ff6600; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-masuk { background: #ff6600; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="card-login">
         <h3 class="text-center fw-bold">🛒 GIBRAN STORE</h3>
-        <p class="text-center text-muted small">Lengkapi data pengiriman</p>
+        <p class="text-center text-muted small">Daftar dulu sebelum belanja</p>
         <form id="formUser">
             <input type="text" id="nama" class="form-control mb-3" placeholder="Nama Lengkap" required>
-            <input type="number" id="hp" class="form-control mb-3" placeholder="Nomor HP (WhatsApp)" required>
-            <textarea id="alamat" class="form-control mb-3" rows="2" placeholder="Alamat Rumah / No. Rumah" required></textarea>
-            <button type="submit" id="btn" class="btn-masuk">MULAI BELANJA</button>
+            <input type="number" id="hp" class="form-control mb-3" placeholder="No HP (WA)" required>
+            <textarea id="alamat" class="form-control mb-3" rows="2" placeholder="Alamat Lengkap" required></textarea>
+            <button type="submit" id="btn" class="btn-masuk">MASUK SEKARANG</button>
         </form>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzG9zsxwzIfPkpACliJcs5GW_xn0ayyQxwSg9fGj4zX1Is9I8yGiCI91_qG2oDNmJ0j3w/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxVagMT4P62TFX4VacV_dwhLrlOig4pX9TiYWqAOtqIC4uqiFvCvAX0YNl9RIMwAxHNTg/exec';
         
         document.getElementById('formUser').addEventListener('submit', e => {
             e.preventDefault();
             const btn = document.getElementById('btn');
-            btn.innerText = "Menyimpan...";
+            btn.innerText = "Mendaftarkan...";
             btn.disabled = true;
             
             const data = {
@@ -46,7 +46,7 @@
                 localStorage.setItem('hpUser', data.hp);
                 localStorage.setItem('alamatUser', data.alamat);
                 window.location.href = 'dashboard.html';
-            }).catch(() => { alert("Error! Cek koneksi."); btn.disabled = false; });
+            }).catch(() => { alert("Error!"); btn.disabled = false; });
         });
         
         if(localStorage.getItem('namaUser')) window.location.href = 'dashboard.html';
