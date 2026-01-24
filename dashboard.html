@@ -14,16 +14,16 @@
 </head>
 <body>
 
-    <nav class="navbar-gibran shadow-sm mb-4">
-        <div class="container d-flex justify-content-between align-items-center">
-            <span class="text-white fw-bold fs-5">🛒 GIBRAN STORE</span>
-            <div>
-                <a href="dashboard.html" class="nav-link-custom">Menu</a>
-                <a href="pengaturan.html" class="nav-link-custom text-warning">⚙️ Pengaturan</a>
-            </div>
-        </div>
-    </nav>
+   <div id="navigasi-container"></div>
 
+<script>
+    // Kode untuk manggil file navigasi.html
+    fetch('navigasi.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navigasi-container').innerHTML = data;
+        });
+</script>
     <div class="container pb-5">
         <div class="text-center mb-4">
             <h4>Halo, <span id="nama-pelanggan" class="text-primary fw-bold">...</span></h4>
@@ -75,4 +75,5 @@
         }
     </script>
 </body>
+
 </html>
