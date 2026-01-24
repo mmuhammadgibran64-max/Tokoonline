@@ -2,62 +2,25 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Pembayaran - GIBRAN STORE</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran</title>
     <style>
-        body { background: #f8f9fa; }
-        .box-pay { border: 2px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; }
-        .box-pay.active { border-color: #ff6600; background: #fff5ed; }
-        .box-pay.off { opacity: 0.5; background: #f1f1f1; cursor: not-allowed; position: relative; }
-        .soon { position: absolute; top: 10px; right: 10px; font-size: 10px; background: #333; color: white; padding: 2px 8px; border-radius: 10px; }
+        body { font-family: sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        button { background: #28a745; color: white; border: none; padding: 15px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; }
     </style>
 </head>
-<body class="d-flex align-items-center justify-content-center" style="height:100vh; padding: 20px;">
-    <div class="card p-4 shadow-sm w-100" style="max-width:400px; border-radius:20px;">
-        <h5 class="fw-bold text-center mb-4">Metode Pembayaran</h5>
-        <div class="text-center mb-4">
-            <small class="text-muted">Total Tagihan</small>
-            <h2 class="fw-bold text-success" id="tot">Rp 0</h2>
-        </div>
-
-        <div class="box-pay active">
-            <b>💵 Cash (Bayar di Tempat)</b><br>
-            <small class="text-muted">Bayar saat kurir datang</small>
-        </div>
-
-        <div class="box-pay off">
-            <span class="soon">Segera Hadir</span>
-            <b>📸 QRIS (Dana/Ovo/Gopay)</b><br>
-            <small class="text-muted">Pembayaran non-tunai</small>
-        </div>
-
-        <button class="btn btn-warning w-100 fw-bold py-3 mt-3" id="btn" onclick="bayar()">KONFIRMASI PESANAN</button>
+<body>
+    <div class="card">
+        <h2>Total Pembayaran</h2>
+        <p>Silakan klik tombol di bawah untuk konfirmasi.</p>
+        <button onclick="prosesBayar()">KONFIRMASI PEMBAYARAN</button>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxVagMT4P62TFX4VacV_dwhLrlOig4pX9TiYWqAOtqIC4uqiFvCvAX0YNl9RIMwAxHNTg/exec';
-        document.getElementById('tot').innerText = 'Rp ' + parseInt(localStorage.getItem('totalTerakhir')).toLocaleString();
-
-        function bayar() {
-            const btn = document.getElementById('btn');
-            btn.innerText = "Memproses...";
-            btn.disabled = true;
-
-            const data = {
-                sheet: "Order",
-                tanggal: new Date().toLocaleString('id-ID'),
-                nama: localStorage.getItem('namaUser'),
-                pesanan: localStorage.getItem('detailPesanan'),
-                total: localStorage.getItem('totalTerakhir')
-            };
-
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
-            .then(() => {
-                let r = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                r.push(data);
-                localStorage.setItem('riwayatPesanan', JSON.stringify(r));
-                window.location.href = 'selesai-pembayaran.html';
-            });
+        function prosesBayar() {
+            // Ini kode yang saya maksud tadi, taruhnya di sini (di dalam script)
+            window.location.href = 'ok.html';
         }
     </script>
 </body>
