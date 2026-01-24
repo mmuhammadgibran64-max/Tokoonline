@@ -6,40 +6,44 @@
     <title>Pembayaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #f8f9fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .btn-bayar { background: #ff6600; color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container" style="max-width: 400px;">
         <div class="card p-4 border-0 shadow-sm rounded-4 text-center">
             <h6 class="text-muted">Total Bayar:</h6>
             <h2 class="fw-bold" id="txtTotal" style="color:#ff6600">Rp 0</h2>
             <hr>
-            <div class="text-start">
-                <p class="small"><b>Penerima:</b> Muhammad Gibran</p>
+            <div class="text-start mb-4">
+                <p class="small mb-1"><b>Penerima:</b> Muhammad Gibran</p>
                 <p class="small"><b>Pilih Metode:</b></p>
-                <div class="p-3 border rounded-3 bg-light mb-3">💵 Tunai (Cash)</div>
+                <div class="p-3 border rounded-3 bg-light mb-2 fw-bold">💵 Tunai (Cash)</div>
+                <div class="p-3 border rounded-3 text-muted small">📱 QRIS (Segera Hadir)</div>
             </div>
-            <button class="btn-bayar" id="btn" onclick="proses()">Konfirmasi & Bayar</button>
+            <button class="btn-bayar" id="btn" onclick="proses()">Konfirmasi & Simpan Riwayat</button>
         </div>
     </div>
     <script>
         const tot = localStorage.getItem('totalTerakhir') || 0;
         document.getElementById('txtTotal').innerText = 'Rp ' + parseInt(tot).toLocaleString();
+
         function proses() {
             document.getElementById('btn').disabled = true;
-            document.getElementById('btn').innerText = "Loading...";
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbz5AFV3T5U7X3IOVAmxzVz6bw0f5BqKb7ngzEVlezllXHLHCIvFJthyQ7DiCpdeFp7u3w/exec';
-            fetch(scriptURL, {
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({ nama: localStorage.getItem('namaUser'), pesanan: localStorage.getItem('detailPesanan'), total: tot })
-            }).then(() => {
-                let r = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                r.push({ tgl: new Date().toLocaleString(), barang: localStorage.getItem('detailPesanan'), harga: tot });
-                localStorage.setItem('riwayatPesanan', JSON.stringify(r));
-                window.location.href = 'selesai-pembayaran.html';
-            }).catch(() => window.location.href = 'selesai-pembayaran.html');
+            document.getElementById('btn').innerText = "Menyimpan...";
+            
+            // Simpan ke Riwayat Lokal
+            let r = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+            r.push({ 
+                tgl: new Date().toLocaleString('id-ID'), 
+                barang: localStorage.getItem('detailPesanan'), 
+                harga: tot 
+            });
+            localStorage.setItem('riwayatPesanan', JSON.stringify(r));
+
+            // Ke Halaman Selesai
+            setTimeout(() => { window.location.href = 'selesai-pembayaran.html'; }, 1000);
         }
     </script>
 </body>
