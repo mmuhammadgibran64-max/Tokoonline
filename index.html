@@ -6,29 +6,31 @@
     <title>Login - GIBRAN STORE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #ff6600; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .card-login { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .btn-masuk { background: #ff6600; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; }
+        body { background: #ff6600; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; font-family: sans-serif; }
+        .card-login { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .btn-masuk { background: #ff6600; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="card-login">
         <h3 class="text-center fw-bold">🛒 GIBRAN STORE</h3>
-        <p class="text-center text-muted small">Lengkapi data untuk memesan</p>
+        <p class="text-center text-muted small">Lengkapi data pengiriman</p>
         <form id="formUser">
             <input type="text" id="nama" class="form-control mb-3" placeholder="Nama Lengkap" required>
-            <input type="number" id="hp" class="form-control mb-3" placeholder="Nomor HP (WA)" required>
-            <textarea id="alamat" class="form-control mb-3" placeholder="Alamat Rumah / No. Rumah" required></textarea>
+            <input type="number" id="hp" class="form-control mb-3" placeholder="Nomor HP (WhatsApp)" required>
+            <textarea id="alamat" class="form-control mb-3" rows="2" placeholder="Alamat Rumah / No. Rumah" required></textarea>
             <button type="submit" id="btn" class="btn-masuk">MULAI BELANJA</button>
         </form>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwrfPJASMS4L6EQjqlRrf4qWbYJS39WdH97ZZrY-gaGoRem5rZU54ZhedWwKzZr8lBJbA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzG9zsxwzIfPkpACliJcs5GW_xn0ayyQxwSg9fGj4zX1Is9I8yGiCI91_qG2oDNmJ0j3w/exec';
         
         document.getElementById('formUser').addEventListener('submit', e => {
             e.preventDefault();
-            document.getElementById('btn').innerText = "Mendaftarkan...";
+            const btn = document.getElementById('btn');
+            btn.innerText = "Menyimpan...";
+            btn.disabled = true;
             
             const data = {
                 sheet: "User",
@@ -44,11 +46,10 @@
                 localStorage.setItem('hpUser', data.hp);
                 localStorage.setItem('alamatUser', data.alamat);
                 window.location.href = 'dashboard.html';
-            });
+            }).catch(() => { alert("Error! Cek koneksi."); btn.disabled = false; });
         });
         
-        // Hapus tanda komentar di bawah ini jika ingin auto-login:
-        // if(localStorage.getItem('namaUser')) window.location.href = 'dashboard.html';
+        if(localStorage.getItem('namaUser')) window.location.href = 'dashboard.html';
     </script>
 </body>
 </html>
