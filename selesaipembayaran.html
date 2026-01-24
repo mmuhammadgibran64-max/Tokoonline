@@ -10,26 +10,25 @@
         .card-selesai { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
         .stars { font-size: 35px; color: #ddd; cursor: pointer; }
         .stars.active { color: #ffcc00; }
-        .btn-back { background: #ff6600; color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 20px; }
+        .btn-home { background: #ff6600; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="card-selesai">
         <h1 style="color: #28a745;">✔</h1>
         <h4 class="fw-bold">Terima Kasih!</h4>
-        <p class="text-muted">Pesanan kamu sudah kami terima dan sedang diproses.</p>
+        <p class="text-muted small">Pesanan kamu sudah kami terima.</p>
         <hr>
-        <p class="small fw-bold">Beri Rating Gibran Store:</p>
-        <div id="ratingArea">
+        <p class="small fw-bold">Beri Rating Kami:</p>
+        <div>
             <span class="stars" onclick="setStar(1)">★</span>
             <span class="stars" onclick="setStar(2)">★</span>
             <span class="stars" onclick="setStar(3)">★</span>
             <span class="stars" onclick="setStar(4)">★</span>
             <span class="stars" onclick="setStar(5)">★</span>
         </div>
-        <button class="btn-back" onclick="home()">Kembali Belanja</button>
+        <button class="btn-home" onclick="home()">Kembali ke Menu</button>
     </div>
-
     <script>
         function setStar(n) {
             const stars = document.querySelectorAll('.stars');
