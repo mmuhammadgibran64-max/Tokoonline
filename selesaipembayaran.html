@@ -15,9 +15,9 @@
     <div class="card p-4 border-0 shadow-sm rounded-4" style="max-width:350px">
         <h1 class="text-success">✔</h1>
         <h4 class="fw-bold">Terima Kasih!</h4>
-        <p class="text-muted small">Pesanan kamu sedang diproses.</p>
+        <p class="text-muted small">Pesanan kamu sudah tercatat di Riwayat.</p>
         <hr>
-        <p class="small fw-bold">Kasih Rating:</p>
+        <p class="small fw-bold">Beri Rating Gibran Store:</p>
         <div class="mb-4">
             <span class="star" onclick="rate(1)">★</span><span class="star" onclick="rate(2)">★</span><span class="star" onclick="rate(3)">★</span><span class="star" onclick="rate(4)">★</span><span class="star" onclick="rate(5)">★</span>
         </div>
@@ -27,7 +27,7 @@
         function rate(n) {
             const ss = document.querySelectorAll('.star');
             ss.forEach((s, i) => s.classList.toggle('active', i < n));
-            alert('Makasih rating ' + n + ' nya!');
+            alert('Makasih rating ' + n + ' nya, Bran!');
         }
         function home() { localStorage.removeItem('detailPesanan'); localStorage.removeItem('totalTerakhir'); window.location.href = 'dashboard.html'; }
     </script>
