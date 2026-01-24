@@ -9,7 +9,7 @@
         body { background: #f8f9fa; padding-bottom: 100px; }
         .header { background: #ff6600; color: white; padding: 20px; border-radius: 0 0 20px 20px; }
         .card-produk { border: none; border-radius: 15px; text-align: center; background: white; height: 100%; }
-        .btn-tambah { background: #ff6600; color: white; border: none; border-radius: 10px; width: 100%; padding: 8px; font-weight: bold; font-size: 12px; }
+        .btn-tambah { background: #ff6600; color: white; border: none; border-radius: 10px; width: 100%; padding: 8px; font-weight: bold; font-size: 11px; }
         .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #333; color: white; padding: 15px; border-radius: 20px; display: none; justify-content: space-between; align-items: center; }
     </style>
 </head>
@@ -26,11 +26,11 @@
 
     <div class="cart-bar" id="bar">
         <div><span id="jml" class="badge bg-warning text-dark">0</span> <b id="tot">Rp 0</b></div>
-        <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='pembayaran.html'">Bayar ➔</button>
+        <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='pembayaran.html'">Proses ke pembayaran ➔</button>
     </div>
 
     <script>
-        document.getElementById('userTxt').innerText = "Halo, " + localStorage.getItem('namaUser');
+        document.getElementById('userTxt').innerText = "Halo, " + (localStorage.getItem('namaUser') || 'Pelanggan');
         const menu = [
             {n:'Peye Kacang (Kecil)', h:5000, i:'🥜'}, {n:'Peye Kacang (Besar)', h:10000, i:'🥜'},
             {n:'Slondok', h:20000, i:'🥨'}, {n:'Opak', h:20000, i:'🍪'},
