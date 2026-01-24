@@ -6,50 +6,100 @@
     <title>Menu - GIBRAN STORE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f4f4f4; padding-bottom: 100px; }
-        .header { background: #ff6600; color: white; padding: 15px; border-radius: 0 0 15px 15px; }
-        .card-p { border: none; border-radius: 15px; text-align: center; }
-        .btn-beli { background: #ff6600; color: white; border: none; border-radius: 8px; width: 100%; font-weight: bold; }
-        .cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #333; color: white; padding: 15px; border-radius: 15px; display: none; justify-content: space-between; align-items: center; }
+        body { background: #f8f9fa; padding-bottom: 100px; font-family: sans-serif; }
+        .header { background: #ff6600; color: white; padding: 20px; border-radius: 0 0 20px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .card-produk { border: none; border-radius: 15px; text-align: center; background: white; height: 100%; transition: 0.3s; }
+        .card-produk:hover { transform: translateY(-5px); }
+        .harga-produk { color: #ff6600; font-weight: bold; font-size: 14px; }
+        .btn-tambah { background: #ff6600; color: white; border: none; border-radius: 10px; width: 100%; padding: 8px; font-weight: bold; font-size: 13px; }
+        .cart-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: #333; color: white; padding: 15px; border-radius: 20px; display: none; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
-    <div class="header d-flex justify-content-between">
-        <b id="hi">Halo!</b>
-        <div class="d-flex gap-3"><a href="riwayat.html" class="text-white">📜</a> <a href="index.html" onclick="localStorage.clear()" class="text-white">🚪</a></div>
+
+    <div class="header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="fw-bold mb-0">🛒 GIBRAN STORE</h5>
+            <small id="userNama">Selamat datang!</small>
+        </div>
+        <div class="d-flex gap-3">
+            <a href="riwayat.html" class="text-white text-decoration-none">📜 Riwayat</a>
+            <a href="index.html" onclick="localStorage.clear()" class="text-white text-decoration-none">🚪 Keluar</a>
+        </div>
     </div>
 
-    <div class="container mt-3">
-        <div class="row g-2" id="list"></div>
+    <div class="container mt-4">
+        <h6 class="fw-bold mb-3">Daftar Menu Produk</h6>
+        <div class="row g-3" id="menuGrid">
+            </div>
     </div>
 
-    <div class="cart-bar" id="bar">
-        <b id="tot">Rp 0</b>
-        <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='pembayaran.html'">Bayar ➔</button>
+    <div class="cart-bar" id="cartBar">
+        <div>
+            <span id="jmlItem" class="badge bg-warning text-dark me-2">0</span>
+            <span class="fw-bold" id="totalHarga">Rp 0</span>
+        </div>
+        <button class="btn btn-warning btn-sm fw-bold px-3" onclick="prosesKePembayaran()">Proses ke Pembayaran ➔</button>
     </div>
 
     <script>
-        document.getElementById('hi').innerText = "Halo, " + localStorage.getItem('namaUser');
-        const menu = [
-            {n:'Peye Kacang', h:5000, i:'🥜'}, {n:'Slondok', h:20000, i:'🥨'},
-            {n:'Opak', h:20000, i:'🍪'}, {n:'Kue Sus', h:15000, i:'🧁'}
+        // Data User dari LocalStorage
+        document.getElementById('userNama').innerText = "Halo, " + (localStorage.getItem('namaUser') || 'Pelanggan');
+
+        // Daftar Menu Lengkap
+        const daftarProduk = [
+            {nama: 'Peye Kacang (Kecil)', harga: 5000, ikon: '🥜'},
+            {nama: 'Peye Kacang (Besar)', harga: 10000, ikon: '🥜'},
+            {nama: 'Slondok', harga: 20000, ikon: '🥨'},
+            {nama: 'Opak', harga: 20000, ikon: '🍪'},
+            {nama: 'Kacang', harga: 2000, ikon: '🥡'},
+            {nama: 'Kripik Pedes', harga: 15000, ikon: '🔥'},
+            {nama: 'Kue Sus Kering', harga: 15000, ikon: '🧁'},
+            {nama: 'Reginang (isi 3)', harga: 5000, ikon: '🍘'},
+            {nama: 'Aqua Galon', harga: 22000, ikon: '💧'}
         ];
-        let cart = [];
-        menu.forEach(p => {
-            document.getElementById('list').innerHTML += `<div class="col-6"><div class="card card-p p-3 shadow-sm">
-                <div style="font-size:30px">${p.i}</div><h6 class="fw-bold mt-1 mb-1">${p.n}</h6>
-                <p class="text-danger fw-bold small">Rp ${p.h.toLocaleString()}</p>
-                <button class="btn-beli py-1" onclick="tambah('${p.n}', ${p.h})">Tambah</button>
-            </div></div>`;
+
+        const menuGrid = document.getElementById('menuGrid');
+        let keranjang = [];
+
+        // Tampilkan Produk
+        daftarProduk.forEach((p, index) => {
+            menuGrid.innerHTML += `
+                <div class="col-6">
+                    <div class="card card-produk p-3 shadow-sm">
+                        <div style="font-size: 40px;">${p.ikon}</div>
+                        <div class="fw-bold small mt-2" style="min-height: 40px;">${p.nama}</div>
+                        <div class="harga-produk mb-2">Rp ${p.harga.toLocaleString()}</div>
+                        <button class="btn-tambah" onclick="tambahKeKeranjang('${p.nama}', ${p.harga})">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            `;
         });
 
-        function tambah(n, h) {
-            cart.push({n, h});
-            document.getElementById('bar').style.display = 'flex';
-            let total = cart.reduce((s, i) => s + i.h, 0);
-            document.getElementById('tot').innerText = 'Rp ' + total.toLocaleString();
-            localStorage.setItem('totalTerakhir', total);
-            localStorage.setItem('detailPesanan', cart.map(i => i.n).join(', '));
+        function tambahKeKeranjang(nama, harga) {
+            keranjang.push({nama, harga});
+            updateBar();
+        }
+
+        function updateBar() {
+            const bar = document.getElementById('cartBar');
+            const jml = document.getElementById('jmlItem');
+            const tot = document.getElementById('totalHarga');
+
+            if (keranjang.length > 0) {
+                bar.style.display = 'flex';
+                let total = keranjang.reduce((sum, item) => sum + item.harga, 0);
+                jml.innerText = keranjang.length + " Item";
+                tot.innerText = "Rp " + total.toLocaleString();
+                
+                // Simpan sementara data belanja
+                localStorage.setItem('totalTerakhir', total);
+                localStorage.setItem('detailPesanan', keranjang.map(i => i.nama).join(', '));
+            }
+        }
+
+        function prosesKePembayaran() {
+            window.location.href = 'pembayaran.html';
         }
     </script>
 </body>
