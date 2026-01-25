@@ -3,62 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Gibran - Daftar Menu</title>
+    <title>Toko Gibran - Menu Utama</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 100px; }
-        .header { text-align: center; padding: 10px; background: #28a745; color: white; border-radius: 10px; margin-bottom: 20px; }
-        .produk-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
-        .info h3 { margin: 0; font-size: 16px; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        
+        /* HEADER */
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
+        
+        /* NAVIGASI UTAMA (Ini yang bikin muncul!) */
+        .navbar { display: flex; justify-content: space-around; background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: -10px 15px 20px; border-radius: 10px; position: relative; z-index: 10; }
+        .nav-item { text-decoration: none; color: #333; text-align: center; font-size: 12px; font-weight: bold; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 5px; }
+
+        /* DAFTAR PRODUK */
+        .container { padding: 15px; padding-bottom: 100px; }
+        .produk-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .info h3 { margin: 0; font-size: 15px; }
         .info p { margin: 5px 0 0; color: #28a745; font-weight: bold; }
-        .btn-tambah { background: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .footer-bayar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 20px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); text-align: center; }
-        .btn-proses { background: #28a745; color: white; border: none; padding: 15px; width: 90%; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-tambah { background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+
+        /* TOMBOL BAWAH */
+        .footer-bayar { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px; text-align: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .btn-proses { background: #28a745; color: white; border: none; padding: 12px; width: 90%; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>Toko Gibran</h2>
+        <h1>Toko Gibran</h1>
     </div>
 
-    <div id="daftar-produk">
+    <div class="navbar">
+        <a href="dashboard.html" class="nav-item">🏠<br>Menu</a>
+        <a href="riwayat.html" class="nav-item">📜<br>Riwayat</a>
+        <a href="pengaturan.html" class="nav-item">⚙️<br>Pengaturan</a>
+    </div>
+
+    <div class="container">
+        <h3>Daftar Produk</h3>
         <div class="produk-card">
             <div class="info"><h3>Peye Kacang (Kecil)</h3><p>Rp5.000</p></div>
             <button class="btn-tambah" onclick="pesan('Peye Kacang (Kecil)', '5.000')">Tambah</button>
         </div>
         <div class="produk-card">
-            <div class="info"><h3>Peye Kacang (Besar)</h3><p>Rp10.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Peye Kacang (Besar)', '10.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Slondok</h3><p>Rp20.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Slondok', '20.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Opak</h3><p>Rp20.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Opak', '20.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Kacang</h3><p>Rp2.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Kacang', '2.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Kripik Pedes</h3><p>Rp15.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Kripik Pedes', '15.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Kue Sus Kering</h3><p>Rp15.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Kue Sus Kering', '15.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
-            <div class="info"><h3>Reginang (isi 3)</h3><p>Rp5.000</p></div>
-            <button class="btn-tambah" onclick="pesan('Reginang (isi 3)', '5.000')">Tambah</button>
-        </div>
-        <div class="produk-card">
             <div class="info"><h3>Aqua Galon</h3><p>Rp22.000</p></div>
             <button class="btn-tambah" onclick="pesan('Aqua Galon', '22.000')">Tambah</button>
         </div>
-    </div>
+        </div>
 
     <div class="footer-bayar">
         <button class="btn-proses" onclick="location.href='pembayaran.html'">Proses ke Pembayaran</button>
@@ -66,21 +57,14 @@
 
     <script>
         function pesan(nama, harga) {
-            // URL sudah saya pasang langsung di bawah ini
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwdOgx4s6kJSKpYxWHHoDQdPHJs4cWApaP5McO0tyfOu6Fzqf8xTCxSAmnCSHQEPWqD/exec';
-
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // Penting agar tidak kena blokir CORS
+                mode: 'no-cors',
                 body: JSON.stringify({ "produk": nama, "harga": harga }),
             })
-            .then(() => {
-                alert('Berhasil! ' + nama + ' sudah tercatat di Google Sheet.');
-            })
-            .catch(error => {
-                alert('Gagal mengirim data. Cek koneksi internet.');
-                console.error('Error!', error.message);
-            });
+            .then(() => alert('Berhasil! ' + nama + ' masuk ke data Order.'))
+            .catch(() => alert('Gagal!'));
         }
     </script>
 
