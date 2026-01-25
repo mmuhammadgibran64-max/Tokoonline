@@ -9,48 +9,95 @@
         .box { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* LAYAR MAINTENANCE */
+        #maintenance-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px;
+        }
+        .m-card { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 2px solid #ffc107; }
     </style>
 </head>
 <body>
-<div class="box">
-    <h2>Toko Gibran</h2>
-    <p>Isi data untuk masuk</p>
-    <input type="text" id="nama" placeholder="Nama Pelanggan">
-    <input type="number" id="hp" placeholder="Nomor HP">
-    <input type="text" id="alamat" placeholder="Alamat Lengkap">
-    <button onclick="masuk()">MULAI BELANJA</button>
-</div>
 
-<script>
-    function masuk() {
-        const nama = document.getElementById('nama').value;
-        const hp = document.getElementById('hp').value;
-        const alamat = document.getElementById('alamat').value;
+    <div id="maintenance-screen">
+        <div class="m-card">
+            <h1 id="m-title" style="color: #ffc107;">MAINTENANCE</h1>
+            <p id="m-desc">Sedang memperbarui sistem...</p>
+            <div id="offline-msg" style="display:none;">
+                <p style="color: #ffc107; font-weight: bold;">Update Besar (4-5 Hari)</p>
+                <p>Silakan offline ke rumah saja sampai aplikasi terbuka semua oke.</p>
+            </div>
+        </div>
+    </div>
 
-        if(!nama || !hp || !alamat) return alert("Isi semua data ya!");
+    <div class="box">
+        <h2>Toko Gibran</h2>
+        <input type="text" id="nama" placeholder="Nama Pelanggan">
+        <input type="number" id="hp" placeholder="Nomor HP">
+        <input type="text" id="alamat" placeholder="Alamat Lengkap">
+        <button onclick="masuk()">MULAI BELANJA</button>
+    </div>
 
-        // Simpan ke memori HP biar tidak hilang
-        localStorage.setItem("nama", nama);
-        localStorage.setItem("hp", hp);
-        localStorage.setItem("alamat", alamat);
+    <script>
+        // KONTROL UPDATE BESAR (MANUAL)
+        const SEDANG_UPDATE_BESAR = false; 
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
+        function checkMaintenance() {
+            const screen = document.getElementById('maintenance-screen');
+            const mDesc = document.getElementById('m-desc');
+            const offlineMsg = document.getElementById('offline-msg');
 
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({
-                "type": "login",
-                "nama": nama,
-                "hp": hp,
-                "alamat": alamat
-            })
-        })
-        .then(() => {
-            window.location.href = 'dashboard.html';
-        })
-        .catch(() => alert("Koneksi bermasalah"));
-    }
-</script>
+            if (SEDANG_UPDATE_BESAR) {
+                screen.style.display = 'flex';
+                mDesc.innerText = "Perbaikan besar sedang berlangsung.";
+                offlineMsg.style.display = 'block';
+                return;
+            }
+
+            const now = new Date();
+            const day = now.getDay(); 
+            const hour = now.getHours();
+
+            // LOGIKA JADWAL:
+            // Senin (1) tutup dari jam 8 pagi s/d Selasa jam 8 pagi
+            // Kamis (4) tutup dari jam 8 pagi s/d Jumat jam 8 pagi
+
+            let maintenanceAktif = false;
+
+            // Cek Hari Senin
+            if (day === 1 && hour >= 8) maintenanceAktif = true;
+            // Cek Selasa Subuh (Sisa update Senin)
+            if (day === 2 && hour < 8) maintenanceAktif = true;
+            
+            // Cek Hari Kamis
+            if (day === 4 && hour >= 8) maintenanceAktif = true;
+            // Cek Jumat Subuh (Sisa update Kamis)
+            if (day === 5 && hour < 8) maintenanceAktif = true;
+
+            if (maintenanceAktif) {
+                screen.style.display = 'flex';
+                mDesc.innerText = "Jadwal Update Rutin. Tunggu selesai update, besok pagi jam 08:00 sudah bisa digunakan kembali.";
+                localStorage.setItem("needDownload", "true");
+            }
+        }
+
+        function masuk() {
+            const nama = document.getElementById('nama').value;
+            const hp = document.getElementById('hp').value;
+            const alamat = document.getElementById('alamat').value;
+            if(!nama || !hp || !alamat) return alert("Isi data dulu!");
+
+            localStorage.setItem("nama", nama);
+            localStorage.setItem("hp", hp);
+            localStorage.setItem("alamat", alamat);
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({"type": "login", "nama": nama, "hp": hp, "alamat": alamat}) })
+            .then(() => { window.location.href = 'dashboard.html'; });
+        }
+
+        window.onload = checkMaintenance;
+    </script>
 </body>
 </html>
