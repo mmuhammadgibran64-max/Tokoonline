@@ -12,30 +12,29 @@
         h2 { color: #28a745; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         p { font-size: 13px; margin: 8px 0; color: #aaa; }
         .status { color: #28a745; font-weight: bold; }
+        
+        /* Gaya Fitur Terkunci */
         .locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
         .badge-lock { background: #555; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; float: right; }
-        
-        /* Style untuk Tombol Simulasi Update */
-        .btn-update { background: #d9534f; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
+
         /* Overlay Maintenance */
-        #maintenance-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .loader { border: 4px solid #333; border-top: 4px solid #28a745; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #maintenance-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .loading-bar { width: 70%; height: 10px; background: #333; border-radius: 5px; margin-top: 20px; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #28a745; transition: width 0.1s; }
     </style>
 </head>
 <body>
 
     <div id="maintenance-screen">
-        <div id="m-content">
-            <h1 style="color: #d9534f;">SYSTEM MAINTENANCE</h1>
-            <p>Jadwal Update: Senin - Kamis</p>
-            <p style="color: #888;">Mohon tunggu, server sedang dalam perbaikan...</p>
-        </div>
-        <div id="l-content" style="display: none;">
-            <div class="loader"></div>
-            <h2 style="color: #28a745;">Downloading Data...</h2>
-            <p id="progress-text">0%</p>
+        <h1 id="m-title" style="color: #ffc107;">SYSTEM MAINTENANCE</h1>
+        <p id="m-desc">Sedang memperbarui sistem (Senin - Kamis)...</p>
+        <div id="loading-container" style="display:none;">
+            <p>Mengunduh Data Baru...</p>
+            <div class="loading-bar"><div class="progress" id="progress-bar"></div></div>
+            <p id="percent" style="font-size: 12px; margin-top: 10px;">0%</p>
         </div>
     </div>
 
@@ -48,7 +47,13 @@
     <div class="section">
         <h2>🏷️ Identitas Toko</h2>
         <p><strong>Nama & Logo:</strong> Toko Gibran</p>
-        <p><strong>Deskripsi:</strong> Toko Online Gibran Terpercaya.</p>
+        <p><strong>Deskripsi:</strong> Penjelasan singkat mengenai apa yang Anda jual.</p>
+    </div>
+
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>🚚 Jasa Ekspedisi</h2>
+        <p>JNE, J&T, SiCepat, dll.</p>
     </div>
 
     <div class="section">
@@ -56,19 +61,6 @@
         <p><strong>Jam Buka:</strong> 08:00</p>
         <p><strong>Jam Tutup:</strong> 20:00</p>
         <p><strong>Jadwal Update:</strong> Senin - Kamis</p>
-        <button class="btn-update" onclick="mulaiMaintenance()">SIMULASI UPDATE SISTEM</button>
-    </div>
-
-    <div class="section locked">
-        <span class="badge-lock">🔒 Tunggu Update</span>
-        <h2>🚚 Jasa Ekspedisi</h2>
-        <p>JNE, J&T, SiCepat, GoSend, dll.</p>
-    </div>
-
-    <div class="section locked">
-        <span class="badge-lock">🔒 Tunggu Update</span>
-        <h2>💬 Template Chat</h2>
-        <p>Balasan otomatis (Auto-reply) FAQ.</p>
     </div>
 
     <div class="section">
@@ -78,37 +70,65 @@
     </div>
 
     <script>
-        function mulaiMaintenance() {
+        function checkMaintenance() {
+            const now = new Date();
+            const day = now.getDay(); // 0=Minggu, 1=Senin, ..., 4=Kamis
+            const hour = now.getHours();
+            
+            // Cek apakah hari Senin(1) sampai Kamis(4) dan jam sudah 20:00 ke atas
+            const isUpdateDay = day >= 1 && day <= 4;
+            const isUpdateTime = hour >= 20 || hour < 8; // Maintenance jam 8 malam sampai 8 pagi
+
             const screen = document.getElementById('maintenance-screen');
-            const mContent = document.getElementById('m-content');
-            const lContent = document.getElementById('l-content');
-            const progText = document.getElementById('progress-text');
-
-            screen.style.display = 'flex';
-
-            // 1. Fase Maintenance (3 detik)
-            setTimeout(() => {
-                mContent.style.display = 'none';
-                lContent.style.display = 'block';
-
-                // 2. Fase Loading Download Data (0% - 100%)
-                let progress = 0;
-                let interval = setInterval(() => {
-                    progress += Math.floor(Math.random() * 10) + 1;
-                    if (progress >= 100) {
-                        progress = 100;
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            screen.style.display = 'none';
-                            alert("Update Selesai! Data telah diperbarui.");
-                            location.reload();
-                        }, 1000);
-                    }
-                    progText.innerText = progress + "%";
-                }, 200);
-
-            }, 3000);
+            
+            // LOGIKA OTOMATIS
+            if (isUpdateDay && isUpdateTime) {
+                // TAMPILKAN MAINTENANCE
+                screen.style.display = 'flex';
+                localStorage.setItem("needDownload", "true"); // Tandai bahwa nanti butuh download
+            } else {
+                // JIKA SELESAI MAINTENANCE, CEK APAKAH PERLU DOWNLOAD DATA
+                if (localStorage.getItem("needDownload") === "true") {
+                    showDownload();
+                } else {
+                    screen.style.display = 'none';
+                }
+            }
         }
+
+        function showDownload() {
+            const screen = document.getElementById('maintenance-screen');
+            const loadingCont = document.getElementById('loading-container');
+            const mTitle = document.getElementById('m-title');
+            const mDesc = document.getElementById('m-desc');
+            
+            screen.style.display = 'flex';
+            loadingCont.style.display = 'block';
+            mTitle.innerText = "UPDATE SELESAI";
+            mTitle.style.color = "#28a745";
+            mDesc.innerText = "Menyiapkan data aplikasi terbaru...";
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 1;
+                if (progress > 100) progress = 100;
+                
+                document.getElementById('progress-bar').style.width = progress + "%";
+                document.getElementById('percent').innerText = progress + "%";
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    localStorage.removeItem("needDownload");
+                    setTimeout(() => {
+                        screen.style.display = 'none';
+                        alert("Data Berhasil Diunduh! Aplikasi siap digunakan.");
+                    }, 1000);
+                }
+            }, 100);
+        }
+
+        // Jalankan pengecekan setiap kali halaman dibuka
+        window.onload = checkMaintenance;
     </script>
 
 </body>
