@@ -12,14 +12,32 @@
         h2 { color: #28a745; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         p { font-size: 13px; margin: 8px 0; color: #aaa; }
         .status { color: #28a745; font-weight: bold; }
-        
-        /* Gaya untuk fitur yang terkunci */
         .locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
         .badge-lock { background: #555; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; float: right; }
-        .sub-text { font-size: 12px; color: #888; font-style: italic; margin-top: 5px; }
+        
+        /* Style untuk Tombol Simulasi Update */
+        .btn-update { background: #d9534f; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        /* Overlay Maintenance */
+        #maintenance-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .loader { border: 4px solid #333; border-top: 4px solid #28a745; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+    <div id="maintenance-screen">
+        <div id="m-content">
+            <h1 style="color: #d9534f;">SYSTEM MAINTENANCE</h1>
+            <p>Jadwal Update: Senin - Kamis</p>
+            <p style="color: #888;">Mohon tunggu, server sedang dalam perbaikan...</p>
+        </div>
+        <div id="l-content" style="display: none;">
+            <div class="loader"></div>
+            <h2 style="color: #28a745;">Downloading Data...</h2>
+            <p id="progress-text">0%</p>
+        </div>
+    </div>
 
     <div class="nav">
         <a href="dashboard.html">🏠 Menu</a>
@@ -30,25 +48,7 @@
     <div class="section">
         <h2>🏷️ Identitas Toko</h2>
         <p><strong>Nama & Logo:</strong> Toko Gibran</p>
-        <p><strong>Deskripsi:</strong> Penjelasan singkat mengenai apa yang Anda jual.</p>
-    </div>
-
-    <div class="section locked">
-        <span class="badge-lock">🔒 Tunggu Update</span>
-        <h2>🚚 Jasa Ekspedisi</h2>
-        <p>Pilih kurir yang tersedia di area kamu:</p>
-        <div class="sub-text">
-            JNE, J&T, SiCepat, GoSend, GrabExpress, dll.
-        </div>
-    </div>
-
-    <div class="section locked">
-        <span class="badge-lock">🔒 Tunggu Update</span>
-        <h2>💬 Template Chat</h2>
-        <p>Siapkan balasan otomatis (Auto-reply) untuk pertanyaan yang sering muncul (FAQ).</p>
-        <div class="sub-text">
-            Membantu membalas chat pelanggan lebih cepat.
-        </div>
+        <p><strong>Deskripsi:</strong> Toko Online Gibran Terpercaya.</p>
     </div>
 
     <div class="section">
@@ -56,6 +56,19 @@
         <p><strong>Jam Buka:</strong> 08:00</p>
         <p><strong>Jam Tutup:</strong> 20:00</p>
         <p><strong>Jadwal Update:</strong> Senin - Kamis</p>
+        <button class="btn-update" onclick="mulaiMaintenance()">SIMULASI UPDATE SISTEM</button>
+    </div>
+
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>🚚 Jasa Ekspedisi</h2>
+        <p>JNE, J&T, SiCepat, GoSend, dll.</p>
+    </div>
+
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>💬 Template Chat</h2>
+        <p>Balasan otomatis (Auto-reply) FAQ.</p>
     </div>
 
     <div class="section">
@@ -63,6 +76,40 @@
         <p><strong>Pencahayaan:</strong> <span class="status">Gelap (Dark Mode)</span></p>
         <p style="text-align: center; margin-top: 20px; font-size: 11px; color: #555;">Aplikasi v.1.2.8</p>
     </div>
+
+    <script>
+        function mulaiMaintenance() {
+            const screen = document.getElementById('maintenance-screen');
+            const mContent = document.getElementById('m-content');
+            const lContent = document.getElementById('l-content');
+            const progText = document.getElementById('progress-text');
+
+            screen.style.display = 'flex';
+
+            // 1. Fase Maintenance (3 detik)
+            setTimeout(() => {
+                mContent.style.display = 'none';
+                lContent.style.display = 'block';
+
+                // 2. Fase Loading Download Data (0% - 100%)
+                let progress = 0;
+                let interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 10) + 1;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            screen.style.display = 'none';
+                            alert("Update Selesai! Data telah diperbarui.");
+                            location.reload();
+                        }, 1000);
+                    }
+                    progText.innerText = progress + "%";
+                }, 200);
+
+            }, 3000);
+        }
+    </script>
 
 </body>
 </html>
