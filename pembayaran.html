@@ -3,28 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran</title>
+    <title>Metode Pembayaran - Toko Gibran</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; text-align: center; background: #f9f9f9; }
-        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .btn-beli { background: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        h2 { color: #333; text-align: center; }
+        p { color: #666; font-size: 14px; text-align: center; margin-bottom: 25px; }
+        
+        .metode-opsi { border: 2px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; transition: 0.3s; }
+        .metode-opsi.aktif { border-color: #28a745; background: #e8f5e9; }
+        .metode-opsi.nonaktif { background: #f5f5f5; color: #aaa; cursor: not-allowed; border-color: #eee; }
+        
+        .radio-circle { height: 20px; width: 20px; border: 2px solid #28a745; border-radius: 50%; margin-right: 15px; position: relative; }
+        .aktif .radio-circle::after { content: ''; width: 12px; height: 12px; background: #28a745; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        .btn-konfirmasi { background: #28a745; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
+        .label-baru { background: #ffc107; color: black; font-size: 10px; padding: 2px 6px; border-radius: 5px; margin-left: 10px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>Konfirmasi Pembayaran</h2>
-        <p>Silakan klik tombol di bawah untuk menyelesaikan pesanan Anda.</p>
-        <button class="btn-beli" onclick="prosesBeli()">KONFIRMASI & BELI PRODUK</button>
+
+<div class="box">
+    <h2>Pembayaran</h2>
+    <p>Pilih metode pembayaran yang tersedia</p>
+
+    <div class="metode-opsi aktif" onclick="pilihMetode('Cash')">
+        <div class="radio-circle"></div>
+        <div>
+            <strong>Cash (Bayar di Tempat)</strong><br>
+            <small>Bayar saat barang sampai</small>
+        </div>
     </div>
+
+    <div class="metode-opsi nonaktif">
+        <div style="height: 20px; width: 20px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px;"></div>
+        <div>
+            <strong>QRIS / E-Wallet</strong> <span class="label-baru">Belum Tersedia</span><br>
+            <small>OVO, Dana, GoPay</small>
+        </div>
+    </div>
+
+    <div class="metode-opsi nonaktif">
+        <div style="height: 20px; width: 20px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px;"></div>
+        <div>
+            <strong>Transfer Bank</strong> <span class="label-baru">Belum Tersedia</span><br>
+            <small>BCA, Mandiri, BRI</small>
+        </div>
+    </div>
+
+    <button class="btn-konfirmasi" onclick="prosesBeli()">KONFIRMASI PEMBAYARAN</button>
+</div>
 
 <script>
     function prosesBeli() {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
-        
-        // Ambil data dari login tadi
+        // Ambil data dari login yang disimpan di index.html
         const nama = localStorage.getItem("nama");
         const hp = localStorage.getItem("hp");
         const alamat = localStorage.getItem("alamat");
+
+        if(!nama) {
+            alert("Selesaikan Login terlebih dahulu!");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
 
         fetch(scriptURL, {
             method: 'POST',
@@ -34,16 +77,17 @@
                 "nama": nama,
                 "hp": hp,
                 "alamat": alamat,
-                "produk": "Pesanan Toko Gibran", // Nanti bisa dibuat otomatis
-                "total": "Sesuai Keranjang"
+                "produk": "Pesanan Selesai", 
+                "total": "Metode: Cash"
             })
         })
         .then(() => {
-            alert("Terima kasih! Pesanan masuk ke riwayat.");
+            alert("Pesanan Berhasil! Menuju Riwayat.");
             window.location.href = 'riwayat.html';
         })
-        .catch(() => alert("Gagal mengirim data."));
+        .catch(() => alert("Koneksi gagal, coba lagi."));
     }
 </script>
+
 </body>
 </html>
