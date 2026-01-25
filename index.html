@@ -3,43 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Pelanggan - Toko Gibran</title>
+    <title>Login - Toko Gibran</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #28a745; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; max-width: 380px; text-align: center; }
-        h2 { color: #333; margin-bottom: 5px; }
-        p { color: #666; font-size: 14px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 14px; }
-        .btn-masuk { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-masuk:hover { background: #218838; }
+        body { font-family: sans-serif; background: #28a745; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div class="login-card">
+<div class="box">
     <h2>Toko Gibran</h2>
-    <p>Silakan isi data untuk masuk ke toko</p>
-    
-    <input type="text" id="nama" placeholder="Nama Pelanggan" required>
-    <input type="number" id="hp" placeholder="Nomor HP (WhatsApp)" required>
-    <input type="text" id="alamat" placeholder="Alamat Rumah / No Rumah" required>
-    
-    <button class="btn-masuk" onclick="prosesLogin()">MULAI BELANJA</button>
+    <p>Isi data untuk masuk</p>
+    <input type="text" id="nama" placeholder="Nama Pelanggan">
+    <input type="number" id="hp" placeholder="Nomor HP">
+    <input type="text" id="alamat" placeholder="Alamat Lengkap">
+    <button onclick="masuk()">MULAI BELANJA</button>
 </div>
 
 <script>
-    function prosesLogin() {
+    function masuk() {
         const nama = document.getElementById('nama').value;
         const hp = document.getElementById('hp').value;
         const alamat = document.getElementById('alamat').value;
 
-        if(!nama || !hp || !alamat) {
-            alert("Harap isi semua data terlebih dahulu!");
-            return;
-        }
+        if(!nama || !hp || !alamat) return alert("Isi semua data ya!");
 
-        // Link Apps Script baru kamu
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxDtiWgsJb1mBmeondxkgZV1zkRR1300rAKJMM7uZqgRckAYIm_w8VMCnMiYaW5anM/exec';
+        // Simpan ke memori HP biar tidak hilang
+        localStorage.setItem("nama", nama);
+        localStorage.setItem("hp", hp);
+        localStorage.setItem("alamat", alamat);
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
 
         fetch(scriptURL, {
             method: 'POST',
@@ -52,14 +47,10 @@
             })
         })
         .then(() => {
-            alert("Selamat datang, " + nama + "!");
             window.location.href = 'dashboard.html';
         })
-        .catch(() => {
-            alert("Ups, ada masalah koneksi. Coba lagi ya!");
-        });
+        .catch(() => alert("Koneksi bermasalah"));
     }
 </script>
-
 </body>
 </html>
