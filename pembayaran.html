@@ -3,56 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metode Pembayaran</title>
+    <title>Pembayaran</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
-        h2 { color: #333; margin-bottom: 20px; }
-        .method-box { border: 2px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: space-between; }
-        .method-box:hover { border-color: #28a745; background: #fafffa; }
-        .method-box input { cursor: pointer; width: 20px; height: 20px; }
-        .info { font-size: 14px; color: #666; margin-bottom: 20px; }
-        .btn-konfirmasi { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-konfirmasi:hover { background: #218838; }
-        .disabled { color: #ccc; cursor: not-allowed; }
+        body { font-family: sans-serif; padding: 20px; text-align: center; background: #f9f9f9; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn-beli { background: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Pilih Pembayaran</h2>
-    <p class="info">Silakan pilih metode yang tersedia:</p>
-
-    <div class="method-box" onclick="document.getElementById('cash').checked = true">
-        <span>💵 Bayar Tunai (Cash)</span>
-        <input type="radio" name="payment" id="cash" checked>
+    <div class="box">
+        <h2>Konfirmasi Pembayaran</h2>
+        <p>Silakan klik tombol di bawah untuk menyelesaikan pesanan Anda.</p>
+        <button class="btn-beli" onclick="prosesBeli()">KONFIRMASI & BELI PRODUK</button>
     </div>
-
-    <div class="method-box" style="opacity: 0.5; cursor: not-allowed;">
-        <span class="disabled">📱 QRIS (Segera Hadir)</span>
-        <input type="radio" name="payment" disabled>
-    </div>
-
-    <div class="method-box" style="opacity: 0.5; cursor: not-allowed;">
-        <span class="disabled">🏦 Transfer Bank (Segera Hadir)</span>
-        <input type="radio" name="payment" disabled>
-    </div>
-
-    <button class="btn-konfirmasi" onclick="konfirmasi()">KONFIRMASI SEKARANG</button>
-</div>
 
 <script>
-    function konfirmasi() {
-        // Cek apakah pilihan cash dipilih
-        if(document.getElementById('cash').checked) {
-            alert('Pesanan diproses dengan metode Cash!');
-            // Ini kuncinya supaya pindah ke halaman OK tanpa error
-            window.location.href = 'ok.html';
-        } else {
-            alert('Silakan pilih metode pembayaran yang tersedia.');
-        }
+    function prosesBeli() {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
+        
+        // Ambil data dari login tadi
+        const nama = localStorage.getItem("nama");
+        const hp = localStorage.getItem("hp");
+        const alamat = localStorage.getItem("alamat");
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({
+                "type": "beli",
+                "nama": nama,
+                "hp": hp,
+                "alamat": alamat,
+                "produk": "Pesanan Toko Gibran", // Nanti bisa dibuat otomatis
+                "total": "Sesuai Keranjang"
+            })
+        })
+        .then(() => {
+            alert("Terima kasih! Pesanan masuk ke riwayat.");
+            window.location.href = 'riwayat.html';
+        })
+        .catch(() => alert("Gagal mengirim data."));
     }
 </script>
-
 </body>
 </html>
