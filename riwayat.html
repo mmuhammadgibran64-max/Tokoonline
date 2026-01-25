@@ -3,40 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan</title>
+    <title>Riwayat Pesanan - Toko Gibran</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 15px; }
-        .nav { display: flex; justify-content: space-around; background: white; padding: 10px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .nav a { text-decoration: none; color: #333; font-size: 14px; font-weight: bold; }
-        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #28a745; color: white; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
+        
+        /* NAVBAR */
+        .navbar { display: flex; justify-content: space-around; background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: -10px 15px 20px; border-radius: 10px; position: relative; z-index: 10; }
+        .nav-item { text-decoration: none; color: #333; text-align: center; font-size: 12px; font-weight: bold; }
+        
+        /* CONTENT */
+        .container { padding: 15px; }
+        .riwayat-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745; }
+        .riwayat-card h4 { margin: 0; color: #333; font-size: 14px; }
+        .riwayat-card p { margin: 5px 0 0; color: #666; font-size: 13px; }
+        .status-bayar { display: inline-block; background: #e8f5e9; color: #28a745; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; margin-top: 10px; }
+        
+        .empty-state { text-align: center; padding: 50px 20px; color: #888; }
+        .btn-wa { background: #25d366; color: white; padding: 12px; border-radius: 10px; text-decoration: none; display: block; text-align: center; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="nav">
-        <a href="dashboard.html">🏠 Menu</a>
-        <a href="riwayat.html" style="color: #28a745;">📜 Riwayat</a>
-        <a href="pengaturan.html">⚙️ Pengaturan</a>
+    <div class="header">
+        <h1>Riwayat Saya</h1>
     </div>
 
-    <div class="card">
-        <h3>📜 Riwayat Pesanan</h3>
-        <table>
-            <tr>
-                <th>Tanggal</th>
-                <th>Nama/HP</th>
-                <th>Alamat</th>
-                <th>Pesanan</th>
-                <th>Total</th>
-            </tr>
-            <tr>
-                <td colspan="5" style="text-align:center; color: #999;">Belum ada pesanan terbaru</td>
-            </tr>
-        </table>
+    <div class="navbar">
+        <a href="dashboard.html" class="nav-item">🏠<br>Menu</a>
+        <a href="riwayat.html" class="nav-item" style="color: #28a745;">📜<br>Riwayat</a>
+        <a href="pengaturan.html" class="nav-item">⚙️<br>Pengaturan</a>
     </div>
+
+    <div class="container">
+        <div id="daftar-riwayat">
+            <div class="empty-state">
+                <p>Belum ada riwayat pesanan.<br>Ayo mulai belanja!</p>
+            </div>
+        </div>
+
+        <a href="https://wa.me/628XXXXXXXXXX" class="btn-wa">Chat Admin Toko</a>
+    </div>
+
+    <script>
+        // Fungsi untuk mengambil data pesanan (sementara dari LocalStorage)
+        function muatRiwayat() {
+            const listContainer = document.getElementById('daftar-riwayat');
+            const namaUser = localStorage.getItem("nama");
+
+            if (!namaUser) {
+                listContainer.innerHTML = '<div class="empty-state">Silakan login untuk melihat riwayat.</div>';
+                return;
+            }
+
+            // Catatan: Untuk riwayat yang beneran real-time dari Sheet, 
+            // kita butuh fungsi doGet di Apps Script. 
+            // Untuk sekarang, ini menampilkan konfirmasi pesanan terakhir.
+            
+            const pesananTerakhir = localStorage.getItem("lastOrder");
+            if (pesananTerakhir) {
+                const data = JSON.parse(pesananTerakhir);
+                listContainer.innerHTML = `
+                    <div class="riwayat-card">
+                        <h4>Pesanan atas nama: ${namaUser}</h4>
+                        <p>Produk: ${data.produk}</p>
+                        <p>Total: ${data.total}</p>
+                        <span class="status-bayar">BERHASIL DIPESAN</span>
+                    </div>
+                `;
+            }
+        }
+
+        window.onload = muatRiwayat;
+    </script>
 
 </body>
 </html>
