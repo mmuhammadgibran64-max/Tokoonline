@@ -6,12 +6,17 @@
     <title>Pengaturan Toko</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; }
-        .nav { display: flex; justify-content: space-around; background: #1e1e1e; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        .nav { display: flex; justify-content: space-around; background: #1e1e1e; padding: 10px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .nav a { text-decoration: none; color: #bbb; font-size: 14px; }
         .section { background: #1e1e1e; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        h2 { color: #28a745; font-size: 18px; margin-top: 0; }
+        h2 { color: #28a745; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         p { font-size: 13px; margin: 8px 0; color: #aaa; }
         .status { color: #28a745; font-weight: bold; }
+        
+        /* Gaya untuk fitur yang terkunci */
+        .locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+        .badge-lock { background: #555; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; float: right; }
+        .kurir-list { font-size: 12px; color: #888; font-style: italic; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -28,16 +33,26 @@
         <p><strong>Deskripsi:</strong> Penjelasan singkat mengenai apa yang Anda jual.</p>
     </div>
 
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>🚚 Jasa Ekspedisi</h2>
+        <p>Pilih kurir yang tersedia di area kamu:</p>
+        <div class="kurir-list">
+            JNE, J&T, SiCepat, GoSend, GrabExpress, dll.
+        </div>
+    </div>
+
     <div class="section">
         <h2>⏰ Jadwal Operasional</h2>
-        <p><strong>Jam:</strong> 08:00 - 20:00</p>
+        <p><strong>Jam Buka:</strong> 08:00</p>
+        <p><strong>Jam Tutup:</strong> 20:00</p>
         <p><strong>Jadwal Update:</strong> Senin - Kamis</p>
     </div>
 
     <div class="section">
         <h2>💻 Sistem</h2>
-        <p><strong>Pencahayaan:</strong> <span class="status">Gelap</span></p>
-        <p style="text-align: center; margin-top: 20px; font-size: 11px;">Aplikasi v.1.2.8</p>
+        <p><strong>Pencahayaan:</strong> <span class="status">Gelap (Dark Mode)</span></p>
+        <p style="text-align: center; margin-top: 20px; font-size: 11px; color: #555;">Aplikasi v.1.2.8</p>
     </div>
 
 </body>
