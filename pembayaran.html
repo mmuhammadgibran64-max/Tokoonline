@@ -10,40 +10,42 @@
         .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #bbb; }
         .total { font-size: 26px; color: #28a745; text-align: center; font-weight: bold; border-top: 1px dashed #444; padding-top: 15px; }
         .btn-order { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .btn-order:disabled { background: #444; }
+        .btn-order:disabled { background: #444; opacity: 0.7; }
         
-        /* Tampilan Sukses (Awalnya Sembunyi) */
+        /* Bagian ini awalnya sembunyi, muncul kalau sudah sukses */
         #halaman-sukses { display: none; padding-top: 50px; }
-        .icon-cek { font-size: 80px; color: #28a745; margin-bottom: 20px; }
+        .ceklist { font-size: 80px; color: #28a745; margin-bottom: 20px; }
         .star { font-size: 40px; color: #333; cursor: pointer; }
         .star.active { color: #ffc107; }
+        .btn-balik { display: block; background: #222; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; margin-top: 30px; border: 1px solid #444; }
     </style>
 </head>
 <body>
 
     <div id="halaman-bayar">
         <div class="card">
-            <h2 style="color: #28a745; margin-top: 0;">🛒 Ringkasan</h2>
+            <h2 style="color: #28a745; margin-top: 0; font-size: 18px;">📦 Detail Pesanan</h2>
             <div id="list-belanja"></div>
             <div class="total" id="txt-total">Rp 0</div>
         </div>
 
         <div class="card">
-            <h3>💳 Pembayaran</h3>
-            <div style="padding: 15px; border-radius: 12px; border: 2px solid #28a745; background: rgba(40,167,69,0.1);">
-                <span>💵 Tunai (Bayar di Tempat)</span>
+            <h3 style="margin-top:0; font-size: 16px;">💳 Metode Pembayaran</h3>
+            <div style="padding: 12px; border-radius: 10px; border: 1px solid #28a745; background: rgba(40,167,69,0.1); font-weight: bold;">
+                💵 Bayar di Tempat (COD)
             </div>
         </div>
 
-        <button class="btn-order" id="btn-gas" onclick="proses()">KONFIRMASI ORDER</button>
+        <button class="btn-order" id="btn-gas" onclick="proses()">KONFIRMASI SEKARANG</button>
     </div>
 
     <div id="halaman-sukses">
-        <div class="icon-cek">✔️</div>
+        <div class="ceklist">✔️</div>
         <h1>Pesanan Terkirim!</h1>
-        <p>Terima kasih Bran, pesananmu sedang diproses.</p>
+        <p>Terima kasih Bran, pesananmu sudah masuk ke sistem Gibran Store.</p>
         
         <div style="margin: 25px 0;">
+            <p style="font-size: 12px; color: #888;">Beri rating kami:</p>
             <span class="star" onclick="rate(1)">★</span>
             <span class="star" onclick="rate(2)">★</span>
             <span class="star" onclick="rate(3)">★</span>
@@ -51,13 +53,19 @@
             <span class="star" onclick="rate(5)">★</span>
         </div>
 
-        <a href="dashboard.html" style="display: block; background: #28a745; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: bold;">Kembali ke Beranda</a>
+        <a href="dashboard.html" class="btn-balik">Kembali ke Dashboard</a>
     </div>
 
     <script>
+        // 1. Ambil data dari dashboard
         const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
         const listDiv = document.getElementById('list-belanja');
         let total = 0;
+
+        if(keranjang.length === 0) {
+            listDiv.innerHTML = "<p>Keranjang kosong!</p>";
+            document.getElementById('btn-gas').disabled = true;
+        }
 
         keranjang.forEach(item => {
             total += item.harga;
@@ -65,32 +73,40 @@
         });
         document.getElementById('txt-total').innerText = "Rp " + total.toLocaleString('id-ID');
 
+        // 2. Fungsi kirim data
         function proses() {
             const btn = document.getElementById('btn-gas');
-            btn.disabled = true; btn.innerText = "Mengirim...";
+            btn.disabled = true; 
+            btn.innerText = "Sabar, lagi ngirim...";
 
             const payload = {
                 "type": "order",
-                "nama": localStorage.getItem("nama") || "Pelanggan",
+                "nama": localStorage.getItem("nama") || "Pelanggan Gibran",
                 "pesanan": keranjang.map(i => i.nama).join(", "),
                 "total": total,
                 "metode": "CASH"
             };
 
+            // LINK SCRIPT KAMU
             const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
 
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => {
-                // Simpan ke riwayat
+                // Simpan ke riwayat lokal biar muncul di halaman riwayat
                 let r = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
                 r.push({ produk: payload.pesanan, total: total, tanggal: new Date().toLocaleString('id-ID') });
                 localStorage.setItem("riwayat_pesanan", JSON.stringify(r));
 
-                localStorage.removeItem("keranjang");
+                localStorage.removeItem("keranjang"); // Kosongkan keranjang
 
-                // GANTI TAMPILAN TANPA PINDAH FILE
+                // GANTI TAMPILAN KE SUKSES (Trik agar tidak File Not Found)
                 document.getElementById('halaman-bayar').style.display = 'none';
                 document.getElementById('halaman-sukses').style.display = 'block';
+            })
+            .catch(err => {
+                alert("Gagal mengirim, cek internet!");
+                btn.disabled = false;
+                btn.innerText = "KONFIRMASI SEKARANG";
             });
         }
 
