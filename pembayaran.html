@@ -5,67 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembayaran - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: left; margin-bottom: 20px; }
-        .btn-gas { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        #sukses { display: none; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; margin: 0; }
+        .header { text-align: center; color: #ff9800; margin-bottom: 20px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .total-row { border-top: 1px dashed #444; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #ff9800; }
+        .btn-bayar { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-bayar:disabled { background: #555; color: #888; }
+        #sukses { display: none; text-align: center; margin-top: 50px; }
+        .back-btn { display: inline-block; margin-top: 20px; color: #ff9800; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="bayar">
-        <div class="card">
-            <h3 style="color:#28a745">Ringkasan Pesanan</h3>
-            <div id="detail-item"></div>
-            <hr style="border:0; border-top:1px dashed #444; margin:15px 0;">
-            <h2 id="total-harga"></h2>
+
+    <div id="halaman-bayar">
+        <div class="header">
+            <h2>Konfirmasi Pesanan</h2>
         </div>
-        <button class="btn-gas" id="btn-kirim" onclick="proses()">KONFIRMASI PESANAN</button>
+
+        <div class="card">
+            <div id="rincian-produk"></div>
+            <div class="total-row">
+                <span>Total Bayar</span>
+                <span id="display-total">Rp 0</span>
+            </div>
+        </div>
+
+        <button class="btn-bayar" id="btn-kirim" onclick="kirimSekarang()">BELI & SIMPAN RIWAYAT</button>
+        <center><a href="dashboard.html" class="back-btn">Kembali ke Menu</a></center>
     </div>
 
     <div id="sukses">
-        <div style="font-size: 70px; color: #28a745;">✔️</div>
-        <h1>Berhasil!</h1>
-        <p>Pesanan terkirim dan tercatat di Riwayat.</p>
-        <a href="dashboard.html" style="color:#28a745; text-decoration:none; font-weight:bold; display:block; margin-top:20px;">Kembali Belanja</a>
+        <div style="font-size: 80px;">✅</div>
+        <h2 style="color: #ff9800;">Pesanan Berhasil!</h2>
+        <p>Data sudah masuk ke Admin dan Riwayat Saya.</p>
+        <a href="riwayat.html" class="btn-bayar" style="display:block; text-decoration:none;">Cek Riwayat Saya</a>
     </div>
 
     <script>
         const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
-        let total = 0;
-        keranjang.forEach(i => {
-            total += i.harga;
-            document.getElementById('detail-item').innerHTML += `<p>${i.nama} <span style="float:right">Rp ${i.harga.toLocaleString()}</span></p>`;
+        const rincianDiv = document.getElementById('rincian-produk');
+        let totalHarga = 0;
+
+        // Tampilkan isi keranjang
+        keranjang.forEach(item => {
+            totalHarga += item.harga;
+            rincianDiv.innerHTML += `
+                <div class="item-row">
+                    <span>${item.nama}</span>
+                    <span>Rp ${item.harga.toLocaleString()}</span>
+                </div>`;
         });
-        document.getElementById('total-harga').innerText = "Total: Rp " + total.toLocaleString();
+        document.getElementById('display-total').innerText = "Rp " + totalHarga.toLocaleString();
 
-        function proses() {
+        function kirimSekarang() {
             const btn = document.getElementById('btn-kirim');
-            btn.disabled = true; btn.innerText = "Mengirim...";
+            const nama = localStorage.getItem("nama");
+            const hp = localStorage.getItem("hp");
+            const pesanan = keranjang.map(i => i.nama).join(", ");
 
-            const data = {
-                "type": "order",
-                "nama": localStorage.getItem("nama"),
-                "hp": localStorage.getItem("hp"),
-                "pesanan": keranjang.map(i => i.nama).join(", "),
-                "total": total
-            };
+            if (keranjang.length === 0) return alert("Keranjang kosong!");
 
-            // Kirim ke Google Sheet
-            fetch('https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec', {
-                method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
+            btn.disabled = true;
+            btn.innerText = "Mengirim ke Server...";
+
+            // URL Google Apps Script kamu
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
+
+            // Kirim Data ke Google Sheet (Sheet: Order)
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    "nama": nama,
+                    "hp": hp,
+                    "pesanan": pesanan,
+                    "total": totalHarga
+                })
             }).then(() => {
-                // SIMPAN KE RIWAYAT LOKAL
-                let riwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
-                riwayat.push({
-                    produk: data.pesanan,
-                    total: total,
-                    tanggal: new Date().toLocaleString('id-ID')
+                // TUGAS 2: SIMPAN KE RIWAYAT LOKAL (Agar muncul di riwayat.html)
+                let dataRiwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
+                dataRiwayat.push({
+                    produk: pesanan,
+                    total: totalHarga,
+                    tanggal: new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'})
                 });
-                localStorage.setItem("riwayat_pesanan", JSON.stringify(riwayat));
+                localStorage.setItem("riwayat_pesanan", JSON.stringify(dataRiwayat));
+
+                // Bersihkan Keranjang
                 localStorage.removeItem("keranjang");
-                
-                document.getElementById('bayar').style.display = 'none';
+
+                // Ganti Tampilan
+                document.getElementById('halaman-bayar').style.display = 'none';
                 document.getElementById('sukses').style.display = 'block';
+            }).catch(err => {
+                alert("Gagal terhubung ke server. Cek koneksi!");
+                btn.disabled = false;
+                btn.innerText = "COBA LAGI";
             });
         }
     </script>
