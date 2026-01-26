@@ -3,48 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gibran Store</title>
+    <title>Gibran Store - Status</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; text-align: center; }
+        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
+        .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; }
+        
+        /* Gaya Tulisan Maintenance */
+        .maintenance-msg { color: #ffc107; }
+        .maintenance-msg h1 { font-size: 20px; }
+        .maintenance-msg p { font-size: 14px; color: #888; }
+        
+        /* Form Login (Awalnya Sembunyi) */
+        #login-form { display: none; }
+        
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .logo { width: 80px; border-radius: 50%; margin-bottom: 10px; border: 2px solid #28a745; }
+        
+        /* Tombol Rahasia buat Gibran */
+        .admin-door { position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; opacity: 0.1; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <div class="box">
-        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" class="logo">
-        <h2>Gibran Store</h2>
-        <p style="font-size: 12px; color: #888;">Silakan Masuk</p>
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="number" id="hp" placeholder="Nomor WhatsApp">
-        <button id="btn-login" onclick="masuk()">MASUK</button>
+        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width: 70px; border-radius: 50%; border: 2px solid #ffc107; margin-bottom: 15px;">
+        
+        <div id="maintenance-view" class="maintenance-msg">
+            <h1>Satu Menit Lagi...</h1>
+            <p>Sistem Gibran Store sedang di-update agar belanja makin nyaman. Ditunggu ya!</p>
+            <div style="font-size: 10px; margin-top: 20px; color: #444;">Status: Maintenance Mode</div>
+        </div>
+
+        <div id="login-form">
+            <h2>Masuk Admin</h2>
+            <input type="text" id="nama" placeholder="Nama Admin">
+            <input type="number" id="hp" placeholder="Nomor HP">
+            <button onclick="masuk()">MASUK KE SISTEM</button>
+            <p style="font-size: 10px; color: #28a745; margin-top: 10px;">Akses Terbuka</p>
+        </div>
     </div>
 
+    <div class="admin-door" onclick="bukaAkses()"></div>
+
     <script>
+        function bukaAkses() {
+            // Kalau kamu klik pojok kanan bawah, maintenance hilang, login muncul
+            document.getElementById('maintenance-view').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+
         function masuk() {
             const nama = document.getElementById('nama').value;
             const hp = document.getElementById('hp').value;
-            const btn = document.getElementById('btn-login');
-
             if (nama && hp) {
-                btn.disabled = true; btn.innerText = "Loading...";
                 localStorage.setItem("nama", nama);
                 localStorage.setItem("hp", hp);
-
-                const URL = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
-                
-                // Kirim ke tab User
-                fetch(URL, {
-                    method: 'POST', mode: 'no-cors',
-                    body: JSON.stringify({ "type": "login", "nama": nama, "hp": hp })
-                }).then(() => {
-                    window.location.href = "dashboard.html";
-                }).catch(() => {
-                    window.location.href = "dashboard.html";
-                });
-            } else { alert("Isi data dulu!"); }
+                window.location.href = "dashboard.html";
+            }
         }
     </script>
 </body>
