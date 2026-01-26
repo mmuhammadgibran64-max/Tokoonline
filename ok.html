@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sukses</title>
+    <title>Sukses - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; padding: 50px 20px; }
-        .stars { font-size: 40px; margin: 20px 0; cursor: pointer; }
-        .star { color: #444; } .star.active { color: #ffc107; }
-        .btn { display: block; background: #28a745; color: white; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: bold; }
+        body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; padding: 60px 20px; }
+        .icon { font-size: 80px; color: #28a745; margin-bottom: 20px; }
+        .rating { font-size: 40px; margin: 25px 0; cursor: pointer; }
+        .star { color: #333; transition: 0.3s; }
+        .star.active { color: #ffc107; }
+        .btn { display: block; background: #28a745; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 30px; }
     </style>
 </head>
 <body>
-    <div style="font-size: 60px; color: #28a745;">✔️</div>
+    <div class="icon">✔️</div>
     <h1>Pesanan Terkirim!</h1>
-    <p>Terima kasih sudah order di Gibran Store.</p>
-    <div class="stars">
-        <span class="star" onclick="rate(1)">★</span><span class="star" onclick="rate(2)">★</span>
-        <span class="star" onclick="rate(3)">★</span><span class="star" onclick="rate(4)">★</span>
+    <p>Terima kasih sudah belanja di Gibran Store.<br>Pesanan kamu segera kami proses.</p>
+
+    <div class="rating">
+        <span class="star" onclick="rate(1)">★</span>
+        <span class="star" onclick="rate(2)">★</span>
+        <span class="star" onclick="rate(3)">★</span>
+        <span class="star" onclick="rate(4)">★</span>
         <span class="star" onclick="rate(5)">★</span>
     </div>
-    <a href="dashboard.html" class="btn">Kembali Belanja</a>
+
+    <a href="dashboard.html" class="btn">Kembali ke Beranda</a>
+
     <script>
         function rate(n) {
-            document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((s, i) => {
+                s.classList.toggle('active', i < n);
+            });
         }
     </script>
 </body>
-</html>   
-
+</html>
