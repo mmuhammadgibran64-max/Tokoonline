@@ -3,81 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Maintenance</title>
+    <title>Gibran Store</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-        .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; }
-        #view-login { display: none; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .btn-secret { background: transparent; border: none; color: #222; font-size: 10px; margin-top: 20px; cursor: pointer; }
+        body { font-family: sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        /* SEMUA LAYAR DISEMBUNYIKAN DULU */
+        #update-layer, #login-layer { display: none; text-align: center; width: 85%; max-width: 350px; }
+
+        /* TAMPILAN DOWNLOAD */
+        .logo { width: 100px; border-radius: 20px; border: 2px solid #ff9800; margin-bottom: 20px; }
+        .bar-cont { width: 100%; background: #222; height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: #ff9800; transition: 0.1s; }
+        .btn-up { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
+
+        /* TAMPILAN LOGIN */
+        .box-login { background: url('https://i.imgur.com/uR1k0jS.png') center/cover; padding: 40px 20px; border-radius: 30px; color: #000; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; }
+        .btn-masuk { width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <div id="view-maint">
-            <h1 style="color:#ffc107; font-size: 22px;">Satu Menit Lagi...</h1>
-            <p style="color:#888; font-size: 14px;">Gibran Store sedang update sistem.</p>
-            <button class="btn-secret" onclick="buka()">. . .</button>
-        </div>
 
-        <div id="view-login">
-            <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width:70px; border-radius:50%; border:2px solid #28a745; margin-bottom:15px;">
-            <h2 style="margin:0">Masuk Admin</h2>
-            <input type="text" id="nama" placeholder="Nama Anda">
+    <div id="update-layer">
+        <img src="https://i.imgur.com/uR1k0jS.png" class="logo">
+        <h2 id="up-title" style="color:#ff9800">MAINTENANCE</h2>
+        <p id="up-msg" style="color:#888">Sistem sedang menyiapkan produk baru untuk besok.</p>
+        
+        <button id="btnUpdate" class="btn-up" style="display:none" onclick="startDownload()">UNDUH DATA TERBARU</button>
+        
+        <div id="progCont" style="display:none">
+            <div class="bar-cont"><div id="bar" class="bar-fill"></div></div>
+            <p id="status" style="font-size:12px; margin-top:10px; color:#555"></p>
+        </div>
+    </div>
+
+    <div id="login-layer">
+        <div class="box-login">
+            <h2 style="margin-top:0">LOGIN ADMIN</h2>
+            <input type="text" id="nama" placeholder="Nama Lengkap">
             <input type="number" id="hp" placeholder="Nomor WhatsApp">
-            <button onclick="masuk()">MASUK SEKARANG</button>
+            <button class="btn-masuk" onclick="masuk()">MASUK SEKARANG</button>
         </div>
     </div>
 
     <script>
-        function buka() { document.getElementById('view-maint').style.display='none'; document.getElementById('view-login').style.display='block'; }
+        // 1. CEK JADWAL
+        function cekSistem() {
+            const sekarang = new Date();
+            const jadwalBuka = new Date('2026-01-27T08:00:00'); // Besok jam 8 pagi
+            
+            document.getElementById('update-layer').style.display = 'block';
+
+            if (sekarang >= jadwalBuka) {
+                document.getElementById('up-title').innerText = "UPDATE TERSEDIA";
+                document.getElementById('up-msg').innerText = "Silakan unduh data produk terbaru (v1.2.9).";
+                document.getElementById('btnUpdate').style.display = 'block';
+            }
+        }
+
+        // 2. PROSES DOWNLOAD DATA BENERAN
+        function startDownload() {
+            document.getElementById('btnUpdate').style.display = 'none';
+            document.getElementById('progCont').style.display = 'block';
+            
+            let p = 0;
+            let bar = document.getElementById('bar');
+            let stat = document.getElementById('status');
+            const teks = ["Checking server...", "Downloading product list...", "Fetching prices...", "Cleaning cache...", "Done!"];
+
+            let intv = setInterval(() => {
+                p += 2;
+                bar.style.width = p + "%";
+                stat.innerText = teks[Math.floor(p/25)] || "Completing...";
+
+                if(p >= 100) {
+                    clearInterval(intv);
+                    // DOWNLOAD SELESAI -> PINDAH KE LOGIN
+                    document.getElementById('update-layer').style.display = 'none';
+                    document.getElementById('login-layer').style.display = 'block';
+                }
+            }, 50);
+        }
+
+        // 3. FUNGSI MASUK
         function masuk() {
             const n = document.getElementById('nama').value;
             const h = document.getElementById('hp').value;
             if(n && h) {
-                localStorage.setItem("nama", n); localStorage.setItem("hp", h);
-                fetch('https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec', {
-                    method: 'POST', mode: 'no-cors', body: JSON.stringify({"type":"login", "nama":n, "hp":h})
-                }).then(() => { window.location.href="dashboard.html"; });
+                localStorage.setItem("nama", n);
+                localStorage.setItem("hp", h);
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Isi nama dan HP dulu, Bran!");
             }
         }
+
+        cekSistem();
     </script>
 </body>
-<div id="loading-screen" style="position:fixed; top:0; left:0; width:100%; height:100vh; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:999999; transition:0.8s;">
-        <div style="position:relative;">
-            <div style="position:absolute; width:150px; height:150px; background:rgba(255,152,0,0.2); filter:blur(30px); border-radius:50%; top:-15px; left:-15px;"></div>
-            <img src="https://i.imgur.com/uR1k0jS.png" style="width:120px; border-radius:25px; border:2px solid #ff9800; position:relative; animation: bounce 2s infinite;">
-        </div>
-        <h2 style="color:#ff9800; font-family:sans-serif; letter-spacing:3px; margin-top:25px; font-size:20px;">GIBRAN STORE</h2>
-        <div style="width:100px; height:3px; background:#222; border-radius:10px; margin-top:10px; overflow:hidden;">
-            <div id="bar" style="width:0%; height:100%; background:#ff9800; transition:0.1s;"></div>
-        </div>
-    </div>
-
-    <style>
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-    </style>
-
-    <script>
-        // Animasi Progress Bar & Menghilangkan Splash
-        let width = 0;
-        let loader = setInterval(() => {
-            if(width >= 100) {
-                clearInterval(loader);
-                document.getElementById('loading-screen').style.opacity = '0';
-                setTimeout(() => { 
-                    document.getElementById('loading-screen').style.display = 'none'; 
-                }, 800);
-            } else {
-                width += 2; // Kecepatan loading
-                document.getElementById('bar').style.width = width + '%';
-            }
-        }, 30);
-    </script>
 </html>
-
-
