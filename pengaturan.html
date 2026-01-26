@@ -3,127 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan - Gibran Store</title>
+    <title>Setting - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; padding-bottom: 100px; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .logo-profile { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #28a745; margin-bottom: 10px; }
-        
-        .section-title { font-size: 14px; color: #888; margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .box { background: #1e1e1e; border-radius: 15px; border: 1px solid #333; overflow: hidden; margin-bottom: 15px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; }
-        .item:last-child { border: none; }
-        .item-info { display: flex; flex-direction: column; text-align: left; }
-        .label { font-size: 14px; font-weight: bold; color: #eee; }
-        .sub { font-size: 11px; color: #777; margin-top: 2px; }
-        .value { color: #28a745; font-size: 13px; font-weight: bold; }
-        .locked { color: #555; font-size: 13px; }
-
-        /* Toggle Switch untuk Pencahayaan */
-        .switch { width: 40px; height: 20px; background: #333; border-radius: 20px; position: relative; cursor: pointer; }
-        .switch::before { content: ''; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .active-light::before { left: 22px; background: #28a745; }
-
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; padding-bottom: 90px; }
+        .box { background: #1e1e1e; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; overflow: hidden; }
+        .item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #222; font-size: 14px; }
+        .label { color: #888; font-size: 12px; }
+        .title { font-weight: bold; margin-bottom: 15px; font-size: 13px; color: #28a745; text-transform: uppercase; }
+        .locked { color: #555; font-size: 12px; }
         .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
-        .btn-out { width: 100%; padding: 15px; background: #331111; color: #ff4444; border: 1px solid #442222; border-radius: 12px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" class="logo-profile">
-        <h2 id="disp-nama" style="margin:0">Gibran Store</h2>
-        <p style="font-size: 11px; color: #888;">Aplikasi v.1.2.8</p>
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width:70px; border-radius:50%; border:2px solid #28a745;">
+        <h3>Gibran Store</h3>
+        <p style="font-size:10px; color:#555">Versi Aplikasi 1.2.8</p>
     </div>
 
-    <div class="section-title">Identitas Toko</div>
+    <div class="title">Identitas & Jadwal</div>
     <div class="box">
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Nama & Logo Toko</span>
-                <span class="sub">Identitas visual brand Anda</span>
-            </div>
-            <span class="value">Gibran Store</span>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Deskripsi Toko</span>
-                <span class="sub">Penjelasan singkat produk Anda</span>
-            </div>
-            <span class="value">Edit ✍️</span>
-        </div>
+        <div class="item"><span>Nama Toko</span><span style="color:#28a745">Gibran Store</span></div>
+        <div class="item"><span>Jam Buka</span><span>08:00</span></div>
+        <div class="item"><span>Jam Tutup</span><span>20:00</span></div>
+        <div class="item"><span>Jadwal Update</span><span>Senin - Kamis</span></div>
     </div>
 
-    <div class="section-title">Operasional & Update</div>
+    <div class="title">Sistem & Ekspedisi</div>
     <div class="box">
-        <div class="item">
-            <div class="item-info"><span class="label">Jam Buka</span></div>
-            <span class="value">08:00</span>
-        </div>
-        <div class="item">
-            <div class="item-info"><span class="label">Jam Tutup</span></div>
-            <span class="value">20:00</span>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Jadwal Update</span>
-                <span class="sub">Hari pemeliharaan sistem</span>
-            </div>
-            <span class="value">Senin - Kamis</span>
-        </div>
+        <div class="item"><span>Pencahayaan</span><span>Gelap/Terang</span></div>
+        <div class="item"><span>Jasa Ekspedisi</span><span>JNE, J&T, SiCepat</span></div>
+        <div class="item"><span>Template Chat</span><span>Aktif</span></div>
     </div>
 
-    <div class="section-title">Sistem & Tampilan</div>
-    <div class="box">
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Pencahayaan</span>
-                <span class="sub">Mode Gelap / Terang</span>
-            </div>
-            <div class="switch" id="theme-toggle"></div>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Template Chat</span>
-                <span class="sub">Auto-reply FAQ pelanggan</span>
-            </div>
-            <span class="value">Aktif</span>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <span class="label">Jasa Ekspedisi</span>
-                <span class="sub">JNE, J&T, SiCepat, GoSend</span>
-            </div>
-            <span class="value">Pilih</span>
-        </div>
+    <div class="title">Fitur Masa Depan (🔒)</div>
+    <div class="box" style="opacity:0.5">
+        <div class="item"><span>E-Wallet (QRIS/Dana)</span><span class="locked">🔒 Terkunci</span></div>
+        <div class="item"><span>Manajemen Stok</span><span class="locked">🔒 Terkunci</span></div>
+        <div class="item"><span>Berat & Dimensi</span><span class="locked">🔒 Terkunci</span></div>
+        <div class="item"><span>Admin/Moderator</span><span class="locked">🔒 Terkunci</span></div>
     </div>
 
-    <div class="section-title">Fitur Lanjutan (🔒 Terkunci)</div>
-    <div class="box" style="opacity: 0.6;">
-        <div class="item">
-            <div class="item-info"><span class="label">E-Wallet (QRIS/Dana)</span></div>
-            <span class="locked">🔒 Terkunci</span>
-        </div>
-        <div class="item">
-            <div class="item-info"><span class="label">Berat & Dimensi</span></div>
-            <span class="locked">🔒 Terkunci</span>
-        </div>
-        <div class="item">
-            <div class="item-info"><span class="label">Manajemen Stok</span></div>
-            <span class="locked">🔒 Terkunci</span>
-        </div>
-        <div class="item">
-            <div class="item-info"><span class="label">Admin / Moderator</span></div>
-            <span class="locked">🔒 Terkunci</span>
-        </div>
-        <div class="item">
-            <div class="item-info"><span class="label">Kebijakan Refund</span></div>
-            <span class="locked">🔒 Terkunci</span>
-        </div>
-    </div>
-
-    <button class="btn-out" onclick="location.href='index.html'">LOGOUT AKUN</button>
+    <button onclick="localStorage.clear(); window.location.href='index.html'" style="width:100%; padding:15px; background:#300; color:#f55; border:1px solid #500; border-radius:10px; font-weight:bold;">LOGOUT</button>
 
     <div class="nav">
         <a href="dashboard.html">🏠<br>Menu</a>
@@ -131,20 +53,5 @@
         <a href="https://wa.me/6285123332018">💬<br>Chat</a>
         <a href="pengaturan.html" style="color:#28a745">⚙️<br>Setting</a>
     </div>
-
-    <script>
-        // Script untuk animasi switch lampu
-        const toggle = document.getElementById('theme-toggle');
-        toggle.onclick = function() {
-            this.classList.toggle('active-light');
-            if(this.classList.contains('active-light')) {
-                alert("Mode Terang diaktifkan!");
-            }
-        };
-
-        // Ambil nama user dari memori
-        const n = localStorage.getItem("nama") || "Admin Gibran";
-        document.getElementById('disp-nama').innerText = n;
-    </script>
 </body>
 </html>
