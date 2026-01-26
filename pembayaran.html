@@ -3,113 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran - Gibran Store</title>
+    <title>Pembayaran</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; margin: 0; text-align: center; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; text-align: left; }
-        .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #bbb; }
-        .total { font-size: 26px; color: #28a745; text-align: center; font-weight: bold; border-top: 1px dashed #444; padding-top: 15px; }
-        .btn-order { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .btn-order:disabled { background: #444; opacity: 0.7; }
-        
-        /* Bagian ini awalnya sembunyi, muncul kalau sudah sukses */
-        #halaman-sukses { display: none; padding-top: 50px; }
-        .ceklist { font-size: 80px; color: #28a745; margin-bottom: 20px; }
-        .star { font-size: 40px; color: #333; cursor: pointer; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: left; margin-bottom: 20px; }
+        .btn-gas { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        #sukses { display: none; }
+        .star { font-size: 30px; color: #333; cursor: pointer; }
         .star.active { color: #ffc107; }
-        .btn-balik { display: block; background: #222; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; margin-top: 30px; border: 1px solid #444; }
     </style>
 </head>
 <body>
-
-    <div id="halaman-bayar">
+    <div id="bayar">
         <div class="card">
-            <h2 style="color: #28a745; margin-top: 0; font-size: 18px;">📦 Detail Pesanan</h2>
-            <div id="list-belanja"></div>
-            <div class="total" id="txt-total">Rp 0</div>
+            <h3 style="color:#28a745">Ringkasan Order</h3>
+            <div id="item"></div>
+            <hr style="border:0; border-top:1px dashed #444">
+            <h2 id="total"></h2>
         </div>
-
-        <div class="card">
-            <h3 style="margin-top:0; font-size: 16px;">💳 Metode Pembayaran</h3>
-            <div style="padding: 12px; border-radius: 10px; border: 1px solid #28a745; background: rgba(40,167,69,0.1); font-weight: bold;">
-                💵 Bayar di Tempat (COD)
-            </div>
-        </div>
-
-        <button class="btn-order" id="btn-gas" onclick="proses()">KONFIRMASI SEKARANG</button>
+        <button class="btn-gas" id="btn" onclick="kirim()">KONFIRMASI PESANAN</button>
     </div>
 
-    <div id="halaman-sukses">
-        <div class="ceklist">✔️</div>
-        <h1>Pesanan Terkirim!</h1>
-        <p>Terima kasih Bran, pesananmu sudah masuk ke sistem Gibran Store.</p>
-        
-        <div style="margin: 25px 0;">
-            <p style="font-size: 12px; color: #888;">Beri rating kami:</p>
-            <span class="star" onclick="rate(1)">★</span>
-            <span class="star" onclick="rate(2)">★</span>
-            <span class="star" onclick="rate(3)">★</span>
-            <span class="star" onclick="rate(4)">★</span>
+    <div id="sukses">
+        <div style="font-size: 60px; color: #28a745;">✔️</div>
+        <h1>Berhasil!</h1>
+        <p>Pesanan terkirim ke Google Sheet Gibran Store.</p>
+        <div style="margin: 20px 0;">
+            <span class="star" onclick="rate(1)">★</span><span class="star" onclick="rate(2)">★</span>
+            <span class="star" onclick="rate(3)">★</span><span class="star" onclick="rate(4)">★</span>
             <span class="star" onclick="rate(5)">★</span>
         </div>
-
-        <a href="dashboard.html" class="btn-balik">Kembali ke Dashboard</a>
+        <a href="dashboard.html" style="color:#28a745; text-decoration:none; font-weight:bold;">Kembali ke Menu</a>
     </div>
 
     <script>
-        // 1. Ambil data dari dashboard
-        const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
-        const listDiv = document.getElementById('list-belanja');
-        let total = 0;
-
-        if(keranjang.length === 0) {
-            listDiv.innerHTML = "<p>Keranjang kosong!</p>";
-            document.getElementById('btn-gas').disabled = true;
-        }
-
-        keranjang.forEach(item => {
-            total += item.harga;
-            listDiv.innerHTML += `<div class="item-row"><span>${item.nama}</span><span>Rp ${item.harga.toLocaleString('id-ID')}</span></div>`;
+        const cart = JSON.parse(localStorage.getItem("keranjang")) || [];
+        let t = 0;
+        cart.forEach(i => {
+            t += i.harga;
+            document.getElementById('item').innerHTML += `<p>${i.nama} <span style="float:right">Rp ${i.harga.toLocaleString()}</span></p>`;
         });
-        document.getElementById('txt-total').innerText = "Rp " + total.toLocaleString('id-ID');
+        document.getElementById('total').innerText = "Total: Rp " + t.toLocaleString();
 
-        // 2. Fungsi kirim data
-        function proses() {
-            const btn = document.getElementById('btn-gas');
-            btn.disabled = true; 
-            btn.innerText = "Sabar, lagi ngirim...";
-
-            const payload = {
+        function kirim() {
+            const btn = document.getElementById('btn');
+            btn.disabled = true; btn.innerText = "Mengirim...";
+            const data = {
                 "type": "order",
-                "nama": localStorage.getItem("nama") || "Pelanggan Gibran",
-                "pesanan": keranjang.map(i => i.nama).join(", "),
-                "total": total,
-                "metode": "CASH"
+                "nama": localStorage.getItem("nama"),
+                "hp": localStorage.getItem("hp"),
+                "pesanan": cart.map(i => i.nama).join(", "),
+                "total": t
             };
-
-            // LINK SCRIPT KAMU
-            const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
-
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-            .then(() => {
-                // Simpan ke riwayat lokal biar muncul di halaman riwayat
+            fetch('https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec', {
+                method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
+            }).then(() => {
                 let r = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
-                r.push({ produk: payload.pesanan, total: total, tanggal: new Date().toLocaleString('id-ID') });
+                r.push({ produk: data.pesanan, total: t, tanggal: new Date().toLocaleString() });
                 localStorage.setItem("riwayat_pesanan", JSON.stringify(r));
-
-                localStorage.removeItem("keranjang"); // Kosongkan keranjang
-
-                // GANTI TAMPILAN KE SUKSES (Trik agar tidak File Not Found)
-                document.getElementById('halaman-bayar').style.display = 'none';
-                document.getElementById('halaman-sukses').style.display = 'block';
-            })
-            .catch(err => {
-                alert("Gagal mengirim, cek internet!");
-                btn.disabled = false;
-                btn.innerText = "KONFIRMASI SEKARANG";
+                localStorage.removeItem("keranjang");
+                document.getElementById('bayar').style.display = 'none';
+                document.getElementById('sukses').style.display = 'block';
             });
         }
-
         function rate(n) {
             document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
         }
