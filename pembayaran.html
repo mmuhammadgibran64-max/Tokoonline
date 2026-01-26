@@ -7,22 +7,18 @@
     <style>
         body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; margin: 0; }
         .header { text-align: center; color: #ff9800; margin-bottom: 20px; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 20px; border: 1px solid #333; }
         .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
         .total-row { border-top: 1px dashed #444; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #ff9800; }
-        .btn-bayar { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-bayar { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; }
         .btn-bayar:disabled { background: #555; color: #888; }
         #sukses { display: none; text-align: center; margin-top: 50px; }
-        .back-btn { display: inline-block; margin-top: 20px; color: #ff9800; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="halaman-bayar">
-        <div class="header">
-            <h2>Konfirmasi Pesanan</h2>
-        </div>
-
+        <div class="header"><h2>Konfirmasi Pesanan</h2></div>
         <div class="card">
             <div id="rincian-produk"></div>
             <div class="total-row">
@@ -30,16 +26,14 @@
                 <span id="display-total">Rp 0</span>
             </div>
         </div>
-
-        <button class="btn-bayar" id="btn-kirim" onclick="kirimSekarang()">BELI & SIMPAN RIWAYAT</button>
-        <center><a href="dashboard.html" class="back-btn">Kembali ke Menu</a></center>
+        <button class="btn-bayar" id="btn-kirim" onclick="kirimSekarang()">BELI & SIMPAN DATA</button>
     </div>
 
     <div id="sukses">
         <div style="font-size: 80px;">✅</div>
         <h2 style="color: #ff9800;">Pesanan Berhasil!</h2>
-        <p>Data sudah masuk ke Admin dan Riwayat Saya.</p>
-        <a href="riwayat.html" class="btn-bayar" style="display:block; text-decoration:none;">Cek Riwayat Saya</a>
+        <p>Data sudah masuk ke Admin dan Riwayat.</p>
+        <a href="riwayat.html" style="color:#ff9800; text-decoration:none; font-weight:bold;">Lihat Riwayat Saya</a>
     </div>
 
     <script>
@@ -47,14 +41,9 @@
         const rincianDiv = document.getElementById('rincian-produk');
         let totalHarga = 0;
 
-        // Tampilkan isi keranjang
         keranjang.forEach(item => {
             totalHarga += item.harga;
-            rincianDiv.innerHTML += `
-                <div class="item-row">
-                    <span>${item.nama}</span>
-                    <span>Rp ${item.harga.toLocaleString()}</span>
-                </div>`;
+            rincianDiv.innerHTML += `<div class="item-row"><span>${item.nama}</span><span>Rp ${item.harga.toLocaleString()}</span></div>`;
         });
         document.getElementById('display-total').innerText = "Rp " + totalHarga.toLocaleString();
 
@@ -64,15 +53,12 @@
             const hp = localStorage.getItem("hp");
             const pesanan = keranjang.map(i => i.nama).join(", ");
 
-            if (keranjang.length === 0) return alert("Keranjang kosong!");
-
             btn.disabled = true;
-            btn.innerText = "Mengirim ke Server...";
+            btn.innerText = "Mengirim...";
 
-            // URL Google Apps Script kamu
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
+            // LINK BARU KAMU SUDAH DIPASANG DI SINI
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby81ohfVhU0XQ5DVrMS5eCVJOnis8D4zXntPR5Hn33DKy1oSEekwwfAdnJYxeF1so7O5A/exec';
 
-            // Kirim Data ke Google Sheet (Sheet: Order)
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -83,25 +69,21 @@
                     "total": totalHarga
                 })
             }).then(() => {
-                // TUGAS 2: SIMPAN KE RIWAYAT LOKAL (Agar muncul di riwayat.html)
+                // Simpan ke Riwayat HP
                 let dataRiwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
                 dataRiwayat.push({
                     produk: pesanan,
                     total: totalHarga,
-                    tanggal: new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'})
+                    tanggal: new Date().toLocaleString('id-ID')
                 });
                 localStorage.setItem("riwayat_pesanan", JSON.stringify(dataRiwayat));
 
-                // Bersihkan Keranjang
                 localStorage.removeItem("keranjang");
-
-                // Ganti Tampilan
                 document.getElementById('halaman-bayar').style.display = 'none';
                 document.getElementById('sukses').style.display = 'block';
             }).catch(err => {
-                alert("Gagal terhubung ke server. Cek koneksi!");
+                alert("Error! Cek koneksi.");
                 btn.disabled = false;
-                btn.innerText = "COBA LAGI";
             });
         }
     </script>
