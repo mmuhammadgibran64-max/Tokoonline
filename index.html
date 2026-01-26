@@ -3,53 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Status</title>
+    <title>Gibran Store - Maintenance</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
         .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; }
         
-        /* Gaya Tulisan Maintenance */
-        .maintenance-msg { color: #ffc107; }
-        .maintenance-msg h1 { font-size: 20px; }
-        .maintenance-msg p { font-size: 14px; color: #888; }
+        /* Tampilan Utama Maintenance */
+        #view-maintenance { display: block; }
+        .icon-warn { font-size: 50px; color: #ffc107; margin-bottom: 15px; }
         
-        /* Form Login (Awalnya Sembunyi) */
-        #login-form { display: none; }
-        
+        /* Tombol Rahasia Gibran (Dibuat samar agar user tidak curiga) */
+        .btn-rahasia {
+            margin-top: 20px;
+            background: transparent;
+            color: #333; /* Warna gelap agar hampir tidak terlihat di background hitam */
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        /* Tampilan Login (Awalnya Sembunyi) */
+        #view-login { display: none; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        
-        /* Tombol Rahasia buat Gibran */
-        .admin-door { position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; opacity: 0.1; cursor: pointer; }
+        button.btn-masuk { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="box">
-        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width: 70px; border-radius: 50%; border: 2px solid #ffc107; margin-bottom: 15px;">
-        
-        <div id="maintenance-view" class="maintenance-msg">
-            <h1>Satu Menit Lagi...</h1>
-            <p>Sistem Gibran Store sedang di-update agar belanja makin nyaman. Ditunggu ya!</p>
-            <div style="font-size: 10px; margin-top: 20px; color: #444;">Status: Maintenance Mode</div>
+        <div id="view-maintenance">
+            <div class="icon-warn">⚠️</div>
+            <h1 style="font-size: 20px; margin: 0;">Satu Menit Lagi...</h1>
+            <p style="color: #888; font-size: 14px; line-height: 1.5;">Gibran Store sedang update sistem.<br>Sabar ya, lagi dibetulin!</p>
+            
+            <button class="btn-rahasia" onclick="bukaPintu()">. . .</button>
         </div>
 
-        <div id="login-form">
-            <h2>Masuk Admin</h2>
-            <input type="text" id="nama" placeholder="Nama Admin">
-            <input type="number" id="hp" placeholder="Nomor HP">
-            <button onclick="masuk()">MASUK KE SISTEM</button>
-            <p style="font-size: 10px; color: #28a745; margin-top: 10px;">Akses Terbuka</p>
+        <div id="view-login">
+            <h2 style="color: #28a745;">Mode Admin</h2>
+            <p style="font-size: 12px; color: #888;">Silakan masuk untuk mengedit/ngetes</p>
+            <input type="text" id="nama" placeholder="Nama Kamu">
+            <input type="number" id="hp" placeholder="Nomor WA">
+            <button class="btn-masuk" onclick="masuk()">MASUK KE DASHBOARD</button>
         </div>
     </div>
 
-    <div class="admin-door" onclick="bukaAkses()"></div>
-
     <script>
-        function bukaAkses() {
-            // Kalau kamu klik pojok kanan bawah, maintenance hilang, login muncul
-            document.getElementById('maintenance-view').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
+        // Fungsi untuk memunculkan form login saat tombol rahasia diklik
+        function bukaPintu() {
+            document.getElementById('view-maintenance').style.display = 'none';
+            document.getElementById('view-login').style.display = 'block';
         }
 
         function masuk() {
@@ -59,6 +63,8 @@
                 localStorage.setItem("nama", nama);
                 localStorage.setItem("hp", hp);
                 window.location.href = "dashboard.html";
+            } else {
+                alert("Isi nama dulu Bran!");
             }
         }
     </script>
