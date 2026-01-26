@@ -5,38 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembayaran - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; margin: 0; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; margin: 0; text-align: center; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; text-align: left; }
         .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #bbb; }
-        .total { font-size: 26px; color: #28a745; text-align: center; font-weight: bold; border-top: 1px dashed #444; padding-top: 15px; margin-top: 10px; }
-        .btn-order { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn-order:disabled { background: #444; cursor: not-allowed; }
-        .metode { padding: 15px; border-radius: 12px; border: 2px solid #28a745; background: rgba(40, 167, 69, 0.1); }
+        .total { font-size: 26px; color: #28a745; text-align: center; font-weight: bold; border-top: 1px dashed #444; padding-top: 15px; }
+        .btn-order { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-order:disabled { background: #444; }
+        
+        /* Tampilan Sukses (Awalnya Sembunyi) */
+        #halaman-sukses { display: none; padding-top: 50px; }
+        .icon-cek { font-size: 80px; color: #28a745; margin-bottom: 20px; }
+        .star { font-size: 40px; color: #333; cursor: pointer; }
+        .star.active { color: #ffc107; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2 style="color: #28a745; margin-top: 0;">🛒 Ringkasan</h2>
-        <div id="list-belanja"></div>
-        <div class="total" id="txt-total">Rp 0</div>
-    </div>
-
-    <div class="card">
-        <h3>💳 Pembayaran</h3>
-        <div class="metode">
-            <span>💵 Tunai (Bayar di Tempat)</span>
+    <div id="halaman-bayar">
+        <div class="card">
+            <h2 style="color: #28a745; margin-top: 0;">🛒 Ringkasan</h2>
+            <div id="list-belanja"></div>
+            <div class="total" id="txt-total">Rp 0</div>
         </div>
+
+        <div class="card">
+            <h3>💳 Pembayaran</h3>
+            <div style="padding: 15px; border-radius: 12px; border: 2px solid #28a745; background: rgba(40,167,69,0.1);">
+                <span>💵 Tunai (Bayar di Tempat)</span>
+            </div>
+        </div>
+
+        <button class="btn-order" id="btn-gas" onclick="proses()">KONFIRMASI ORDER</button>
     </div>
 
-    <button class="btn-order" id="btn-gas" onclick="proses()">KONFIRMASI ORDER</button>
+    <div id="halaman-sukses">
+        <div class="icon-cek">✔️</div>
+        <h1>Pesanan Terkirim!</h1>
+        <p>Terima kasih Bran, pesananmu sedang diproses.</p>
+        
+        <div style="margin: 25px 0;">
+            <span class="star" onclick="rate(1)">★</span>
+            <span class="star" onclick="rate(2)">★</span>
+            <span class="star" onclick="rate(3)">★</span>
+            <span class="star" onclick="rate(4)">★</span>
+            <span class="star" onclick="rate(5)">★</span>
+        </div>
+
+        <a href="dashboard.html" style="display: block; background: #28a745; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: bold;">Kembali ke Beranda</a>
+    </div>
 
     <script>
         const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
         const listDiv = document.getElementById('list-belanja');
         let total = 0;
 
-        // Tampilkan daftar belanja
         keranjang.forEach(item => {
             total += item.harga;
             listDiv.innerHTML += `<div class="item-row"><span>${item.nama}</span><span>Rp ${item.harga.toLocaleString('id-ID')}</span></div>`;
@@ -45,44 +67,35 @@
 
         function proses() {
             const btn = document.getElementById('btn-gas');
-            btn.disabled = true;
-            btn.innerText = "Mengirim...";
+            btn.disabled = true; btn.innerText = "Mengirim...";
 
             const payload = {
                 "type": "order",
                 "nama": localStorage.getItem("nama") || "Pelanggan",
-                "hp": localStorage.getItem("hp") || "-",
-                "alamat": localStorage.getItem("alamat") || "-",
                 "pesanan": keranjang.map(i => i.nama).join(", "),
                 "total": total,
                 "metode": "CASH"
             };
 
-            // LINK SCRIPT TERBARU
             const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
 
-            fetch(URL_SCRIPT, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(payload)
-            }).then(() => {
-                // Simpan ke riwayat lokal
-                let riwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
-                riwayat.push({
-                    produk: payload.pesanan,
-                    total: total,
-                    tanggal: new Date().toLocaleString('id-ID')
-                });
-                localStorage.setItem("riwayat_pesanan", JSON.stringify(riwayat));
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+            .then(() => {
+                // Simpan ke riwayat
+                let r = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
+                r.push({ produk: payload.pesanan, total: total, tanggal: new Date().toLocaleString('id-ID') });
+                localStorage.setItem("riwayat_pesanan", JSON.stringify(r));
 
-                // Bersihkan keranjang dan pindah ke oke.html
                 localStorage.removeItem("keranjang");
-                window.location.href = 'oke.html';
-            }).catch(e => {
-                alert("Gagal kirim!");
-                btn.disabled = false;
-                btn.innerText = "KONFIRMASI ORDER";
+
+                // GANTI TAMPILAN TANPA PINDAH FILE
+                document.getElementById('halaman-bayar').style.display = 'none';
+                document.getElementById('halaman-sukses').style.display = 'block';
             });
+        }
+
+        function rate(n) {
+            document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
         }
     </script>
 </body>
