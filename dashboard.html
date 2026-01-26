@@ -7,46 +7,39 @@
     <style>
         body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 80px; }
         .header { background: #1e1e1e; padding: 20px; text-align: center; border-bottom: 1px solid #333; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; }
-        .price { color: #28a745; font-weight: bold; margin: 5px 0; }
-        .btn { background: #28a745; color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; cursor: pointer; font-size: 12px; }
+        .price { color: #28a745; font-weight: bold; margin: 8px 0; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
         .nav { position: fixed; bottom: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
+        .nav a.active { color: #28a745; }
     </style>
 </head>
 <body>
-    <div class="header"><b id="user-display">Halo!</b><br>Mau belanja apa hari ini?</div>
+    <div class="header"><b>Gibran Store</b></div>
     <div class="grid" id="menu"></div>
 
     <div class="nav">
-        <a href="dashboard.html" style="color:#28a745">🏠<br>Menu</a>
+        <a href="dashboard.html" class="active">🏠<br>Menu</a>
         <a href="riwayat.html">📜<br>Riwayat</a>
         <a href="https://wa.me/6285123332018">💬<br>Chat</a>
+        <a href="pengaturan.html">⚙️<br>Setting</a>
     </div>
 
     <script>
-        document.getElementById('user-display').innerText = "Halo, " + (localStorage.getItem("nama") || "Pelanggan");
-        const items = [
-            { n: "Peye Kacang (K)", h: 5000 }, { n: "Peye Kacang (B)", h: 10000 },
-            { n: "Slondok", h: 20000 }, { n: "Opak", h: 20000 },
-            { n: "Kacang", h: 2000 }, { n: "Kripik Pedes", h: 15000 },
-            { n: "Kue Sus Kering", h: 15000 }, { n: "Reginang (isi 3)", h: 5000 },
-            { n: "Aqua Galon", h: 22000 }
+        const p = [
+            {n:"Peye Kacang (K)", h:5000}, {n:"Peye Kacang (B)", h:10000},
+            {n:"Slondok", h:20000}, {n:"Opak", h:20000},
+            {n:"Kacang", h:2000}, {n:"Kripik Pedes", h:15000},
+            {n:"Kue Sus Kering", h:15000}, {n:"Reginang (isi 3)", h:5000},
+            {n:"Aqua Galon", h:22000}
         ];
         const container = document.getElementById('menu');
-        items.forEach(p => {
-            container.innerHTML += `
-                <div class="card">
-                    <div style="font-size:13px; height:30px">${p.n}</div>
-                    <div class="price">Rp ${p.h.toLocaleString()}</div>
-                    <button class="btn" onclick="beli('${p.n}', ${p.h})">🛒 Tambah</button>
-                </div>`;
+        p.forEach(x => {
+            container.innerHTML += `<div class="card"><div style="font-size:13px;height:35px">${x.n}</div><div class="price">Rp ${x.h.toLocaleString()}</div><button class="btn-add" onclick="order('${x.n}',${x.h})">Tambah</button></div>`;
         });
-        function beli(n, h) {
-            localStorage.setItem("keranjang", JSON.stringify([{ nama: n, harga: h }]));
-            window.location.href = "pembayaran.html";
-        }
+        function order(n,h) { localStorage.setItem("keranjang", JSON.stringify([{nama:n, harga:h}])); window.location.href="pembayaran.html"; }
     </script>
 </body>
 </html>
