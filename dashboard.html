@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN STORE - Menu</title>
+    <title>GIBRAN STORE - Menu Lengkap</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 80px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 80px; }
         .header { background: #1e1e1e; padding: 25px; text-align: center; border-bottom: 1px solid #333; }
         .logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid #28a745; margin-bottom: 10px; }
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; }
-        .price { color: #28a745; font-weight: bold; margin: 5px 0; }
-        .btn-add { background: #28a745; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-name { font-size: 14px; font-weight: bold; margin-bottom: 5px; height: 35px; overflow: hidden; }
+        .price { color: #28a745; font-weight: bold; font-size: 15px; margin-bottom: 10px; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; font-size: 12px; }
+        
+        .nav { position: fixed; bottom: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
         .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
         .nav a.active { color: #28a745; }
     </style>
 </head>
 <body>
+
     <div class="header">
         <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" class="logo">
         <div style="font-weight: bold;">GIBRAN STORE</div>
     </div>
 
-    <div class="product-grid" id="menu"></div>
+    <div class="product-grid" id="menu-container">
+        </div>
 
     <div class="nav">
         <a href="dashboard.html" class="active">🏠<br>Menu</a>
@@ -33,24 +37,37 @@
     </div>
 
     <script>
-        const menu = [
+        // DAFTAR PRODUK KAMU
+        const products = [
             { n: "Peye Kacang (Kecil)", h: 5000 },
             { n: "Peye Kacang (Besar)", h: 10000 },
             { n: "Slondok", h: 20000 },
+            { n: "Opak", h: 20000 },
+            { n: "Kacang", h: 2000 },
+            { n: "Kripik Pedes", h: 15000 },
+            { n: "Kue Sus Kering", h: 15000 },
+            { n: "Reginang (isi 3)", h: 5000 },
             { n: "Aqua Galon", h: 22000 }
         ];
-        const container = document.getElementById('menu');
-        menu.forEach(p => {
+
+        const container = document.getElementById('menu-container');
+        
+        // Memunculkan semua produk ke layar
+        products.forEach(p => {
             container.innerHTML += `
                 <div class="card">
-                    <div style="font-size:13px">${p.n}</div>
-                    <div class="price">Rp ${p.h.toLocaleString()}</div>
+                    <div class="product-name">${p.n}</div>
+                    <div class="price">Rp ${p.h.toLocaleString('id-ID')}</div>
                     <button class="btn-add" onclick="tambah('${p.n}', ${p.h})">🛒 Tambah</button>
                 </div>`;
         });
 
         function tambah(nama, harga) {
-            localStorage.setItem("keranjang", JSON.stringify([{ nama, harga }]));
+            // Simpan satu produk yang dipilih ke keranjang
+            const keranjang = [{ nama: nama, harga: harga }];
+            localStorage.setItem("keranjang", JSON.stringify(keranjang));
+            
+            // Langsung pindah ke halaman pembayaran
             window.location.href = 'pembayaran.html';
         }
     </script>
