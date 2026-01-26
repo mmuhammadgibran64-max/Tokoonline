@@ -15,25 +15,22 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px;
         }
-        .m-card { background: #1e1e1e; padding: 35px; border-radius: 25px; border: 2px solid #ffc107; box-shadow: 0 0 20px rgba(255,193,7,0.3); }
-        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #ffc107; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .m-card { background: #1e1e1e; padding: 35px; border-radius: 25px; border: 2px solid #ffc107; }
     </style>
 </head>
 <body>
 
     <div id="maintenance-screen">
         <div class="m-card">
-            <h1 style="color: #ffc107; margin-bottom: 10px;">MAINTENANCE</h1>
-            <div class="spinner"></div>
-            <p style="line-height: 1.6;">Mohon maaf, saat ini sistem sedang dalam pemeliharaan rutin.<br><br>Silakan coba akses kembali beberapa saat lagi.</p>
-            <p style="font-size: 12px; color: #666; margin-top: 20px;">Toko Gibran © 2026</p>
+            <h1 style="color: #ffc107;">MAINTENANCE</h1>
+            <p>Sistem sedang diperbarui. Silakan kembali lagi nanti.</p>
+            <input type="password" id="admin-pass" placeholder="Mode Admin" style="background:#333; color:white; border:none; width:50%; margin-top:20px; font-size:10px;">
+            <button onclick="bukaPintuBelakang()" style="width:50%; padding:5px; font-size:10px; background:#444;">Buka</button>
         </div>
     </div>
 
     <div class="box">
         <h2>Toko Gibran</h2>
-        <p>Login untuk mulai belanja</p>
         <input type="text" id="nama" placeholder="Nama Pelanggan">
         <input type="number" id="hp" placeholder="Nomor HP">
         <input type="text" id="alamat" placeholder="Alamat Rumah">
@@ -41,58 +38,46 @@
     </div>
 
     <script>
-        /* CARA PAKAI:
-           - Ganti SEDANG_UPDATE ke 'true' jika kamu lagi benerin aplikasi (User tidak bisa masuk).
-           - Ganti ke 'false' jika update sudah selesai (User bisa masuk, kecuali hari Senin/Kamis).
-        */
-        const SEDANG_UPDATE = false; 
+        // KONTROL MAINTENANCE
+        const SEDANG_UPDATE = true; // Set ke 'true' biar user lihat maintenance
 
         function checkSystem() {
-            const screen = document.getElementById('maintenance-screen');
-            
-            // 1. Cek Kunci Manual (Update dari Gibran)
-            if (SEDANG_UPDATE) {
-                screen.style.display = 'flex';
+            // Jika kamu sudah pernah masuk lewat pintu belakang, jangan kunci lagi
+            if(sessionStorage.getItem("pintuBelakang") === "terbuka") {
+                document.getElementById('maintenance-screen').style.display = 'none';
                 return;
             }
 
-            // 2. Cek Jadwal Otomatis (Senin & Kamis jam 8 pagi)
+            const screen = document.getElementById('maintenance-screen');
             const now = new Date();
             const day = now.getDay(); 
             const hour = now.getHours();
-            
-            let isMaintenance = false;
-            // Senin (1) jam 8 pagi sampai Selasa (2) jam 8 pagi
-            if ((day === 1 && hour >= 8) || (day === 2 && hour < 8)) isMaintenance = true;
-            // Kamis (4) jam 8 pagi sampai Jumat (5) jam 8 pagi
-            if ((day === 4 && hour >= 8) || (day === 5 && hour < 8)) isMaintenance = true;
 
-            if (isMaintenance) {
-                screen.style.display = 'flex';
+            // Cek Manual atau Jadwal (Senin & Kamis)
+            let isMaint = SEDANG_UPDATE;
+            if ((day === 1 && hour >= 8) || (day === 2 && hour < 8)) isMaint = true;
+            if ((day === 4 && hour >= 8) || (day === 5 && hour < 8)) isMaint = true;
+
+            if (isMaint) screen.style.display = 'flex';
+        }
+
+        // FUNGSI KHUSUS GIBRAN
+        function bukaPintuBelakang() {
+            const pass = document.getElementById('admin-pass').value;
+            // KATA SANDI RAHASIA KAMU (Ganti sesukamu)
+            if(pass === "1234") { 
+                sessionStorage.setItem("pintuBelakang", "terbuka");
+                document.getElementById('maintenance-screen').style.display = 'none';
+                alert("Mode Admin Aktif! Selamat bekerja, Gibran.");
+            } else {
+                alert("Akses ditolak!");
             }
         }
 
         function masuk() {
             const nama = document.getElementById('nama').value;
-            const hp = document.getElementById('hp').value;
-            const alamat = document.getElementById('alamat').value;
-            if(!nama || !hp || !alamat) return alert("Harap isi semua data!");
-
-            localStorage.setItem("nama", nama);
-            localStorage.setItem("hp", hp);
-            localStorage.setItem("alamat", alamat);
-
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxDtiWgsJb1mBmeondxkgZV1zkRR1300rAKJMM7uZqgRckAYIm_w8VMCnMiYaW5anM/exec';
-            
-            fetch(scriptURL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({"type": "login", "nama": nama, "hp": hp, "alamat": alamat}) 
-            })
-            .then(() => { 
-                window.location.href = 'dashboard.html'; 
-            })
-            .catch(() => alert("Koneksi gagal!"));
+            if(!nama) return alert("Isi data!");
+            window.location.href = 'dashboard.html';
         }
 
         window.onload = checkSystem;
