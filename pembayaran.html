@@ -3,89 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metode Pembayaran - Toko Gibran</title>
+    <title>Pembayaran - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        h2 { color: #333; text-align: center; }
-        p { color: #666; font-size: 14px; text-align: center; margin-bottom: 25px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
+        .container { max-width: 450px; margin: auto; padding-bottom: 50px; }
         
-        .metode-opsi { border: 2px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; transition: 0.3s; }
-        .metode-opsi.aktif { border-color: #28a745; background: #e8f5e9; }
-        .metode-opsi.nonaktif { background: #f5f5f5; color: #aaa; cursor: not-allowed; border-color: #eee; }
+        /* KARTU PESANAN */
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        h2 { color: #28a745; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         
-        .radio-circle { height: 20px; width: 20px; border: 2px solid #28a745; border-radius: 50%; margin-right: 15px; position: relative; }
-        .aktif .radio-circle::after { content: ''; width: 12px; height: 12px; background: #28a745; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .item-list { margin: 15px 0; }
+        .item-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: #ccc; }
+        .total-box { border-top: 2px dashed #333; margin-top: 15px; padding-top: 15px; text-align: center; }
+        .total-harga { font-size: 24px; font-weight: bold; color: #28a745; }
 
-        .btn-konfirmasi { background: #28a745; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
-        .label-baru { background: #ffc107; color: black; font-size: 10px; padding: 2px 6px; border-radius: 5px; margin-left: 10px; }
+        /* METODE PEMBAYARAN */
+        .metode-pilih { 
+            padding: 15px; border-radius: 12px; border: 2px solid #28a745; 
+            background: rgba(40, 167, 69, 0.1); display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .metode-off { 
+            padding: 15px; border-radius: 12px; border: 1px solid #333; 
+            background: #111; display: flex; justify-content: space-between; align-items: center;
+            opacity: 0.5; margin-bottom: 10px; font-size: 14px;
+        }
+        .badge { background: #444; font-size: 10px; padding: 3px 8px; border-radius: 5px; }
+
+        /* TOMBOL KONFIRMASI */
+        .btn-confirm { 
+            width: 100%; padding: 18px; background: #28a745; color: white; 
+            border: none; border-radius: 15px; font-weight: bold; font-size: 16px; 
+            cursor: pointer; box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+            transition: 0.3s;
+        }
+        .btn-confirm:disabled { background: #555; box-shadow: none; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Pembayaran</h2>
-    <p>Pilih metode pembayaran yang tersedia</p>
-
-    <div class="metode-opsi aktif" onclick="pilihMetode('Cash')">
-        <div class="radio-circle"></div>
-        <div>
-            <strong>Cash (Bayar di Tempat)</strong><br>
-            <small>Bayar saat barang sampai</small>
+<div class="container">
+    <div class="card">
+        <h2>📦 Ringkasan Pesanan</h2>
+        <div id="list-belanja" class="item-list">
+            </div>
+        <div class="total-box">
+            <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Total yang harus dibayar:</div>
+            <div class="total-harga" id="display-total">Rp 0</div>
         </div>
     </div>
 
-    <div class="metode-opsi nonaktif">
-        <div style="height: 20px; width: 20px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px;"></div>
-        <div>
-            <strong>QRIS / E-Wallet</strong> <span class="label-baru">Belum Tersedia</span><br>
-            <small>OVO, Dana, GoPay</small>
+    <div class="card">
+        <h2>💳 Metode Pembayaran</h2>
+        <div class="metode-pilih">
+            <span>💵 Tunai / Cash (COD)</span>
+            <span style="font-weight: bold; color: #28a745;">PILIH</span>
+        </div>
+        <div class="metode-off">
+            <span>📱 QRIS / Transfer</span>
+            <span class="badge">BELUM TERSEDIA</span>
         </div>
     </div>
 
-    <div class="metode-opsi nonaktif">
-        <div style="height: 20px; width: 20px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px;"></div>
-        <div>
-            <strong>Transfer Bank</strong> <span class="label-baru">Belum Tersedia</span><br>
-            <small>BCA, Mandiri, BRI</small>
-        </div>
-    </div>
-
-    <button class="btn-konfirmasi" onclick="prosesBeli()">KONFIRMASI PEMBAYARAN</button>
+    <button class="btn-confirm" id="btnProses" onclick="kirimKeSheet()">KONFIRMASI & ORDER SEKARANG</button>
 </div>
 
 <script>
-    function prosesBeli() {
-        // Ambil data dari login yang disimpan di index.html
-        const nama = localStorage.getItem("nama");
-        const hp = localStorage.getItem("hp");
-        const alamat = localStorage.getItem("alamat");
+    // 1. Ambil data dari penyimpanan HP
+    const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
+    const nama = localStorage.getItem("nama");
+    const hp = localStorage.getItem("hp");
+    const alamat = localStorage.getItem("alamat");
 
-        if(!nama) {
-            alert("Selesaikan Login terlebih dahulu!");
-            window.location.href = 'index.html';
-            return;
-        }
+    const listDiv = document.getElementById('list-belanja');
+    let totalHarga = 0;
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz2mHIxC4YpRxrDap_33a1EOFZ_lh2V66yqtbuqM_JfB4sDpgHzuWW8QjMYKXtm8rVLLQ/exec';
+    // 2. Tampilkan daftar belanjaan
+    if(keranjang.length === 0) {
+        listDiv.innerHTML = "<p style='text-align:center;'>Keranjang kosong!</p>";
+        document.getElementById('btnProses').disabled = true;
+    } else {
+        keranjang.forEach(item => {
+            totalHarga += item.harga;
+            listDiv.innerHTML += `
+                <div class="item-row">
+                    <span>${item.nama}</span>
+                    <span>Rp ${item.harga.toLocaleString('id-ID')}</span>
+                </div>`;
+        });
+    }
 
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({
-                "type": "beli",
-                "nama": nama,
-                "hp": hp,
-                "alamat": alamat,
-                "produk": "Pesanan Selesai", 
-                "total": "Metode: Cash"
-            })
+    document.getElementById('display-total').innerText = "Rp " + totalHarga.toLocaleString('id-ID');
+
+    // 3. Fungsi Kirim Data ke Google Sheet
+    function kirimKeSheet() {
+        const btn = document.getElementById('btnProses');
+        btn.innerText = "Sabar, lagi ngirim...";
+        btn.disabled = true;
+
+        // Gabungkan list barang jadi 1 kalimat
+        const daftarBarang = keranjang.map(i => i.nama).join(", ");
+
+        const dataPesanan = {
+            "type": "order", 
+            "nama": nama,
+            "hp": hp,
+            "alamat": alamat,
+            "pesanan": daftarBarang,
+            "total": totalHarga,
+            "metode": "CASH"
+        };
+
+        // LINK GOOGLE APPS SCRIPT KAMU
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwJXZhqNdnqRnlbiMSoAVlc5QI_VInwWu-XrvwlAZBHMeCmPTJmOEnjjj_jdd9jEaeqZw/exec';
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: JSON.stringify(dataPesanan) 
         })
         .then(() => {
-            alert("Pesanan Berhasil! Menuju Riwayat.");
+            // Simpan riwayat singkat sebelum dihapus
+            localStorage.setItem("riwayat_terakhir", JSON.stringify({
+                info: daftarBarang,
+                biaya: totalHarga
+            }));
+
+            alert("Pesanan kamu sudah masuk ke Admin Gibran! Tunggu sebentar ya.");
+            localStorage.removeItem("keranjang"); // Kosongkan keranjang
             window.location.href = 'riwayat.html';
         })
-        .catch(() => alert("Koneksi gagal, coba lagi."));
+        .catch(err => {
+            alert("Aduh gagal kirim! Cek kuota atau internet kamu.");
+            btn.disabled = false;
+            btn.innerText = "KONFIRMASI & ORDER SEKARANG";
+        });
     }
 </script>
 
