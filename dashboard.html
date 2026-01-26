@@ -3,174 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN STORE</title>
+    <title>GIBRAN STORE - Menu</title>
     <style>
-        /* TEMA GELAP PROFESIONAL */
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 100px; }
-        
-        /* HEADER LOGO SESUAI GAMBAR */
-        .header { 
-            background: #1e1e1e; padding: 30px 20px; text-align: center; 
-            border-bottom: 1px solid #333; display: flex; flex-direction: column; align-items: center;
-        }
-        .logo-container { 
-            width: 90px; height: 90px; border-radius: 50%; 
-            border: 3px solid #28a745; background: #fff; 
-            overflow: hidden; margin-bottom: 12px;
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
-        }
-        .logo-container img { width: 100%; height: 100%; object-fit: cover; }
-        .store-name { font-size: 22px; font-weight: bold; letter-spacing: 1.5px; color: #fff; }
-
-        /* NAVIGASI ATAS (HITAM ABU) */
-        .top-nav { display: flex; background: #222; margin: 15px; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
-        .top-nav-item { flex: 1; padding: 12px; text-align: center; font-size: 12px; color: #888; text-decoration: none; transition: 0.3s; }
-        .top-nav-item.active { background: #28a745; color: white; font-weight: bold; }
-
-        /* KONTEN DASHBOARD */
-        .content-title { padding: 0 20px; font-size: 18px; font-weight: bold; color: #28a745; }
-        
-        /* GRID PRODUK */
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .product-card { background: #1e1e1e; border-radius: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
-        .product-img { width: 100%; height: 130px; background: #252525; display: flex; align-items: center; justify-content: center; padding: 10px; box-sizing: border-box; }
-        .product-img img { max-width: 100%; max-height: 100%; border-radius: 10px; }
-        
-        .product-info { padding: 12px; text-align: center; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 80px; }
+        .header { background: #1e1e1e; padding: 25px; text-align: center; border-bottom: 1px solid #333; }
+        .logo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #28a745; margin-bottom: 10px; background: #fff; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .card { background: #1e1e1e; padding: 15px; border-radius: 15px; border: 1px solid #333; text-align: center; transition: 0.3s; }
         .product-name { font-size: 14px; font-weight: bold; margin-bottom: 5px; height: 35px; overflow: hidden; }
-        .product-price { color: #28a745; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
+        .price { color: #28a745; font-weight: bold; font-size: 15px; margin-bottom: 10px; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; font-size: 12px; }
         
-        .btn-buy { 
-            background: #28a745; color: white; border: none; padding: 10px; 
-            border-radius: 10px; width: 100%; font-size: 11px; font-weight: bold; 
-            cursor: pointer; transition: 0.2s;
-        }
-        .btn-buy:active { transform: scale(0.95); background: #218838; }
-
-        /* NAVIGASI BAWAH FIXED */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #1e1e1e; 
-            display: flex; justify-content: space-around; padding: 12px 0; 
-            border-top: 1px solid #333; z-index: 1000;
-        }
-        .nav-link { text-decoration: none; color: #666; font-size: 11px; text-align: center; }
-        .nav-link.active { color: #28a745; }
-        .nav-link i { display: block; font-size: 20px; margin-bottom: 3px; font-style: normal; }
+        /* NAVIGASI BAWAH */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 100; }
+        .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
+        .nav a.active { color: #28a745; }
+        .nav span { display: block; font-size: 20px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo-container">
-            <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" alt="Logo Gibran Store">
-        </div>
-        <div class="store-name">GIBRAN STORE</div>
+        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" class="logo">
+        <div style="font-weight: bold; letter-spacing: 1px;">GIBRAN STORE</div>
     </div>
 
-    <div class="top-nav">
-        <a href="dashboard.html" class="top-nav-item active">Menu</a>
-        <a href="riwayat.html" class="top-nav-item">Riwayat</a>
-        <a href="https://wa.me/6285123332018" class="top-nav-item">Chat</a>
-        <a href="pengaturan.html" class="top-nav-item">Setting</a>
-    </div>
-
-    <h2 class="content-title">Dashboard</h2>
-<div class="product-grid">
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Peye+Kacang" alt="Peye"></div>
-            <div class="product-info">
-                <div class="product-name">Peye Kacang (Kecil)</div>
-                <div class="product-price">Rp 5.000</div>
-                <button class="btn-buy" onclick="tambah('Peye Kacang (Kecil)', 5000)">🛒 Tambah</button>
-            </div>
+    <div class="product-grid" id="menu-container">
         </div>
 
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Peye+Kacang" alt="Peye"></div>
-            <div class="product-info">
-                <div class="product-name">Peye Kacang (Besar)</div>
-                <div class="product-price">Rp 10.000</div>
-                <button class="btn-buy" onclick="tambah('Peye Kacang (Besar)', 10000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Slondok" alt="Slondok"></div>
-            <div class="product-info">
-                <div class="product-name">Slondok</div>
-                <div class="product-price">Rp 20.000</div>
-                <button class="btn-buy" onclick="tambah('Slondok', 20000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Opak" alt="Opak"></div>
-            <div class="product-info">
-                <div class="product-name">Opak</div>
-                <div class="product-price">Rp 20.000</div>
-                <button class="btn-buy" onclick="tambah('Opak', 20000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Kacang" alt="Kacang"></div>
-            <div class="product-info">
-                <div class="product-name">Kacang</div>
-                <div class="product-price">Rp 2.000</div>
-                <button class="btn-buy" onclick="tambah('Kacang', 2000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Kripik+Pedes" alt="Kripik"></div>
-            <div class="product-info">
-                <div class="product-name">Kripik Pedes</div>
-                <div class="product-price">Rp 15.000</div>
-                <button class="btn-buy" onclick="tambah('Kripik Pedes', 15000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Kue+Sus" alt="Sus"></div>
-            <div class="product-info">
-                <div class="product-name">Kue Sus Kering</div>
-                <div class="product-price">Rp 15.000</div>
-                <button class="btn-buy" onclick="tambah('Kue Sus Kering', 15000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Reginang" alt="Reginang"></div>
-            <div class="product-info">
-                <div class="product-name">Reginang (isi 3)</div>
-                <div class="product-price">Rp 5.000</div>
-                <button class="btn-buy" onclick="tambah('Reginang (isi 3)', 5000)">🛒 Tambah</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-img"><img src="https://via.placeholder.com/150?text=Aqua+Galon" alt="Aqua"></div>
-            <div class="product-info">
-                <div class="product-name">Aqua Galon</div>
-                <div class="product-price">Rp 22.000</div>
-                <button class="btn-buy" onclick="tambah('Aqua Galon', 22000)">🛒 Tambah</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-link active"><i>🏠</i>Menu</a>
-        <a href="riwayat.html" class="nav-link"><i>📜</i>Riwayat</a>
-        <a href="https://wa.me/6285123332018" class="nav-link"><i>💬</i>Chat</a>
-        <a href="pengaturan.html" class="nav-link"><i>⚙️</i>Setting</a>
+    <div class="nav">
+        <a href="dashboard.html" class="active"><span>🏠</span>Menu</a>
+        <a href="riwayat.html"><span>📜</span>Riwayat</a>
+        <a href="https://wa.me/6285123332018" target="_blank"><span>💬</span>Chat</a>
+        <a href="pengaturan.html"><span>⚙️</span>Setting</a>
     </div>
 
     <script>
+        const products = [
+            { n: "Peye Kacang (Kecil)", h: 5000 },
+            { n: "Peye Kacang (Besar)", h: 10000 },
+            { n: "Slondok", h: 20000 },
+            { n: "Opak", h: 20000 },
+            { n: "Kacang", h: 2000 },
+            { n: "Kripik Pedes", h: 15000 },
+            { n: "Kue Sus Kering", h: 15000 },
+            { n: "Reginang (isi 3)", h: 5000 },
+            { n: "Aqua Galon", h: 22000 }
+        ];
+
+        const container = document.getElementById('menu-container');
+        products.forEach(p => {
+            container.innerHTML += `
+                <div class="card">
+                    <div class="product-name">${p.n}</div>
+                    <div class="price">Rp ${p.h.toLocaleString('id-ID')}</div>
+                    <button class="btn-add" onclick="tambah('${p.n}', ${p.h})">🛒 Tambah</button>
+                </div>`;
+        });
+
         function tambah(nama, harga) {
-            alert(nama + " berhasil ditambah ke keranjang!");
-            // Logika keranjang belanja bisa kita buat nanti
+            let keranjang = []; // Kita reset keranjang setiap klik tambah agar fokus satu pesanan (atau hapus baris ini jika ingin bisa borong banyak)
+            keranjang.push({ nama: nama, harga: harga });
+            localStorage.setItem("keranjang", JSON.stringify(keranjang));
+            
+            // PINDAH OTOMATIS KE PEMBAYARAN
+            window.location.href = 'pembayaran.html';
         }
     </script>
-
 </body>
 </html>
