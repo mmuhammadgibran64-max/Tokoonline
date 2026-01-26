@@ -3,85 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran - Gibran Store</title>
+    <title>Pembayaran</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 15px; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #ccc; }
-        .total { font-size: 26px; color: #28a745; text-align: center; font-weight: bold; margin: 15px 0; border-top: 1px dashed #333; padding-top: 15px; }
-        .btn-order { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(40,167,69,0.3); }
-        .btn-order:disabled { background: #444; box-shadow: none; }
-        .metode { padding: 15px; border-radius: 12px; border: 2px solid #28a745; background: rgba(40,167,69,0.1); margin-bottom: 10px; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
+        .total { font-size: 24px; color: #28a745; text-align: center; font-weight: bold; margin: 15px 0; }
+        .btn-kirim { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <h2 style="color: #28a745; margin: 0 0 15px 0; font-size: 18px;">🛒 Ringkasan Order</h2>
-        <div id="list-order"></div>
-        <div class="total" id="total-harga">Rp 0</div>
+        <h2 style="color:#28a745">Ringkasan</h2>
+        <div id="list"></div>
+        <div class="total" id="total">Rp 0</div>
     </div>
-
-    <div class="card">
-        <h3 style="margin: 0 0 10px 0; font-size: 16px;">💳 Metode Pembayaran</h3>
-        <div class="metode">
-            <span style="font-weight: bold;">💵 Bayar di Tempat (Cash)</span>
-            <div style="font-size: 11px; color: #aaa; margin-top: 5px;">Silakan siapkan uang pas saat pesanan tiba.</div>
-        </div>
-    </div>
-
-    <button class="btn-order" id="btn-kirim" onclick="kirim()">KONFIRMASI & ORDER</button>
+    <div class="card"><h3>💵 CASH</h3><p>Bayar di tempat saat barang sampai.</p></div>
+    <button class="btn-kirim" id="btn" onclick="order()">KONFIRMASI ORDER</button>
 
     <script>
         const keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
-        const box = document.getElementById('list-order');
         let total = 0;
+        keranjang.forEach(i => {
+            total += i.harga;
+            document.getElementById('list').innerHTML += `<div style="display:flex; justify-content:space-between"><span>${i.nama}</span><span>Rp ${i.harga.toLocaleString()}</span></div>`;
+        });
+        document.getElementById('total').innerText = "Rp " + total.toLocaleString();
 
-        if(keranjang.length === 0) {
-            box.innerHTML = "<p style='text-align:center;'>Keranjang kosong, silakan pilih menu lagi.</p>";
-            document.getElementById('btn-kirim').disabled = true;
-        } else {
-            keranjang.forEach(item => {
-                total += item.harga;
-                box.innerHTML += `
-                    <div class="item">
-                        <span>${item.nama}</span>
-                        <span>Rp ${item.harga.toLocaleString('id-ID')}</span>
-                    </div>`;
-            });
-        }
-        document.getElementById('total-harga').innerText = "Rp " + total.toLocaleString('id-ID');
+        function order() {
+            const btn = document.getElementById('btn');
+            btn.disabled = true; btn.innerText = "Mengirim...";
 
-        function kirim() {
-            const btn = document.getElementById('btn-kirim');
-            btn.disabled = true;
-            btn.innerText = "Mengirim Pesanan...";
-
-            const payload = {
+            const data = {
                 "type": "order",
-                "nama": localStorage.getItem("nama") || "Pelanggan Gibran",
-                "hp": localStorage.getItem("hp") || "-",
-                "alamat": localStorage.getItem("alamat") || "-",
+                "nama": localStorage.getItem("nama") || "Pelanggan",
                 "pesanan": keranjang.map(i => i.nama).join(", "),
                 "total": total,
                 "metode": "CASH"
             };
 
-            // LINK BARU KAMU
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec';
-
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(payload)
+            fetch('https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec', {
+                method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
             }).then(() => {
-                alert("Order Berhasil Dikirim ke Admin!");
+                // SIMPAN RIWAYAT
+                let r = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
+                r.push({ produk: data.pesanan, total: total, tanggal: new Date().toLocaleString() });
+                localStorage.setItem("riwayat_pesanan", JSON.stringify(r));
+                
                 localStorage.removeItem("keranjang");
-                window.location.href = 'riwayat.html';
-            }).catch(() => {
-                alert("Terjadi kesalahan koneksi!");
-                btn.disabled = false;
-                btn.innerText = "KONFIRMASI & ORDER";
+                window.location.href = 'oke.html'; // PINDAH KE OKE
             });
         }
     </script>
