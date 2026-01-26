@@ -7,64 +7,39 @@
     <style>
         body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
         .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; width: 85%; max-width: 320px; }
-        
-        /* Tampilan Utama Maintenance */
-        #view-maintenance { display: block; }
-        .icon-warn { font-size: 50px; color: #ffc107; margin-bottom: 15px; }
-        
-        /* Tombol Rahasia Gibran (Dibuat samar agar user tidak curiga) */
-        .btn-rahasia {
-            margin-top: 20px;
-            background: transparent;
-            color: #333; /* Warna gelap agar hampir tidak terlihat di background hitam */
-            border: none;
-            font-size: 10px;
-            cursor: pointer;
-            padding: 10px;
-        }
-
-        /* Tampilan Login (Awalnya Sembunyi) */
         #view-login { display: none; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
-        button.btn-masuk { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-secret { background: transparent; border: none; color: #222; font-size: 10px; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <div class="box">
-        <div id="view-maintenance">
-            <div class="icon-warn">⚠️</div>
-            <h1 style="font-size: 20px; margin: 0;">Satu Menit Lagi...</h1>
-            <p style="color: #888; font-size: 14px; line-height: 1.5;">Gibran Store sedang update sistem.<br>Sabar ya, lagi dibetulin!</p>
-            
-            <button class="btn-rahasia" onclick="bukaPintu()">. . .</button>
+        <div id="view-maint">
+            <h1 style="color:#ffc107; font-size: 22px;">Satu Menit Lagi...</h1>
+            <p style="color:#888; font-size: 14px;">Gibran Store sedang update sistem.</p>
+            <button class="btn-secret" onclick="buka()">. . .</button>
         </div>
 
         <div id="view-login">
-            <h2 style="color: #28a745;">Mode Admin</h2>
-            <p style="font-size: 12px; color: #888;">Silakan masuk untuk mengedit/ngetes</p>
-            <input type="text" id="nama" placeholder="Nama Kamu">
-            <input type="number" id="hp" placeholder="Nomor WA">
-            <button class="btn-masuk" onclick="masuk()">MASUK KE DASHBOARD</button>
+            <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width:70px; border-radius:50%; border:2px solid #28a745; margin-bottom:15px;">
+            <h2 style="margin:0">Masuk Admin</h2>
+            <input type="text" id="nama" placeholder="Nama Anda">
+            <input type="number" id="hp" placeholder="Nomor WhatsApp">
+            <button onclick="masuk()">MASUK SEKARANG</button>
         </div>
     </div>
 
     <script>
-        // Fungsi untuk memunculkan form login saat tombol rahasia diklik
-        function bukaPintu() {
-            document.getElementById('view-maintenance').style.display = 'none';
-            document.getElementById('view-login').style.display = 'block';
-        }
-
+        function buka() { document.getElementById('view-maint').style.display='none'; document.getElementById('view-login').style.display='block'; }
         function masuk() {
-            const nama = document.getElementById('nama').value;
-            const hp = document.getElementById('hp').value;
-            if (nama && hp) {
-                localStorage.setItem("nama", nama);
-                localStorage.setItem("hp", hp);
-                window.location.href = "dashboard.html";
-            } else {
-                alert("Isi nama dulu Bran!");
+            const n = document.getElementById('nama').value;
+            const h = document.getElementById('hp').value;
+            if(n && h) {
+                localStorage.setItem("nama", n); localStorage.setItem("hp", h);
+                fetch('https://script.google.com/macros/s/AKfycby2YE26tH3I3FmArwiLTT6DUkdu-uGBKYXw8nDQk3con8Aq4-a_gKQHMGNT4QDKMfgbMQ/exec', {
+                    method: 'POST', mode: 'no-cors', body: JSON.stringify({"type":"login", "nama":n, "hp":h})
+                }).then(() => { window.location.href="dashboard.html"; });
             }
         }
     </script>
