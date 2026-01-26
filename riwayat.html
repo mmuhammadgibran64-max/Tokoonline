@@ -3,79 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan - Toko Gibran</title>
+    <title>Riwayat Saya</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
-        .header { background: #28a745; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
-        
-        /* NAVBAR */
-        .navbar { display: flex; justify-content: space-around; background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: -10px 15px 20px; border-radius: 10px; position: relative; z-index: 10; }
-        .nav-item { text-decoration: none; color: #333; text-align: center; font-size: 12px; font-weight: bold; }
-        
-        /* CONTENT */
-        .container { padding: 15px; }
-        .riwayat-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745; }
-        .riwayat-card h4 { margin: 0; color: #333; font-size: 14px; }
-        .riwayat-card p { margin: 5px 0 0; color: #666; font-size: 13px; }
-        .status-bayar { display: inline-block; background: #e8f5e9; color: #28a745; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; margin-top: 10px; }
-        
-        .empty-state { text-align: center; padding: 50px 20px; color: #888; }
-        .btn-wa { background: #25d366; color: white; padding: 12px; border-radius: 10px; text-decoration: none; display: block; text-align: center; margin-top: 20px; font-weight: bold; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; padding-bottom: 80px; }
+        .card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; position: relative; }
+        .status { position: absolute; top: 15px; right: 15px; font-size: 10px; background: #28a745; padding: 3px 8px; border-radius: 5px; }
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
     </style>
 </head>
 <body>
+    <h2 style="color:#28a745">📜 Riwayat Pesanan</h2>
+    <div id="list-riwayat"></div>
 
-    <div class="header">
-        <h1>Riwayat Saya</h1>
-    </div>
-
-    <div class="navbar">
-        <a href="dashboard.html" class="nav-item">🏠<br>Menu</a>
-        <a href="riwayat.html" class="nav-item" style="color: #28a745;">📜<br>Riwayat</a>
-        <a href="pengaturan.html" class="nav-item">⚙️<br>Pengaturan</a>
-    </div>
-
-    <div class="container">
-        <div id="daftar-riwayat">
-            <div class="empty-state">
-                <p>Belum ada riwayat pesanan.<br>Ayo mulai belanja!</p>
-            </div>
-        </div>
-
-        <a href="https://wa.me/628XXXXXXXXXX" class="btn-wa">Chat Admin Toko</a>
+    <div class="nav">
+        <a href="dashboard.html">🏠<br>Menu</a>
+        <a href="riwayat.html" style="color:#28a745">📜<br>Riwayat</a>
+        <a href="https://wa.me/6285123332018">💬<br>Chat</a>
+        <a href="pengaturan.html">⚙️<br>Setting</a>
     </div>
 
     <script>
-        // Fungsi untuk mengambil data pesanan (sementara dari LocalStorage)
-        function muatRiwayat() {
-            const listContainer = document.getElementById('daftar-riwayat');
-            const namaUser = localStorage.getItem("nama");
-
-            if (!namaUser) {
-                listContainer.innerHTML = '<div class="empty-state">Silakan login untuk melihat riwayat.</div>';
-                return;
-            }
-
-            // Catatan: Untuk riwayat yang beneran real-time dari Sheet, 
-            // kita butuh fungsi doGet di Apps Script. 
-            // Untuk sekarang, ini menampilkan konfirmasi pesanan terakhir.
-            
-            const pesananTerakhir = localStorage.getItem("lastOrder");
-            if (pesananTerakhir) {
-                const data = JSON.parse(pesananTerakhir);
-                listContainer.innerHTML = `
-                    <div class="riwayat-card">
-                        <h4>Pesanan atas nama: ${namaUser}</h4>
-                        <p>Produk: ${data.produk}</p>
-                        <p>Total: ${data.total}</p>
-                        <span class="status-bayar">BERHASIL DIPESAN</span>
-                    </div>
-                `;
-            }
+        const riwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
+        const container = document.getElementById('list-riwayat');
+        if(riwayat.length === 0) {
+            container.innerHTML = "<p style='color:#555; text-align:center; margin-top:50px;'>Belum ada pesanan.</p>";
+        } else {
+            riwayat.reverse().forEach(r => {
+                container.innerHTML += `
+                <div class="card">
+                    <span class="status">Selesai</span>
+                    <div style="font-size:11px; color:#888">${r.tanggal}</div>
+                    <div style="font-weight:bold; margin:5px 0; color:#28a745">${r.produk}</div>
+                    <div style="font-size:13px">Total: Rp ${r.total.toLocaleString()}</div>
+                </div>`;
+            });
         }
-
-        window.onload = muatRiwayat;
     </script>
-
 </body>
 </html>
