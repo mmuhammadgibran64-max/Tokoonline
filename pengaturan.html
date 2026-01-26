@@ -3,140 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan Toko</title>
+    <title>Pengaturan - Toko Gibran</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; }
-        .nav { display: flex; justify-content: space-around; background: #1e1e1e; padding: 10px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .nav a { text-decoration: none; color: #bbb; font-size: 14px; }
-        .section { background: #1e1e1e; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        h2 { color: #28a745; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        p { font-size: 13px; margin: 8px 0; color: #aaa; }
+        body { font-family: sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; padding-bottom: 80px; }
         
-        /* Layar Maintenance */
-        #maintenance-screen {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #121212; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
+        /* NAVIGASI BARU (4 MENU) */
+        .nav { 
+            display: flex; justify-content: space-around; background: #1e1e1e; 
+            padding: 12px 5px; border-radius: 15px; margin-bottom: 20px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: sticky; top: 10px; z-index: 100;
         }
-        .m-box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 2px solid #ffc107; }
-        .loading-bar { width: 100%; height: 10px; background: #333; border-radius: 5px; margin-top: 20px; overflow: hidden; }
-        .progress { width: 0%; height: 100%; background: #28a745; transition: width 0.1s; }
-        .btn-offline { margin-top: 20px; background: #ffc107; color: black; padding: 10px 20px; border-radius: 10px; font-weight: bold; text-decoration: none; display: inline-block; }
+        .nav a { text-decoration: none; color: #bbb; font-size: 11px; text-align: center; flex: 1; }
+        .nav a.active { color: #28a745; font-weight: bold; }
+        .nav i { display: block; font-size: 20px; margin-bottom: 5px; }
+
+        .section { background: #1e1e1e; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        h2 { color: #28a745; font-size: 17px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        p { font-size: 13px; color: #aaa; line-height: 1.5; }
+
+        /* FITUR TERKUNCI */
+        .locked { opacity: 0.5; filter: grayscale(1); position: relative; }
+        .badge-lock { background: #444; color: #fff; font-size: 9px; padding: 3px 8px; border-radius: 10px; float: right; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <div id="maintenance-screen">
-        <div class="m-box" id="m-content">
-            <h1 id="m-title" style="color: #ffc107;">SISTEM MAINTENANCE</h1>
-            <p id="m-desc">Sedang memperbarui sistem...</p>
-            
-            <div id="loading-container" style="display:none;">
-                <div class="loading-bar"><div class="progress" id="progress-bar"></div></div>
-                <p id="percent" style="font-size: 12px; margin-top: 10px;">0%</p>
-            </div>
-
-            <div id="offline-msg" style="display:none;">
-                <p style="color: #ffc107; font-weight: bold;">Update Besar Sedang Berlangsung (4-5 Hari)</p>
-                <a href="#" class="btn-offline">Silakan Offline ke Rumah Saja</a>
-            </div>
-        </div>
-    </div>
-
     <div class="nav">
-        <a href="dashboard.html">🏠 Menu</a>
-        <a href="riwayat.html">📜 Riwayat</a>
-        <a href="pengaturan.html" style="color: #28a745; font-weight: bold;">⚙️ Pengaturan</a>
+        <a href="dashboard.html"><i>🏠</i>Menu</a>
+        <a href="riwayat.html"><i>📜</i>Riwayat</a>
+        <a href="#" class="locked"><i>💬</i>Chat</a> <a href="pengaturan.html" class="active"><i>⚙️</i>Setting</a>
     </div>
 
     <div class="section">
         <h2>🏷️ Identitas Toko</h2>
-        <p><strong>Nama & Logo:</strong> Toko Gibran</p>
-        <p><strong>Deskripsi:</strong> Penjelasan singkat toko Anda.</p>
+        <p><strong>Nama:</strong> Toko Gibran</p>
+        <p><strong>Status:</strong> Online</p>
+    </div>
+
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>🚚 Jasa Ekspedisi</h2>
+        <p>Pilih kurir yang tersedia di area kamu (JNE, J&T, SiCepat, GoSend, dll).</p>
+    </div>
+
+    <div class="section locked">
+        <span class="badge-lock">🔒 Tunggu Update</span>
+        <h2>💬 Template Chat</h2>
+        <p>Siapkan balasan otomatis (Auto-reply) untuk pertanyaan yang sering muncul (FAQ).</p>
     </div>
 
     <div class="section">
         <h2>⏰ Jadwal Operasional</h2>
-        <p><strong>Jam:</strong> 08:00 - 20:00</p>
-        <p><strong>Jadwal Update:</strong> Senin - Kamis</p>
+        <p><strong>Buka:</strong> 08:00 | <strong>Tutup:</strong> 20:00</p>
+        <p><strong>Update:</strong> Senin & Kamis (Off)</p>
     </div>
 
-    <div class="section">
-        <h2>💻 Sistem</h2>
-        <p><strong>Status:</strong> <span id="sys-status" style="color:#28a745">Online</span></p>
-        <p style="text-align: center; margin-top: 20px; font-size: 11px; color: #555;">Aplikasi v.1.2.8</p>
+    <div class="section" style="text-align: center; border: none; background: transparent;">
+        <p style="font-size: 10px; color: #444;">Versi Aplikasi 1.2.9</p>
     </div>
 
-    <script>
-        // UBAH INI JADI 'true' KALAU KAMU LAGI UPADTE BESAR (4-5 HARI)
-        const SEDANG_UPDATE_BESAR = false; 
-
-        function runSystemCheck() {
-            const now = new Date();
-            const day = now.getDay(); 
-            const hour = now.getHours();
-            const screen = document.getElementById('maintenance-screen');
-            const mTitle = document.getElementById('m-title');
-            const mDesc = document.getElementById('m-desc');
-            const offlineMsg = document.getElementById('offline-msg');
-
-            // 1. CEK UPDATE BESAR (MANUAL)
-            if (SEDANG_UPDATE_BESAR) {
-                screen.style.display = 'flex';
-                mTitle.innerText = "UPDATE BESAR";
-                mDesc.innerText = "Aplikasi sedang dalam perbaikan total. Estimasi 4-5 hari kerja.";
-                offlineMsg.style.display = 'block';
-                return; // Berhenti di sini, jangan lanjut cek jadwal rutin
-            }
-
-            // 2. CEK UPDATE RUTIN (OTOMATIS SENIN-KAMIS)
-            const isUpdateDay = day >= 1 && day <= 4;
-            const isUpdateTime = hour >= 20 || hour < 8;
-
-            if (isUpdateDay && isUpdateTime) {
-                screen.style.display = 'flex';
-                mTitle.innerText = "MAINTENANCE RUTIN";
-                mDesc.innerText = "Tunggu selesai update, mungkin sore, malam, atau besok sudah bisa digunakan kembali.";
-                localStorage.setItem("needDownload", "true");
-            } else {
-                // JIKA SUDAH SELESAI, CEK DOWNLOAD DATA
-                if (localStorage.getItem("needDownload") === "true") {
-                    startDownload();
-                } else {
-                    screen.style.display = 'none';
-                }
-            }
-        }
-
-        function startDownload() {
-            const screen = document.getElementById('maintenance-screen');
-            const loadingCont = document.getElementById('loading-container');
-            const mTitle = document.getElementById('m-title');
-            const mDesc = document.getElementById('m-desc');
-            
-            screen.style.display = 'flex';
-            loadingCont.style.display = 'block';
-            mTitle.innerText = "UPDATE SELESAI";
-            mDesc.innerText = "Mengunduh data aplikasi terbaru...";
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 5) + 2;
-                if (progress > 100) progress = 100;
-                document.getElementById('progress-bar').style.width = progress + "%";
-                document.getElementById('percent').innerText = progress + "%";
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    localStorage.removeItem("needDownload");
-                    setTimeout(() => {
-                        screen.style.display = 'none';
-                        alert("Aplikasi diperbarui!");
-                    }, 800);
-                }
-            }, 100);
-        }
-
-        window.onload = runSystemCheck;
-    </script>
 </body>
 </html>
