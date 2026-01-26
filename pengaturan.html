@@ -3,75 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan - Gibran Store</title>
+    <title>Setting - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; padding-bottom: 80px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo-profile { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #28a745; margin-bottom: 10px; }
-        
-        .box-info { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
-        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; }
-        .info-item:last-child { border: none; }
-        .label { color: #888; font-size: 14px; }
-        .value { font-weight: bold; color: #28a745; }
-
-        .btn-logout { 
-            width: 100%; padding: 15px; background: #dc3545; color: white; 
-            border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px;
-        }
-
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: left; }
+        .btn-out { width: 100%; padding: 15px; background: #dc3545; color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; }
         .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
         .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
-        .nav a.active { color: #28a745; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" class="logo-profile">
-        <h2 id="disp-nama">Memuat...</h2>
-        <p style="font-size: 12px; color: #888;">ID Member: GBN-001</p>
+    <img src="https://i.ibb.co.com/MxPH2fq6/logo-gibran.jpg" style="width:90px; border-radius:50%; border:3px solid #28a745; margin-bottom:10px;">
+    <h2 id="unama">Nama User</h2>
+    <div class="card">
+        <p>WhatsApp: <span id="uhp" style="float:right; color:#28a745"></span></p>
+        <p>Status: <span style="float:right; color:#28a745">Aktif</span></p>
     </div>
-
-    <div class="box-info">
-        <div class="info-item">
-            <span class="label">Nama Akun</span>
-            <span class="value" id="info-nama">-</span>
-        </div>
-        <div class="info-item">
-            <span class="label">No. WhatsApp</span>
-            <span class="value" id="info-hp">-</span>
-        </div>
-        <div class="info-item">
-            <span class="label">Status</span>
-            <span class="value">Pelanggan Aktif</span>
-        </div>
-    </div>
-
-    <button class="btn-logout" onclick="keluar()">KELUAR AKUN</button>
+    <button class="btn-out" onclick="localStorage.clear(); window.location.href='index.html'">KELUAR</button>
 
     <div class="nav">
         <a href="dashboard.html">🏠<br>Menu</a>
         <a href="riwayat.html">📜<br>Riwayat</a>
         <a href="https://wa.me/6285123332018">💬<br>Chat</a>
-        <a href="pengaturan.html" class="active">⚙️<br>Setting</a>
+        <a href="pengaturan.html" style="color:#28a745">⚙️<br>Setting</a>
     </div>
 
     <script>
-        // Ambil data yang disimpan saat login tadi
-        const nama = localStorage.getItem("nama") || "Tamu";
-        const hp = localStorage.getItem("hp") || "-";
-
-        document.getElementById('disp-nama').innerText = nama;
-        document.getElementById('info-nama').innerText = nama;
-        document.getElementById('info-hp').innerText = hp;
-
-        function keluar() {
-            if(confirm("Yakin mau keluar? Data login akan dihapus.")) {
-                localStorage.clear(); // Hapus semua memori login & keranjang
-                window.location.href = "index.html"; // Balik ke halaman login
-            }
-        }
+        document.getElementById('unama').innerText = localStorage.getItem("nama") || "Tamu";
+        document.getElementById('uhp').innerText = localStorage.getItem("hp") || "-";
     </script>
 </body>
 </html>
