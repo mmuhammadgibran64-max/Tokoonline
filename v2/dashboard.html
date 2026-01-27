@@ -9,11 +9,12 @@
         .header { background: #1f1f1f; padding: 15px; border-bottom: 2px solid #ff9800; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .nav-icons { display: flex; gap: 15px; }
         .container { padding: 15px; }
+        .category-title { color: #ff9800; font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; border-left: 4px solid #ff9800; padding-left: 10px; }
         .card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .info b { color: #ff9800; font-size: 16px; }
-        .info span { color: #bbb; font-size: 14px; }
+        .info b { color: #fff; font-size: 16px; }
+        .info span { color: #ff9800; font-size: 14px; font-weight: bold; }
         .btn-plus { background: #ff9800; color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 20px; }
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
         .btn-checkout { background: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .icon-link { text-decoration: none; font-size: 20px; }
     </style>
@@ -28,7 +29,13 @@
         </div>
     </div>
 
-    <div class="container" id="menu-list"></div>
+    <div class="container">
+        <div class="category-title">Daftar Makanan</div>
+        <div id="makanan-list"></div>
+
+        <div class="category-title">Daftar Minuman</div>
+        <div id="minuman-list"></div>
+    </div>
 
     <div class="cart-bar">
         <span>Total: <span id="total-text">Rp 0</span></span>
@@ -37,33 +44,53 @@
 
     <script>
         document.getElementById('welcome').innerText = "Halo, " + (localStorage.getItem('userNama') || "Pelanggan");
-        const menu = [
+
+        const makanan = [
             {n: "Peye Kacang (Kecil)", h: 5000}, {n: "Peye Kacang (Besar)", h: 10000},
             {n: "Slondok", h: 20000}, {n: "Opak", h: 20000},
             {n: "Kacang", h: 2000}, {n: "Kripik Pedes", h: 15000},
             {n: "Kue Sus Kering", h: 15000}, {n: "Reginang (isi 3)", h: 5000}
         ];
+
+        const minuman = [
+            {n: "Aqua Galon", h: 22000}
+        ];
+
         let cart = [];
-        function renderMenu() {
-            document.getElementById('menu-list').innerHTML = menu.map((item, index) => `
+
+        function render() {
+            // Render Makanan
+            document.getElementById('makanan-list').innerHTML = makanan.map((item, index) => `
                 <div class="card">
                     <div class="info"><b>${item.n}</b><br><span>Rp ${item.h.toLocaleString('id-ID')}</span></div>
-                    <button class="btn-plus" onclick="addToCart(${index})">+</button>
-                </div>
-            `).join('');
+                    <button class="btn-plus" onclick="add('makanan', ${index})">+</button>
+                </div>`).join('');
+
+            // Render Minuman
+            document.getElementById('minuman-list').innerHTML = minuman.map((item, index) => `
+                <div class="card">
+                    <div class="info"><b>${item.n}</b><br><span>Rp ${item.h.toLocaleString('id-ID')}</span></div>
+                    <button class="btn-plus" onclick="add('minuman', ${index})">+</button>
+                </div>`).join('');
         }
-        function addToCart(index) {
-            cart.push(menu[index]);
-            let total = cart.reduce((sum, item) => sum + item.h, 0);
+
+        function add(type, index) {
+            const item = type === 'makanan' ? makanan[index] : minuman[index];
+            cart.push(item);
+            
+            let total = cart.reduce((sum, i) => sum + i.h, 0);
             document.getElementById('total-text').innerText = "Rp " + total.toLocaleString('id-ID');
+            
             localStorage.setItem('tempTotal', total);
-            localStorage.setItem('tempOrder', cart.map(item => item.n).join(', '));
+            localStorage.setItem('tempOrder', cart.map(i => i.n).join(', '));
         }
+
         function checkout() {
-            if (cart.length === 0) return alert("Pilih jajanan dulu!");
+            if (cart.length === 0) return alert("Pilih pesanan dulu ya!");
             window.location.href = "pembayaran.html";
         }
-        renderMenu();
+
+        render();
     </script>
 </body>
 </html>
