@@ -7,6 +7,7 @@
     <style>
         body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 100px; }
         .header { background: #1f1f1f; padding: 15px; border-bottom: 2px solid #ff9800; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .nav-icons { display: flex; gap: 15px; }
         .container { padding: 15px; }
         .card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
         .info b { color: #ff9800; font-size: 16px; }
@@ -14,14 +15,17 @@
         .btn-plus { background: #ff9800; color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 20px; }
         .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
         .btn-checkout { background: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-gear { text-decoration: none; font-size: 22px; filter: grayscale(0); }
+        .icon-link { text-decoration: none; font-size: 20px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h3 id="welcome" style="margin:0;">Halo, Pelanggan!</h3>
-        <a href="pengaturan.html" class="btn-gear">⚙️</a>
+        <div class="nav-icons">
+            <a href="riwayat.html" class="icon-link" title="Riwayat">📜</a>
+            <a href="pengaturan.html" class="icon-link" title="Pengaturan">⚙️</a>
+        </div>
     </div>
 
     <div class="container" id="menu-list"></div>
@@ -34,14 +38,10 @@
     <script>
         document.getElementById('welcome').innerText = "Halo, " + (localStorage.getItem('userNama') || "Pelanggan");
         const menu = [
-            {n: "Peye Kacang (Kecil)", h: 5000},
-            {n: "Peye Kacang (Besar)", h: 10000},
-            {n: "Slondok", h: 20000},
-            {n: "Opak", h: 20000},
-            {n: "Kacang", h: 2000},
-            {n: "Kripik Pedes", h: 15000},
-            {n: "Kue Sus Kering", h: 15000},
-            {n: "Reginang (isi 3)", h: 5000}
+            {n: "Peye Kacang (Kecil)", h: 5000}, {n: "Peye Kacang (Besar)", h: 10000},
+            {n: "Slondok", h: 20000}, {n: "Opak", h: 20000},
+            {n: "Kacang", h: 2000}, {n: "Kripik Pedes", h: 15000},
+            {n: "Kue Sus Kering", h: 15000}, {n: "Reginang (isi 3)", h: 5000}
         ];
         let cart = [];
         function renderMenu() {
