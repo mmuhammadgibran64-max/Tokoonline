@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan</title>
+    <title>Riwayat</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; padding-top: 70px; }
         .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; }
-        .nav-top a { color: white; text-decoration: none; font-size: 14px; }
+        .nav-top a { color: white; text-decoration: none; }
         .item { background: #1f1f1f; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #ff9800; }
     </style>
 </head>
@@ -17,19 +17,15 @@
     <a href="riwayat.html" style="color:#ff9800">RIWAYAT</a>
     <a href="pengaturan.html">PENGATURAN</a>
 </div>
-<br><br>
-<h3>Riwayat Belanja</h3>
+<h3>Daftar Belanja Kamu</h3>
 <div id="list"></div>
-
 <script>
     const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
     document.getElementById('list').innerHTML = data.reverse().map(r => `
         <div class="item">
             <small>${r.tanggal}</small><br>
-            <b>${r.nama}</b> (${r.hp})<br>
-            Alamat: ${r.alamat}<br>
-            Menu: ${r.pesanan}<br>
-            <b>Total: ${r.total}</b>
+            <b>${r.pesanan}</b><br>
+            Total: ${r.total}
         </div>
     `).join('') || "Belum ada pesanan.";
 </script>
