@@ -6,16 +6,15 @@
     <title>Pembayaran</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #1f1f1f; color: white; }
         .btn-bayar { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h2>Konfirmasi Pesanan</h2>
-    <p>Total: <b id="total-txt"></b></p>
+    <h3>Konfirmasi Pesanan</h3>
     <form id="payForm">
         <input type="text" id="nama" placeholder="Nama Lengkap" required>
-        <input type="tel" id="hp" placeholder="Nomor HP" required>
+        <input type="tel" id="hp" placeholder="Nomor WA" required>
         <textarea id="alamat" placeholder="Alamat Lengkap" required></textarea>
         <select id="metode">
             <option value="Cash">Cash (Tersedia)</option>
@@ -25,32 +24,26 @@
     </form>
 
     <script>
-        const tot = localStorage.getItem('tempTotal');
-        const ord = localStorage.getItem('tempOrder');
-        document.getElementById('total-txt').innerText = "Rp " + parseInt(tot).toLocaleString();
-
         document.getElementById('payForm').onsubmit = function(e) {
             e.preventDefault();
-            document.getElementById('btnS').innerText = "Proses...";
+            const btn = document.getElementById('btnS');
+            btn.innerText = "Mengirim...";
             
             const data = {
                 tanggal: new Date().toLocaleString('id-ID'),
                 nama: document.getElementById('nama').value,
                 hp: document.getElementById('hp').value,
                 alamat: document.getElementById('alamat').value,
-                pesanan: ord,
-                total: "Rp " + parseInt(tot).toLocaleString()
+                pesanan: localStorage.getItem('tempOrder'),
+                total: "Rp " + parseInt(localStorage.getItem('tempTotal')).toLocaleString()
             };
 
-            // Link Google Sheets kamu
             fetch("https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec", {
                 method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
             }).then(() => {
-                // Simpan ke Riwayat Lokal
                 let history = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
                 history.push(data);
                 localStorage.setItem('riwayatPesanan', JSON.stringify(history));
-                
                 window.location.href = "selesai.html";
             });
         };
