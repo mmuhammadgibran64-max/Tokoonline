@@ -6,29 +6,31 @@
     <title>Pembayaran</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #1f1f1f; color: white; }
-        .btn-bayar { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; }
+        .box { background: #1f1f1f; padding: 20px; border-radius: 15px; border: 1px solid #ff9800; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #2c2c2c; color: white; box-sizing: border-box; }
+        button { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h3>Konfirmasi Pesanan</h3>
-    <form id="payForm">
-        <input type="text" id="nama" placeholder="Nama Lengkap" required>
-        <input type="tel" id="hp" placeholder="Nomor WA" required>
-        <textarea id="alamat" placeholder="Alamat Lengkap" required></textarea>
-        <select id="metode">
-            <option value="Cash">Cash (Tersedia)</option>
-            <option disabled>QRIS (Terkunci)</option>
-        </select>
-        <button type="submit" class="btn-bayar" id="btnS">KIRIM PESANAN</button>
-    </form>
-
+    <div class="box">
+        <h3>Konfirmasi Pesanan</h3>
+        <p id="ringkasan" style="color:#bbb; font-size:14px;"></p>
+        <form id="payForm">
+            <input type="text" id="nama" readonly required>
+            <input type="tel" id="hp" readonly required>
+            <textarea id="alamat" readonly required></textarea>
+            <button type="submit" id="btnKirim">KIRIM PESANAN SEKARANG</button>
+        </form>
+    </div>
     <script>
+        document.getElementById('nama').value = localStorage.getItem('userNama');
+        document.getElementById('hp').value = localStorage.getItem('userHP');
+        document.getElementById('alamat').value = localStorage.getItem('userAlamat');
+        document.getElementById('ringkasan').innerText = "Pesanan: " + localStorage.getItem('tempOrder');
+
         document.getElementById('payForm').onsubmit = function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btnS');
-            btn.innerText = "Mengirim...";
-            
+            document.getElementById('btnKirim').innerText = "Mengirim...";
             const data = {
                 tanggal: new Date().toLocaleString('id-ID'),
                 nama: document.getElementById('nama').value,
@@ -37,15 +39,9 @@
                 pesanan: localStorage.getItem('tempOrder'),
                 total: "Rp " + parseInt(localStorage.getItem('tempTotal')).toLocaleString()
             };
-
-            fetch("https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec", {
-                method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
-            }).then(() => {
-                let history = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                history.push(data);
-                localStorage.setItem('riwayatPesanan', JSON.stringify(history));
-                window.location.href = "selesai.html";
-            });
+            fetch("https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec", 
+            { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
+            .then(() => { window.location.href = "selesai.html"; });
         };
     </script>
 </body>
