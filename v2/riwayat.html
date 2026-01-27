@@ -3,52 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan - Gibran Store</title>
+    <title>Riwayat Pesanan</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; padding: 20px; }
-        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-        .nav a { text-decoration: none; color: #666; font-weight: bold; padding: 10px; border-bottom: 2px solid transparent; }
-        .nav a.active { color: #ff9800; border-bottom: 2px solid #ff9800; }
-        .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card h4 { margin: 0; color: #333; }
-        .card p { margin: 5px 0; font-size: 13px; color: #666; }
-        .status { color: #28a745; font-weight: bold; font-size: 12px; }
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
+        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; }
+        .nav-top a { color: white; text-decoration: none; font-size: 14px; }
+        .item { background: #1f1f1f; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #ff9800; }
     </style>
 </head>
 <body>
-
-<div class="nav">
-    <a href="dashboard.html">Menu</a>
-    <a href="riwayat.html" class="active">Riwayat</a>
-    <a href="pengaturan.html">Pengaturan</a>
+<div class="nav-top">
+    <a href="dashboard.html">MENU</a>
+    <a href="riwayat.html" style="color:#ff9800">RIWAYAT</a>
+    <a href="pengaturan.html">PENGATURAN</a>
 </div>
-
-<h2>Riwayat Pesanan</h2>
-<div id="daftar-riwayat">
-    <p>Belum ada riwayat pesanan.</p>
-</div>
+<br><br>
+<h3>Riwayat Belanja</h3>
+<div id="list"></div>
 
 <script>
-    // Menampilkan data dari memori HP (LocalStorage)
-    function muatRiwayat() {
-        const riwayat = JSON.parse(localStorage.getItem('riwayatBelanja')) || [];
-        const box = document.getElementById('daftar-riwayat');
-        
-        if(riwayat.length > 0) {
-            box.innerHTML = riwayat.reverse().map(item => `
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between">
-                        <h4>${item.nama}</h4>
-                        <span class="status">Selesai</span>
-                    </div>
-                    <p>📅 ${item.tanggal}</p>
-                    <p>📦 ${item.pesanan}</p>
-                    <p>💰 <b>${item.total}</b></p>
-                </div>
-            `).join('');
-        }
-    }
-    muatRiwayat();
+    const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+    document.getElementById('list').innerHTML = data.reverse().map(r => `
+        <div class="item">
+            <small>${r.tanggal}</small><br>
+            <b>${r.nama}</b> (${r.hp})<br>
+            Alamat: ${r.alamat}<br>
+            Menu: ${r.pesanan}<br>
+            <b>Total: ${r.total}</b>
+        </div>
+    `).join('') || "Belum ada pesanan.";
 </script>
 </body>
 </html>
