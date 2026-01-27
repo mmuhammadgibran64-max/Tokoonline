@@ -6,21 +6,13 @@
     <title>Gibran Store</title>
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        
-        /* MAINTENANCE LAYER */
-        #update-layer { text-align: center; width: 85%; max-width: 350px; }
-        .logo-btn { width: 80px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        #update-layer, #login-layer { text-align: center; width: 85%; max-width: 350px; display: none; }
+        .logo-btn { width: 80px; border-radius: 15px; cursor: pointer; }
+        .box-login { background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://i.imgur.com/uR1k0jS.png'); background-size: cover; padding: 30px 20px; border-radius: 25px; border: 2px solid #ff9800; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ff9800; background: #fff; color: #000; box-sizing: border-box; }
+        .btn-masuk { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
         .bar-cont { width: 100%; background: #222; height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; display: none; }
         .bar-fill { width: 0%; height: 100%; background: #ff9800; transition: 0.1s; }
-
-        /* LOGIN LAYER */
-        #login-layer { display: none; width: 90%; max-width: 350px; }
-        .box-login { 
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://i.imgur.com/uR1k0jS.png'); 
-            background-size: cover; padding: 30px 20px; border-radius: 25px; border: 2px solid #ff9800; text-align: center; 
-        }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ff9800; background: #fff; color: #000; box-sizing: border-box; font-size: 14px; }
-        .btn-masuk { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -28,10 +20,8 @@
     <div id="update-layer">
         <img src="https://i.imgur.com/uR1k0jS.png" class="logo-btn" onclick="bukaAdmin()">
         <h2 id="up-title" style="color:#ff9800">MAINTENANCE</h2>
-        <p id="up-msg" style="color:#666">Sedang update data. Kembali jam 21:00.</p>
-        
-        <button id="btnUpdate" style="display:none; background:#ff9800; border:none; padding:15px; border-radius:10px; font-weight:bold; width:100%; margin-top:20px;" onclick="startDownload()">UNDUH DATA TERBARU</button>
-        
+        <p id="up-msg" style="color:#666">Kembali jam 21:00 WIB.</p>
+        <button id="btnUpdate" style="display:none; background:#ff9800; border:none; padding:15px; border-radius:10px; font-weight:bold; width:100%;" onclick="startDownload()">UNDUH DATA TERBARU</button>
         <div id="progCont" class="bar-cont"><div id="bar" class="bar-fill"></div></div>
     </div>
 
@@ -46,6 +36,8 @@
     </div>
 
     <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby1ihg0h4F93-PWkrl0R842P4sj0inewTyVB9a2NkNrRfA43dvOsZrsTPuIEyvdKY27zA/exec';
+
         function bukaAdmin() {
             document.getElementById('update-layer').style.display = 'none';
             document.getElementById('login-layer').style.display = 'block';
@@ -55,7 +47,7 @@
             const sekarang = new Date();
             const jadwalBuka = new Date();
             jadwalBuka.setHours(21, 0, 0); 
-
+            document.getElementById('update-layer').style.display = 'block';
             if (sekarang >= jadwalBuka) {
                 document.getElementById('up-title').innerText = "UPDATE SELESAI";
                 document.getElementById('btnUpdate').style.display = 'block';
@@ -69,10 +61,7 @@
             let intv = setInterval(() => {
                 p += 5;
                 document.getElementById('bar').style.width = p + "%";
-                if(p >= 100) {
-                    clearInterval(intv);
-                    bukaAdmin();
-                }
+                if(p >= 100) { clearInterval(intv); bukaAdmin(); }
             }, 50);
         }
 
@@ -81,34 +70,17 @@
             const h = document.getElementById('hp').value;
             const a = document.getElementById('alamat').value;
             const btn = document.getElementById('btnSelesai');
-
             if(n && h && a) {
-                btn.disabled = true;
-                btn.innerText = "Mendaftarkan...";
-
-                // LINK SCRIPT (Gunakan link yang sama)
-                const url = 'https://script.google.com/macros/s/AKfycby81ohfVhU0XQ5DVrMS5eCVJOnis8D4zXntPR5Hn33DKy1oSEekwwfAdnJYxeF1so7O5A/exec';
-
-                fetch(url, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        "tipe": "USER_BARU",
-                        "nama": n,
-                        "hp": h,
-                        "alamat": a
-                    })
+                btn.disabled = true; btn.innerText = "Mendaftarkan...";
+                fetch(scriptURL, {
+                    method: 'POST', mode: 'no-cors',
+                    body: JSON.stringify({ "tipe": "USER_BARU", "nama": n, "hp": h, "alamat": a })
                 }).then(() => {
-                    localStorage.setItem("nama", n);
-                    localStorage.setItem("hp", h);
-                    localStorage.setItem("alamat", a);
+                    localStorage.setItem("nama", n); localStorage.setItem("hp", h); localStorage.setItem("alamat", a);
                     window.location.href = "dashboard.html";
                 });
-            } else {
-                alert("Lengkapi data dulu, Bran!");
-            }
+            } else { alert("Isi data dulu!"); }
         }
-        setInterval(cekSistem, 5000);
         cekSistem();
     </script>
 </body>
