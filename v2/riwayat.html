@@ -7,8 +7,10 @@
     <style>
         body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
         .nav-back { text-decoration: none; color: #ff9800; font-weight: bold; display: block; margin-bottom: 20px; }
-        .order-card { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; font-size: 13px; line-height: 1.6; }
+        .order-card { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; font-size: 13px; position: relative; }
         .order-card b { color: #ff9800; }
+        .btn-hapus { position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; }
+        .btn-download { background: #28a745; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; display: none; }
         .no-data { text-align: center; color: #555; margin-top: 50px; }
         .divider { border-bottom: 1px dashed #333; margin: 8px 0; }
     </style>
@@ -16,35 +18,66 @@
 <body>
 
     <a href="dashboard.html" class="nav-back">← Kembali</a>
-    <h3>📜 Riwayat Pesanan Anda</h3>
+    <h3>📜 Riwayat Pesanan</h3>
 
-    <div id="riwayat-list">
-        </div>
+    <div id="riwayat-list"></div>
+
+    <button id="downloadBtn" class="btn-download" onclick="downloadRiwayat()">DOWNLOAD RIWAYAT (.TXT)</button>
 
     <script>
         function loadRiwayat() {
             const listContainer = document.getElementById('riwayat-list');
+            const downloadBtn = document.getElementById('downloadBtn');
             const dataRiwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
 
             if (dataRiwayat.length === 0) {
                 listContainer.innerHTML = '<p class="no-data">Belum ada riwayat pesanan.</p>';
+                downloadBtn.style.display = 'none';
                 return;
             }
 
-            // Tampilkan dari yang terbaru (paling atas)
-            listContainer.innerHTML = dataRiwayat.reverse().map(item => `
+            downloadBtn.style.display = 'block';
+            listContainer.innerHTML = dataRiwayat.map((item, index) => `
                 <div class="order-card">
+                    <button class="btn-hapus" onclick="hapusSatu(${index})">HAPUS</button>
                     <div><b>Tanggal:</b> ${item.tanggal}</div>
                     <div class="divider"></div>
-                    <div><b>Nama:</b> ${item.nama}</div>
-                    <div><b>HP:</b> ${item.hp}</div>
-                    <div><b>Alamat:</b> ${item.alamat}</div>
-                    <div class="divider"></div>
                     <div><b>Pesanan:</b> ${item.pesanan}</div>
-                    <div style="font-size:15px; margin-top:5px;"><b>Total:</b> ${item.total}</div>
+                    <div><b>Total:</b> ${item.total}</div>
                 </div>
-            `).join('');
+            `).reverse().join('');
         }
+
+        function hapusSatu(index) {
+            if(confirm("Hapus pesanan ini dari riwayat?")) {
+                let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+                riwayat.splice(index, 1);
+                localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
+                loadRiwayat();
+            }
+        }
+
+        function downloadRiwayat() {
+            const dataRiwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+            let teks = "--- RIWAYAT PESANAN GIBRAN STORE ---\n\n";
+            
+            dataRiwayat.forEach((item, i) => {
+                teks += `Pesanan #${i+1}\n`;
+                teks += `Tanggal : ${item.tanggal}\n`;
+                teks += `Nama    : ${item.nama}\n`;
+                teks += `Alamat  : ${item.alamat}\n`;
+                teks += `Barang  : ${item.pesanan}\n`;
+                teks += `Total   : ${item.total}\n`;
+                teks += `----------------------------\n\n`;
+            });
+
+            const blob = new Blob([teks], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Riwayat_GibranStore.txt";
+            link.click();
+        }
+
         loadRiwayat();
     </script>
 </body>
