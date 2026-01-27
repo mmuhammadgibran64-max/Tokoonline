@@ -3,30 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan</title>
+    <title>Pengaturan - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; }
-        .box { background: #1f1f1f; padding: 15px; border-radius: 10px; margin-top: 50px; }
-        .gray { color: #888; font-size: 12px; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; padding-top: 70px; }
+        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .nav-top a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; }
+        
+        .box { background: #1f1f1f; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
+        h3 { color: #ff9800; margin-top: 0; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        
+        .setting-item { margin-bottom: 15px; }
+        .label { display: block; color: #888; font-size: 12px; margin-bottom: 4px; }
+        .value { display: block; color: #eee; font-size: 14px; font-weight: bold; }
+        
+        .locked { color: #555 !important; font-style: italic; }
+        .icon-lock { font-size: 12px; margin-right: 5px; }
+        
+        .badge-version { background: #333; color: #ff9800; padding: 3px 8px; border-radius: 5px; font-size: 11px; float: right; }
     </style>
 </head>
 <body>
+
 <div class="nav-top">
     <a href="dashboard.html">MENU</a>
     <a href="riwayat.html">RIWAYAT</a>
     <a href="pengaturan.html" style="color:#ff9800">PENGATURAN</a>
 </div>
+
 <div class="box">
-    <h3>Pengaturan Update</h3>
-    <p>Nama Toko: <b>Gibran Store</b></p>
-    <p>Deskripsi: <b>Identitas visual brand Anda</b></p>
-    <p>Jam: <b>08:00 - 20:00</b> (Senin-Kamis)</p>
-    <p>Pencahayaan: <b>Mode Gelap</b></p>
-    <p class="gray">Versi Aplikasi: v.1.2.8</p>
-    <hr>
-    <p class="gray">🔒 Ekspedisi (JNE, J&T) - Terkunci</p>
-    <p class="gray">🔒 Auto-Reply Chat - Terkunci</p>
+    <span class="badge-version">v.1.2.8</span>
+    <h3>⚙️ Identitas Toko</h3>
+    <div class="setting-item">
+        <span class="label">Nama & Logo Toko</span>
+        <span class="value">Gibran Store (Identitas Visual Aktif)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Deskripsi Toko</span>
+        <span class="value">Penjelasan singkat mengenai apa yang Anda jual.</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Jadwal Operasional</span>
+        <span class="value">08:00 - 20:00 (Senin - Kamis)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Pencahayaan</span>
+        <span class="value">Mode Gelap (Dark Mode)</span>
+    </div>
 </div>
+
+<div class="box">
+    <h3>📦 Manajemen Produk (Update Mendatang)</h3>
+    <div class="setting-item">
+        <span class="label">Kategori Produk</span>
+        <span class="value locked">🔒 Terkunci (Atasan, Bawahan, Aksesoris)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Varian Produk</span>
+        <span class="value locked">🔒 Terkunci (Warna, Ukuran, Motif)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Manajemen Stok</span>
+        <span class="value locked">🔒 Terkunci (Auto-reduce Stock System)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">SKU (Stock Keeping Unit)</span>
+        <span class="value locked">🔒 Terkunci (Kode Unik Inventaris)</span>
+    </div>
+</div>
+
+<div class="box">
+    <h3>🚚 Ekspedisi & Layanan</h3>
+    <div class="setting-item">
+        <span class="label">Jasa Kurir</span>
+        <span class="value locked">🔒 Terkunci (JNE, J&T, SiCepat, GoSend)</span>
+    </div>
+    <div class="setting-item">
+        <span class="label">Template Chat</span>
+        <span class="value locked">🔒 Terkunci (FAQ Auto-reply)</span>
+    </div>
+</div>
+
+<p style="text-align: center; color: #444; font-size: 12px;">Gibran Store &copy; 2026</p>
+
 </body>
 </html>
