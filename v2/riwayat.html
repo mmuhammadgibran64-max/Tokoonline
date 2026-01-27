@@ -3,31 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat</title>
+    <title>Riwayat Pesanan</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; padding-top: 70px; }
-        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; }
-        .nav-top a { color: white; text-decoration: none; }
-        .item { background: #1f1f1f; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #ff9800; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
+        .nav-back { text-decoration: none; color: #ff9800; font-weight: bold; display: block; margin-bottom: 20px; }
+        .order-card { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; font-size: 13px; line-height: 1.6; }
+        .order-card b { color: #ff9800; }
+        .no-data { text-align: center; color: #555; margin-top: 50px; }
+        .divider { border-bottom: 1px dashed #333; margin: 8px 0; }
     </style>
 </head>
 <body>
-<div class="nav-top">
-    <a href="dashboard.html">MENU</a>
-    <a href="riwayat.html" style="color:#ff9800">RIWAYAT</a>
-    <a href="pengaturan.html">PENGATURAN</a>
-</div>
-<h3>Daftar Belanja Kamu</h3>
-<div id="list"></div>
-<script>
-    const data = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-    document.getElementById('list').innerHTML = data.reverse().map(r => `
-        <div class="item">
-            <small>${r.tanggal}</small><br>
-            <b>${r.pesanan}</b><br>
-            Total: ${r.total}
+
+    <a href="dashboard.html" class="nav-back">← Kembali</a>
+    <h3>📜 Riwayat Pesanan Anda</h3>
+
+    <div id="riwayat-list">
         </div>
-    `).join('') || "Belum ada pesanan.";
-</script>
+
+    <script>
+        function loadRiwayat() {
+            const listContainer = document.getElementById('riwayat-list');
+            const dataRiwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+
+            if (dataRiwayat.length === 0) {
+                listContainer.innerHTML = '<p class="no-data">Belum ada riwayat pesanan.</p>';
+                return;
+            }
+
+            // Tampilkan dari yang terbaru (paling atas)
+            listContainer.innerHTML = dataRiwayat.reverse().map(item => `
+                <div class="order-card">
+                    <div><b>Tanggal:</b> ${item.tanggal}</div>
+                    <div class="divider"></div>
+                    <div><b>Nama:</b> ${item.nama}</div>
+                    <div><b>HP:</b> ${item.hp}</div>
+                    <div><b>Alamat:</b> ${item.alamat}</div>
+                    <div class="divider"></div>
+                    <div><b>Pesanan:</b> ${item.pesanan}</div>
+                    <div style="font-size:15px; margin-top:5px;"><b>Total:</b> ${item.total}</div>
+                </div>
+            `).join('');
+        }
+        loadRiwayat();
+    </script>
 </body>
 </html>
