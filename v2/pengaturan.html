@@ -5,71 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; padding-top: 70px; }
-        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
-        .nav-top a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; }
-        
-        .box { background: #1f1f1f; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
-        h3 { color: #ff9800; margin-top: 0; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        
-        .setting-item { margin-bottom: 15px; }
-        .label { display: block; color: #888; font-size: 12px; margin-bottom: 4px; }
-        .value { display: block; color: #eee; font-size: 14px; font-weight: bold; }
-        
-        .locked { color: #555 !important; font-style: italic; }
-        .badge-version { background: #333; color: #ff9800; padding: 3px 8px; border-radius: 5px; font-size: 11px; float: right; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
+        .nav-back { text-decoration: none; color: #ff9800; font-weight: bold; display: block; margin-bottom: 20px; }
+        .section { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
+        .section h4 { margin-top: 0; color: #ff9800; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2c2c2c; font-size: 14px; }
+        .item:last-child { border: none; }
+        .val { color: #888; text-align: right; }
+        .locked { color: #ff4444; font-size: 11px; font-style: italic; }
+        .badge { background: #333; padding: 2px 8px; border-radius: 5px; font-size: 12px; }
+        .btn-logout { background: #ff4444; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .footer-ver { text-align: center; font-size: 11px; color: #555; margin-top: 30px; }
     </style>
 </head>
 <body>
 
-<div class="nav-top">
-    <a href="dashboard.html">MENU</a>
-    <a href="riwayat.html">RIWAYAT</a>
-    <a href="pengaturan.html" style="color:#ff9800">PENGATURAN</a>
-</div>
+    <a href="dashboard.html" class="nav-back">← Kembali ke Toko</a>
 
-<div class="box">
-    <span class="badge-version">v.1.2.8</span>
-    <h3>⚙️ Identitas Toko</h3>
-    <div class="setting-item">
-        <span class="label">Nama & Logo Toko</span>
-        <span class="value">Gibran Store (Identitas Visual Aktif)</span>
+    <div class="section">
+        <h4>Identitas Visual</h4>
+        <div class="item">
+            <div>Nama & Logo</div>
+            <div class="val">Gibran Store <br> <span style="font-size:10px;">Brand Identity Aktif</span></div>
+        </div>
+        <div class="item">
+            <div>Deskripsi Toko</div>
+            <div class="val">Pusat Jajanan Enak & Gurih</div>
+        </div>
     </div>
-    <div class="setting-item">
-        <span class="label">Jadwal Operasional</span>
-        <span class="value">08:00 - 20:00 (Senin - Kamis)</span>
-    </div>
-</div>
 
-<div class="box">
-    <h3>📦 Manajemen Produk (Update Mendatang)</h3>
-    <div class="setting-item">
-        <span class="label">Kategori & Varian</span>
-        <span class="value locked">🔒 Terkunci (Atasan, Warna, Ukuran)</span>
+    <div class="section">
+        <h4>Operasional</h4>
+        <div class="item">
+            <div>Jam Buka - Tutup</div>
+            <div class="val">08:00 - 20:00</div>
+        </div>
+        <div class="item">
+            <div>Jadwal Update</div>
+            <div class="val">Senin - Kamis</div>
+        </div>
     </div>
-    <div class="setting-item">
-        <span class="label">Manajemen Stok & SKU</span>
-        <span class="value locked">🔒 Terkunci (Auto-reduce & Unique Code)</span>
-    </div>
-    <div class="setting-item">
-        <span class="label">Berat & Dimensi</span>
-        <span class="value locked">🔒 Terkunci (Input Gramasi Akurat agar Tidak Rugi Bandar)</span>
-    </div>
-</div>
 
-<div class="box">
-    <h3>🚚 Ekspedisi & Layanan</h3>
-    <div class="setting-item">
-        <span class="label">Jasa Kurir</span>
-        <span class="value locked">🔒 Terkunci (JNE, J&T, SiCepat)</span>
+    <div class="section">
+        <h4>Fitur & Sistem</h4>
+        <div class="item">
+            <div>Pencahayaan</div>
+            <div class="val badge">Gelap (Dark Mode)</div>
+        </div>
+        <div class="item">
+            <div>Jasa Ekspedisi</div>
+            <div class="locked">🔒 Masih Kunci (JNE, J&T, GoSend)</div>
+        </div>
+        <div class="item">
+            <div>Template Chat</div>
+            <div class="val">Auto-reply FAQ Aktif</div>
+        </div>
     </div>
-    <div class="setting-item">
-        <span class="label">Template Chat</span>
-        <span class="value locked">🔒 Terkunci (FAQ Auto-reply)</span>
-    </div>
-</div>
 
-<p style="text-align: center; color: #444; font-size: 11px;">Aplikasi Gibran Store Berbasis Web Mode Gelap</p>
+    <div class="section">
+        <h4>Akun</h4>
+        <button class="btn-logout" onclick="logout()">KELUAR (LOGOUT)</button>
+    </div>
+
+    <div class="footer-ver">
+        Aplikasi v.1.2.8<br>
+        &copy; 2024 Gibran Store Official
+    </div>
+
+    <script>
+        function logout() {
+            if(confirm("Yakin mau keluar? Kamu harus isi nama lagi nanti.")) {
+                localStorage.clear();
+                window.location.href = "index.html";
+            }
+        }
+    </script>
 
 </body>
 </html>
