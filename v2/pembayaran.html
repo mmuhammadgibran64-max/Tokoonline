@@ -9,10 +9,18 @@
         .box { max-width: 400px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h2 { color: #28a745; text-align: center; margin-top: 0; }
         .total-box { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #2e7d32; border: 1px solid #c8e6c9; }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        
+        label { font-weight: bold; font-size: 14px; color: #333; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0 18px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        
+        /* Gaya untuk pilihan yang terkunci */
+        option:disabled { color: #ccc; background: #f9f9f9; }
+
         .btn-kirim { background: #28a745; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-kirim:disabled { background: #ccc; }
         .btn-back { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+        
+        .info-metode { font-size: 12px; color: #ff9800; margin-top: -10px; margin-bottom: 15px; display: block; }
     </style>
 </head>
 <body>
@@ -25,40 +33,53 @@
     </div>
 
     <form id="formOrder">
-        <input type="text" id="nama" placeholder="Nama Lengkap" required>
-        <input type="tel" id="wa" placeholder="Nomor WhatsApp (Contoh: 0812...)" required>
-        <textarea id="alamat" placeholder="Alamat Pengiriman Lengkap" rows="3" required></textarea>
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
         
-        <button type="submit" class="btn-kirim" id="btnSubmit">KIRIM PESANAN SEKARANG</button>
+        <label>Nomor WhatsApp</label>
+        <input type="tel" id="wa" placeholder="0812xxxx" required>
+        
+        <label>Alamat Lengkap</label>
+        <textarea id="alamat" placeholder="Nama jalan, nomor rumah, dll" rows="3" required></textarea>
+
+        <label>Metode Pembayaran</label>
+        <select id="metode" required>
+            <option value="Cash">Tunai / Cash (Tersedia)</option>
+            <option value="QRIS" disabled>QRIS (Terkunci - Segera Hadir)</option>
+            <option value="Transfer" disabled>Transfer Bank (Terkunci - Segera Hadir)</option>
+        </select>
+        <span class="info-metode">*Selain Cash, metode pembayaran lain masih dikunci.</span>
+        
+        <button type="submit" class="btn-kirim" id="btnSubmit">KONFIRMASI & KIRIM</button>
     </form>
 
     <a href="dashboard.html" class="btn-back">⬅ Kembali Belanja</a>
 </div>
 
 <script>
-    // 1. Ambil total harga dari Dashboard
+    // Ambil total harga
     const total = localStorage.getItem('totalBayar') || 0;
     document.getElementById('display-total').innerText = "Rp " + parseInt(total).toLocaleString('id-ID');
 
-    // 2. Kirim Data ke Google Sheets
     const form = document.getElementById('formOrder');
     const btn = document.getElementById('btnSubmit');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        btn.innerText = "Sedang Mengirim...";
+        btn.innerText = "Memproses...";
         btn.disabled = true;
 
         const data = {
             nama: document.getElementById('nama').value,
             whatsapp: document.getElementById('wa').value,
             alamat: document.getElementById('alamat').value,
+            metode: document.getElementById('metode').value,
             total: "Rp " + parseInt(total).toLocaleString('id-ID'),
             tanggal: new Date().toLocaleString('id-ID')
         };
 
-        // Link Google Script kamu yang sudah aktif
+        // URL Google Script kamu
         const urlSheet = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
 
         fetch(urlSheet, {
@@ -68,14 +89,13 @@
             body: JSON.stringify(data)
         })
         .then(() => {
-            alert("✅ PESANAN TERKIRIM!\n\nTerima kasih sudah belanja di Gibran Store. Pesanan kamu sudah masuk ke sistem kami.");
-            localStorage.removeItem('totalBayar'); // Hapus keranjang setelah beli
-            window.location.href = "index.html"; // Balik ke halaman utama v2
+            alert("✅ PESANAN BERHASIL!\n\nPembayaran via " + data.metode + " telah dicatat. Gibran akan segera menghubungi kamu!");
+            localStorage.removeItem('totalBayar');
+            window.location.href = "index.html"; 
         })
         .catch(err => {
-            alert("Gagal mengirim pesanan, coba lagi ya.");
-            console.error(err);
-            btn.innerText = "KIRIM PESANAN SEKARANG";
+            alert("Maaf, terjadi kesalahan.");
+            btn.innerText = "KONFIRMASI & KIRIM";
             btn.disabled = false;
         });
     });
