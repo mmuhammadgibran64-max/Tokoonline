@@ -3,103 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran - Gibran Store</title>
+    <title>Pembayaran</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
-        .box { max-width: 400px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { color: #28a745; text-align: center; margin-top: 0; }
-        .total-box { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #2e7d32; border: 1px solid #c8e6c9; }
-        
-        label { font-weight: bold; font-size: 14px; color: #333; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0 18px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        
-        /* Gaya untuk pilihan yang terkunci */
-        option:disabled { color: #ccc; background: #f9f9f9; }
-
-        .btn-kirim { background: #28a745; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-kirim:disabled { background: #ccc; }
-        .btn-back { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
-        
-        .info-metode { font-size: 12px; color: #ff9800; margin-top: -10px; margin-bottom: 15px; display: block; }
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+        .btn-bayar { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
-
-<div class="box">
     <h2>Konfirmasi Pesanan</h2>
-    <div class="total-box">
-        Total Tagihan: <br>
-        <span id="display-total">Rp 0</span>
-    </div>
-
-    <form id="formOrder">
-        <label>Nama Lengkap</label>
-        <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
-        
-        <label>Nomor WhatsApp</label>
-        <input type="tel" id="wa" placeholder="0812xxxx" required>
-        
-        <label>Alamat Lengkap</label>
-        <textarea id="alamat" placeholder="Nama jalan, nomor rumah, dll" rows="3" required></textarea>
-
-        <label>Metode Pembayaran</label>
-        <select id="metode" required>
-            <option value="Cash">Tunai / Cash (Tersedia)</option>
-            <option value="QRIS" disabled>QRIS (Terkunci - Segera Hadir)</option>
-            <option value="Transfer" disabled>Transfer Bank (Terkunci - Segera Hadir)</option>
+    <p>Total: <b id="total-txt"></b></p>
+    <form id="payForm">
+        <input type="text" id="nama" placeholder="Nama Lengkap" required>
+        <input type="tel" id="hp" placeholder="Nomor HP" required>
+        <textarea id="alamat" placeholder="Alamat Lengkap" required></textarea>
+        <select id="metode">
+            <option value="Cash">Cash (Tersedia)</option>
+            <option disabled>QRIS (Terkunci)</option>
         </select>
-        <span class="info-metode">*Selain Cash, metode pembayaran lain masih dikunci.</span>
-        
-        <button type="submit" class="btn-kirim" id="btnSubmit">KONFIRMASI & KIRIM</button>
+        <button type="submit" class="btn-bayar" id="btnS">KIRIM PESANAN</button>
     </form>
 
-    <a href="dashboard.html" class="btn-back">⬅ Kembali Belanja</a>
-</div>
+    <script>
+        const tot = localStorage.getItem('tempTotal');
+        const ord = localStorage.getItem('tempOrder');
+        document.getElementById('total-txt').innerText = "Rp " + parseInt(tot).toLocaleString();
 
-<script>
-    // Ambil total harga
-    const total = localStorage.getItem('totalBayar') || 0;
-    document.getElementById('display-total').innerText = "Rp " + parseInt(total).toLocaleString('id-ID');
+        document.getElementById('payForm').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('btnS').innerText = "Proses...";
+            
+            const data = {
+                tanggal: new Date().toLocaleString('id-ID'),
+                nama: document.getElementById('nama').value,
+                hp: document.getElementById('hp').value,
+                alamat: document.getElementById('alamat').value,
+                pesanan: ord,
+                total: "Rp " + parseInt(tot).toLocaleString()
+            };
 
-    const form = document.getElementById('formOrder');
-    const btn = document.getElementById('btnSubmit');
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        btn.innerText = "Memproses...";
-        btn.disabled = true;
-
-        const data = {
-            nama: document.getElementById('nama').value,
-            whatsapp: document.getElementById('wa').value,
-            alamat: document.getElementById('alamat').value,
-            metode: document.getElementById('metode').value,
-            total: "Rp " + parseInt(total).toLocaleString('id-ID'),
-            tanggal: new Date().toLocaleString('id-ID')
+            // Link Google Sheets kamu
+            fetch("https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec", {
+                method: 'POST', mode: 'no-cors', body: JSON.stringify(data)
+            }).then(() => {
+                // Simpan ke Riwayat Lokal
+                let history = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+                history.push(data);
+                localStorage.setItem('riwayatPesanan', JSON.stringify(history));
+                
+                window.location.href = "selesai.html";
+            });
         };
-
-        // URL Google Script kamu
-        const urlSheet = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
-
-        fetch(urlSheet, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            alert("✅ PESANAN BERHASIL!\n\nPembayaran via " + data.metode + " telah dicatat. Gibran akan segera menghubungi kamu!");
-            localStorage.removeItem('totalBayar');
-            window.location.href = "index.html"; 
-        })
-        .catch(err => {
-            alert("Maaf, terjadi kesalahan.");
-            btn.innerText = "KONFIRMASI & KIRIM";
-            btn.disabled = false;
-        });
-    });
-</script>
-
+    </script>
 </body>
 </html>
