@@ -1,35 +1,15 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance - Gibran Store</title>
+    <title>Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
-        .box { border: 2px solid #ff9800; display: inline-block; padding: 30px; border-radius: 15px; }
-        #btn-download { display: none; background: #ff9800; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }
+        body { background:#121212; color:white; text-align:center; padding-top:100px; font-family:sans-serif; }
+        .btn { background:orange; color:white; padding:15px 25px; text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block; margin-top:20px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>Toko Sedang Maintenance</h2>
-        <p>Kami sedang menyiapkan produk terbaru untuk Anda.</p>
-        <p id="timer">Buka Otomatis Jam 21:00 WIB</p>
-        <a href="v2/index.html" id="btn-download">MASUK KE TOKO (SUDAH BUKA)</a>
-    </div>
-
-    <script>
-        function checkTime() {
-            const sekarang = new Date();
-            const jam = sekarang.getHours();
-            // Jika sudah jam 9 malam (21) ke atas
-            if (jam >= 21) {
-                document.getElementById('btn-download').style.display = 'inline-block';
-                document.getElementById('timer').innerText = "Toko Sudah Dibuka!";
-            }
-        }
-        setInterval(checkTime, 1000);
-        checkTime();
-    </script>
+    <h1>Selamat Datang di Gibran Store</h1>
+    <p>Klik tombol di bawah untuk masuk ke toko</p>
+    <a href="v2/index.html" class="btn">MASUK KE TOKO (v2)</a>
 </body>
 </html>
