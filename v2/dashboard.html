@@ -3,36 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Dashboard</title>
+    <title>Gibran Store - Menu</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
-        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: sticky; top: 0; }
+        /* Navigasi Atas */
+        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: sticky; top: 0; z-index: 100; }
         .nav-top a { color: white; text-decoration: none; font-weight: bold; font-size: 14px; }
+        
         .container { padding: 20px; }
         .product-card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .btn-add { background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
-        .cart-box { background: #ff9800; color: black; padding: 15px; border-radius: 12px; margin-top: 20px; }
-        .btn-checkout { background: white; color: black; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-add { background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        /* Keranjang */
+        .cart-box { background: #ff9800; color: black; padding: 15px; border-radius: 12px; margin-top: 20px; position: sticky; bottom: 20px; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
+        .btn-checkout { background: white; color: black; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div class="nav-top">
-    <a href="dashboard.html" style="color:#ff9800">MENU</a>
+    <a href="index.html" style="color:#ff9800">MENU</a>
     <a href="riwayat.html">RIWAYAT</a>
     <a href="pengaturan.html">PENGATURAN</a>
 </div>
 
 <div class="container">
-    <h2>Daftar Menu Jajanan</h2>
+    <h2>Daftar Jajanan 🍿</h2>
     <div id="menu-list"></div>
 
     <div class="cart-box">
         <strong>🛒 Keranjang:</strong>
-        <div id="cart-items">Kosong</div>
-        <hr>
+        <div id="cart-items">Belum ada barang</div>
+        <hr border="1">
         <strong>Total: <span id="total-harga">Rp 0</span></strong>
-        <button class="btn-checkout" onclick="kePembayaran()">Proses ke Pembayaran</button>
+        <button class="btn-checkout" onclick="kePembayaran()">Proses Pembayaran</button>
     </div>
 </div>
 
@@ -48,8 +52,8 @@
     function renderMenu() {
         document.getElementById('menu-list').innerHTML = menu.map((m, i) => `
             <div class="product-card">
-                <div><b>${m.n}</b><br>Rp ${m.h.toLocaleString()}</div>
-                <button class="btn-add" onclick="add(${i})">+</button>
+                <div><b>${m.n}</b><br><span style="color:#bbb">Rp ${m.h.toLocaleString()}</span></div>
+                <button class="btn-add" onclick="add(${i})">Tambah</button>
             </div>
         `).join('');
     }
@@ -61,15 +65,20 @@
 
     function updateCart() {
         const total = cart.reduce((s, m) => s + m.h, 0);
-        document.getElementById('cart-items').innerText = cart.length + " item terpilih";
+        document.getElementById('cart-items').innerText = cart.length + " produk dipilih";
         document.getElementById('total-harga').innerText = "Rp " + total.toLocaleString();
+        
+        // Simpan data sementara untuk dibawa ke halaman pembayaran
         localStorage.setItem('tempTotal', total);
         localStorage.setItem('tempOrder', cart.map(c => c.n).join(', '));
     }
 
     function kePembayaran() {
-        if(cart.length == 0) return alert("Keranjang kosong!");
-        window.location.href = "pembayaran.html";
+        if(cart.length == 0) {
+            alert("Pilih jajanannya dulu, Bran!");
+        } else {
+            window.location.href = "pembayaran.html";
+        }
     }
     renderMenu();
 </script>
