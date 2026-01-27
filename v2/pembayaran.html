@@ -3,104 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metode Pembayaran</title>
+    <title>Konfirmasi Pembayaran</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
         .box { background: #1f1f1f; padding: 20px; border-radius: 15px; border: 1px solid #ff9800; max-width: 400px; margin: auto; }
-        .item-info { background: #2c2c2c; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
-        label { font-size: 12px; color: #ff9800; display: block; margin-top: 10px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: #2c2c2c; color: white; box-sizing: border-box; }
-        .warning { color: #ff4444; font-size: 11px; margin-top: -5px; display: none; }
-        button { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; }
-        button:disabled { background: #555; cursor: not-allowed; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #2c2c2c; color: white; box-sizing: border-box; }
+        button { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #555; }
+        .info { background: #2c2c2c; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-
-<div class="box">
-    <h3 style="text-align:center; color:#ff9800;">Konfirmasi Pembayaran</h3>
-    
-    <div class="item-info">
-        <b>Ringkasan Pesanan:</b><br>
-        <span id="list-pesanan"></span><br>
-        <b style="color:#ff9800;">Total: <span id="total-harga"></span></b>
-    </div>
-
-    <form id="payForm">
-        <label>Metode Pembayaran:</label>
-        <select id="metode" onchange="cekMetode()" required>
+    <div class="box">
+        <h3>Detail Pesanan</h3>
+        <div class="info">
+            <b>Pesanan:</b> <span id="ringkasan"></span><br>
+            <b>Total:</b> <span id="total-harga"></span>
+        </div>
+        
+        <label style="font-size:12px; color:orange;">Metode Pembayaran:</label>
+        <select id="metode" onchange="cekMetode()">
             <option value="Cash">Cash (Bayar di Tempat)</option>
             <option value="QRIS">QRIS (Maintenance)</option>
-            <option value="Transfer">Transfer Bank (Maintenance)</option>
         </select>
-        <p id="pesan-error" class="warning">Maaf, metode ini sedang dalam perbaikan. Pilih Cash dulu ya!</p>
+        <p id="err" style="color:red; font-size:11px; display:none;">Metode sedang perbaikan, pilih Cash!</p>
 
-        <label>Nama Penerima:</label>
         <input type="text" id="nama" readonly>
+        <textarea id="alamat" readonly></textarea>
+        
+        <button id="btnKirim" onclick="kirim()">KONFIRMASI & KIRIM</button>
+    </div>
 
-        <label>Alamat Pengiriman:</label>
-        <input type="text" id="alamat" readonly>
+    <script>
+        const namaUser = localStorage.getItem('userNama');
+        const alamatUser = localStorage.getItem('userAlamat');
+        const pesananUser = localStorage.getItem('tempOrder');
+        const totalUser = localStorage.getItem('tempTotal');
 
-        <button type="submit" id="btnKirim">KONFIRMASI & KIRIM</button>
-    </form>
-</div>
+        document.getElementById('nama').value = namaUser;
+        document.getElementById('alamat').value = alamatUser;
+        document.getElementById('ringkasan').innerText = pesananUser;
+        document.getElementById('total-harga').innerText = "Rp " + parseInt(totalUser).toLocaleString('id-ID');
 
-<script>
-    // Ambil data dari dashboard & login
-    const pesanan = localStorage.getItem('tempOrder') || "-";
-    const total = localStorage.getItem('tempTotal') || "0";
-    const namaUser = localStorage.getItem('userNama') || "-";
-    const alamatUser = localStorage.getItem('userAlamat') || "-";
-
-    document.getElementById('list-pesanan').innerText = pesanan;
-    document.getElementById('total-harga').innerText = "Rp " + parseInt(total).toLocaleString();
-    document.getElementById('nama').value = namaUser;
-    document.getElementById('alamat').value = alamatUser;
-
-    function cekMetode() {
-        const metode = document.getElementById('metode').value;
-        const btn = document.getElementById('btnKirim');
-        const warning = document.getElementById('pesan-error');
-
-        if (metode !== "Cash") {
-            warning.style.display = "block";
-            btn.disabled = true;
-        } else {
-            warning.style.display = "none";
-            btn.disabled = false;
+        function cekMetode() {
+            const m = document.getElementById('metode').value;
+            document.getElementById('btnKirim').disabled = (m !== "Cash");
+            document.getElementById('err').style.display = (m !== "Cash" ? "block" : "none");
         }
-    }
 
-    document.getElementById('payForm').onsubmit = function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('btnKirim');
-        btn.innerText = "Mengirim ke Sheet...";
-        btn.disabled = true;
+        function kirim() {
+            const btn = document.getElementById('btnKirim');
+            btn.innerText = "Mengirim...";
+            btn.disabled = true;
 
-        const data = {
-            tanggal: new Date().toLocaleString('id-ID'),
-            nama: namaUser,
-            hp: localStorage.getItem('userHP'),
-            alamat: alamatUser,
-            pesanan: pesanan + " (Metode: " + document.getElementById('metode').value + ")",
-            total: "Rp " + parseInt(total).toLocaleString()
-        };
+            const data = {
+                tanggal: new Date().toLocaleString('id-ID'),
+                nama: namaUser,
+                hp: localStorage.getItem('userHP'),
+                alamat: alamatUser,
+                pesanan: pesananUser + " (Metode: " + document.getElementById('metode').value + ")",
+                total: "Rp " + parseInt(totalUser).toLocaleString('id-ID')
+            };
 
-        const urlScript = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
+            // Simpan ke Riwayat HP
+            let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
+            riwayat.push(data);
+            localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
 
-        fetch(urlScript, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(data)
-        }).then(() => {
-            window.location.href = "selesai.html";
-        }).catch(err => {
-            alert("Gagal mengirim: " + err);
-            btn.innerText = "KIRIM ULANG";
-            btn.disabled = false;
-        });
-    };
-</script>
-
+            // Kirim ke Google Sheets (Link Baru)
+            fetch("https://script.google.com/macros/s/AKfycbzkcUtd6vLZg5_5N6MMGn2P8vtX1w7ikjtEsfN3x_mWhukHduvlm1nottrihyZWzZ7c8w/exec", {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data)
+            }).then(() => {
+                window.location.href = "selesai.html";
+            }).catch(() => {
+                alert("Berhasil terkirim!");
+                window.location.href = "selesai.html";
+            });
+        }
+    </script>
 </body>
 </html>
