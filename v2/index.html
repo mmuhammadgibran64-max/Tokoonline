@@ -3,41 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gibran Store</title>
+    <title>Masuk - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: #1f1f1f; padding: 30px; border-radius: 15px; border: 1px solid #ff9800; text-align: center; width: 300px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #121212; color: white; box-sizing: border-box; }
-        button { background: #ff9800; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .login-box { background: #1f1f1f; padding: 25px; border-radius: 15px; border: 1px solid #ff9800; width: 100%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h2 { color: #ff9800; margin-bottom: 5px; text-align: center; }
+        p { font-size: 12px; color: #888; text-align: center; margin-bottom: 20px; }
+        label { font-size: 13px; color: #ff9800; display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #333; background: #121212; color: white; box-sizing: border-box; }
+        button { background: #ff9800; color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2 style="color:#ff9800">Gibran Store v2</h2>
-        <input type="text" id="user" placeholder="Username">
-        <input type="password" id="pass" placeholder="Password">
-        <button onclick="cekLogin()" id="btnL">MASUK</button>
-    </div>
 
-    <script>
-        function cekLogin() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            const btn = document.getElementById('btnL');
-            const urlScript = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
+<div class="login-box">
+    <h2>Gibran Store v2</h2>
+    <p>Isi data untuk masuk ke toko</p>
+    
+    <form id="loginForm">
+        <label>Nama Pelanggan:</label>
+        <input type="text" id="nama" placeholder="Nama Lengkap" required>
+        
+        <label>Nomor HP:</label>
+        <input type="tel" id="hp" placeholder="0812..." required>
+        
+        <label>Alamat Rumah / No Rumah:</label>
+        <textarea id="alamat" rows="2" placeholder="Alamat lengkap kamu" required></textarea>
 
-            btn.innerText = "Mengecek...";
-            fetch(`${urlScript}?u=${u}&p=${p}`)
-                .then(res => res.text())
-                .then(hasil => {
-                    if(hasil.trim() === "Success") {
-                        window.location.href = "dashboard.html";
-                    } else {
-                        alert("Gagal Login! Cek Sheet User.");
-                        btn.innerText = "MASUK";
-                    }
-                });
-        }
-    </script>
+        <button type="submit" id="btnMasuk">MASUK SEKARANG</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').onsubmit = function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnMasuk');
+        btn.innerText = "Mendaftarkan...";
+        btn.disabled = true;
+
+        const dataLogin = {
+            tanggal: new Date().toLocaleString('id-ID'),
+            nama: document.getElementById('nama').value,
+            hp: document.getElementById('hp').value,
+            alamat: document.getElementById('alamat').value,
+            pesanan: "LOG IN (Hanya Masuk)", // Keterangan biar kamu tau di Sheet
+            total: "-"
+        };
+
+        // PAKAI URL SCRIPT LAMA KAMU
+        const urlScript = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
+
+        // Simpan data identitas ke LocalStorage biar pas checkout nggak usah isi lagi
+        localStorage.setItem('userNama', dataLogin.nama);
+        localStorage.setItem('userHP', dataLogin.hp);
+        localStorage.setItem('userAlamat', dataLogin.alamat);
+
+        fetch(urlScript, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(dataLogin)
+        }).then(() => {
+            alert("Halo " + dataLogin.nama + ", Selamat datang!");
+            window.location.href = "dashboard.html";
+        }).catch(() => {
+            // Kalau internet lemot, tetep masukin ke dashboard aja biar pembeli nggak kabur
+            window.location.href = "dashboard.html";
+        });
+    };
+</script>
+
 </body>
 </html>
