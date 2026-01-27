@@ -3,43 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - Gibran Store</title>
+    <title>Dashboard - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding-bottom: 80px; }
-        .header { background: #1e1e1e; padding: 20px; text-align: center; border-bottom: 1px solid #333; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; }
-        .price { color: #28a745; font-weight: bold; margin: 8px 0; }
-        .btn-add { background: #28a745; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
-        .nav { position: fixed; bottom: 0; width: 100%; background: #1e1e1e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav a { color: #666; text-decoration: none; font-size: 11px; text-align: center; }
-        .nav a.active { color: #28a745; }
+        body { font-family: sans-serif; background: #000; color: #fff; margin: 0; padding-bottom: 80px; }
+        .header { background: #ff9800; color: #000; padding: 20px; text-align: center; border-radius: 0 0 30px 30px; font-weight: bold; }
+        
+        /* Gaya Menu/Konten */
+        .content { padding: 20px; display: none; }
+        .active { display: block; }
+
+        /* Gaya Kartu Produk di Menu Harga */
+        .card { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-beli { background: #ff9800; color: #000; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Gaya Navigasi Bawah (Bottom Nav) */
+        .navbar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .nav-item { color: #888; text-decoration: none; font-size: 12px; text-align: center; cursor: pointer; }
+        .nav-item.active-nav { color: #ff9800; font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-    <div class="header"><b>Gibran Store</b></div>
-    <div class="grid" id="menu"></div>
 
-    <div class="nav">
-        <a href="dashboard.html" class="active">🏠<br>Menu</a>
-        <a href="riwayat.html">📜<br>Riwayat</a>
-        <a href="https://wa.me/6285123332018">💬<br>Chat</a>
-        <a href="pengaturan.html">⚙️<br>Setting</a>
+    <div class="header">
+        <span id="sapaan">Halo, Pelanggan!</span>
+    </div>
+
+    <div id="menu-harga" class="content active">
+        <h3 style="color: #ff9800;">Daftar Produk</h3>
+        
+        <div class="card">
+            <div>
+                <div style="font-weight:bold;">Air Galon Isi Ulang</div>
+                <div style="color:#ff9800; font-size:14px;">Rp 5.000</div>
+            </div>
+            <button class="btn-beli" onclick="tambahKeKeranjang('Galon Isi Ulang', 5000)">BELI</button>
+        </div>
+
+        <div class="card">
+            <div>
+                <div style="font-weight:bold;">Air Mineral Botol</div>
+                <div style="color:#ff9800; font-size:14px;">Rp 3.000</div>
+            </div>
+            <button class="btn-beli" onclick="tambahKeKeranjang('Mineral Botol', 3000)">BELI</button>
+        </div>
+    </div>
+
+    <div id="menu-riwayat" class="content">
+        <h3 style="color: #ff9800;">Pesanan Saya</h3>
+        <div id="list-riwayat" style="font-size: 14px; color: #bbb;">Belum ada pesanan.</div>
+    </div>
+
+    <div class="navbar">
+        <div class="nav-item active-nav" id="btn-harga" onclick="pindahMenu('harga')">
+            <span>🏠</span><br>Dashboard
+        </div>
+        <div class="nav-item" id="btn-riwayat" onclick="pindahMenu('riwayat')">
+            <span>📜</span><br>Riwayat
+        </div>
     </div>
 
     <script>
-        const p = [
-            {n:"Peye Kacang (K)", h:5000}, {n:"Peye Kacang (B)", h:10000},
-            {n:"Slondok", h:20000}, {n:"Opak", h:20000},
-            {n:"Kacang", h:2000}, {n:"Kripik Pedes", h:15000},
-            {n:"Kue Sus Kering", h:15000}, {n:"Reginang (isi 3)", h:5000},
-            {n:"Aqua Galon", h:22000}
-        ];
-        const container = document.getElementById('menu');
-        p.forEach(x => {
-            container.innerHTML += `<div class="card"><div style="font-size:13px;height:35px">${x.n}</div><div class="price">Rp ${x.h.toLocaleString()}</div><button class="btn-add" onclick="order('${x.n}',${x.h})">Tambah</button></div>`;
-        });
-        function order(n,h) { localStorage.setItem("keranjang", JSON.stringify([{nama:n, harga:h}])); window.location.href="pembayaran.html"; }
+        // Ambil nama user dari Login tadi
+        const namaUser = localStorage.getItem("nama") || "Pelanggan";
+        document.getElementById('sapaan').innerText = "Halo, " + namaUser + "!";
+
+        // Fungsi pindah menu tanpa pindah halaman
+        function pindahMenu(menu) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+
+            if(menu === 'harga') {
+                document.getElementById('menu-harga').classList.add('active');
+                document.getElementById('btn-harga').classList.add('active-nav');
+            } else {
+                document.getElementById('menu-riwayat').classList.add('active');
+                document.getElementById('btn-riwayat').classList.add('active-nav');
+                tampilkanRiwayat();
+            }
+        }
+
+        // Fungsi Beli & Lanjut ke Pembayaran (Tetap ke Sheet Order)
+        function tambahKeKeranjang(nama, harga) {
+            const item = [{ nama: nama, harga: harga }];
+            localStorage.setItem("keranjang", JSON.stringify(item));
+            window.location.href = "pembayaran.html"; 
+        }
+
+        function tampilkanRiwayat() {
+            const riwayat = JSON.parse(localStorage.getItem("riwayat_pesanan")) || [];
+            const container = document.getElementById('list-riwayat');
+            if(riwayat.length > 0) {
+                container.innerHTML = riwayat.map(r => `
+                    <div style="background:#111; padding:10px; border-radius:10px; margin-bottom:10px; border-left:4px solid #ff9800;">
+                        <b>${r.produk}</b><br>
+                        <small>${r.tanggal}</small> - <span style="color:#ff9800;">Rp ${r.total.toLocaleString()}</span>
+                    </div>
+                `).join('');
+            }
+        }
     </script>
 </body>
 </html>
