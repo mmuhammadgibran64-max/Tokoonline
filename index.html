@@ -4,80 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gibran Store</title>
-    
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ff9800">
-    <link rel="apple-touch-icon" href="https://i.imgur.com/uR1k0jS.png">
-
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* 1. Style Splash Screen */
+        /* LAYAR 1: SPLASH SCREEN */
         #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
-        .splash-logo { width: 120px; border-radius: 25px; border: 2px solid #ff9800; animation: bounce 2s infinite; }
-        
-        /* 2. Style Update & Maintenance */
-        #update-layer { display: none; text-align: center; width: 85%; max-width: 350px; z-index: 10; }
+        .logo-img { width: 120px; border-radius: 20px; border: 2px solid #ff9800; animation: pulse 2s infinite; }
+
+        /* LAYAR 2: UPDATE/MAINTENANCE */
+        #update-layer { display: none; text-align: center; width: 85%; max-width: 350px; }
         .bar-cont { width: 100%; background: #222; height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
         .bar-fill { width: 0%; height: 100%; background: #ff9800; transition: 0.1s; }
-        .btn-up { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
+        .btn-up { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
 
-        /* 3. Style Login */
-        #login-layer { display: none; width: 85%; max-width: 350px; }
-        .box-login { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.imgur.com/uR1k0jS.png'); background-size: cover; background-position: center; padding: 40px 20px; border-radius: 30px; border: 2px solid #ff9800; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ff9800; background: rgba(255,255,255,0.9); color: #000; box-sizing: border-box; font-weight: bold; }
-        .btn-masuk { width: 100%; padding: 12px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* LAYAR 3: LOGIN (GAMBAR BACKGROUND DI SINI) */
+        #login-layer { display: none; width: 90%; max-width: 350px; }
+        .box-login { 
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i.imgur.com/uR1k0jS.png'); 
+            background-size: cover; 
+            background-position: center; 
+            padding: 40px 20px; 
+            border-radius: 30px; 
+            border: 2px solid #ff9800; 
+            text-align: center; 
+            box-shadow: 0 0 30px rgba(255,152,0,0.2);
+        }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ff9800; background: #fff; color: #000; box-sizing: border-box; font-size: 16px; }
+        .btn-masuk { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <img src="https://i.imgur.com/uR1k0jS.png" class="splash-logo">
-        <h2 style="color:#ff9800; letter-spacing:3px;">GIBRAN STORE</h2>
-        <div style="width:50px; height:3px; background:#ff9800; border-radius:10px;"></div>
+        <img src="https://i.imgur.com/uR1k0jS.png" class="logo-img">
+        <h2 style="color:#ff9800; margin-top:20px;">GIBRAN STORE</h2>
     </div>
 
     <div id="update-layer">
-        <img src="https://i.imgur.com/uR1k0jS.png" style="width:80px; border-radius:15px; margin-bottom:10px;">
-        <h2 id="up-title" style="color:#ff9800; margin:5px 0;">MAINTENANCE</h2>
-        <p id="up-msg" style="color:#888; font-size:14px;">Sedang menyiapkan data produk terbaru.</p>
+        <img src="https://i.imgur.com/uR1k0jS.png" style="width:80px; border-radius:15px;">
+        <h2 id="up-title" style="color:#ff9800">MEMERIKSA DATA...</h2>
+        <p id="up-msg" style="color:#666">Tunggu sebentar ya, Bran...</p>
         
-        <button id="btnUpdate" class="btn-up" style="display:none; margin-top:20px;" onclick="startDownload()">UNDUH DATA TERBARU</button>
+        <button id="btnUpdate" class="btn-up" style="display:none" onclick="startDownload()">UNDUH DATA TERBARU</button>
         
         <div id="progCont" style="display:none">
             <div class="bar-cont"><div id="bar" class="bar-fill"></div></div>
-            <p id="status" style="font-size:11px; margin-top:10px; color:#666; text-transform:uppercase;"></p>
+            <p id="status" style="font-size:11px; margin-top:10px; color:#444"></p>
         </div>
     </div>
 
     <div id="login-layer">
         <div class="box-login">
-            <h2 style="color:#ff9800; margin-top:0; text-shadow: 2px 2px 5px #000;">LOGIN ADMIN</h2>
-            <input type="text" id="nama" placeholder="Nama Lengkap">
-            <input type="number" id="hp" placeholder="Nomor WhatsApp">
-            <button class="btn-masuk" onclick="masuk()">MASUK SEKARANG</button>
+            <h2 style="color:#ff9800; margin-bottom:20px;">LOGIN ADMIN</h2>
+            <input type="text" id="nama" placeholder="Masukkan Nama">
+            <input type="number" id="hp" placeholder="Masukkan No. WA">
+            <button class="btn-masuk" onclick="masuk()">MASUK KE TOKO</button>
         </div>
     </div>
 
     <script>
-        // Jalankan Splash Screen dulu
+        // Start: Tampilkan Splash 2 detik
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             cekSistem();
-        }, 3000); // Muncul selama 3 detik
+        }, 2000);
 
         function cekSistem() {
             const sekarang = new Date();
+            // JANGAN LUPA: Ini disetel ke besok jam 8 pagi
             const jadwalBuka = new Date('2026-01-27T08:00:00'); 
             
             document.getElementById('update-layer').style.display = 'block';
 
             if (sekarang >= jadwalBuka) {
                 document.getElementById('up-title').innerText = "UPDATE TERSEDIA";
-                document.getElementById('up-msg').innerText = "Versi 1.2.9 siap diunduh.";
+                document.getElementById('up-msg').innerText = "Klik tombol di bawah untuk ambil data produk baru.";
                 document.getElementById('btnUpdate').style.display = 'block';
+            } else {
+                document.getElementById('up-title').innerText = "MAINTENANCE";
+                document.getElementById('up-msg').innerText = "Sistem buka besok jam 08:00 Pagi.";
             }
         }
 
@@ -88,19 +96,19 @@
             let p = 0;
             let bar = document.getElementById('bar');
             let stat = document.getElementById('status');
-            const teks = ["Menghubungkan...", "Mengambil Produk...", "Update Harga...", "Sinkronisasi...", "Selesai!"];
+            const teks = ["Connecting...", "Downloading...", "Syncing...", "Done!"];
 
             let intv = setInterval(() => {
-                p += 2;
+                p += 5; // Kecepatan download (5% per step)
                 bar.style.width = p + "%";
-                stat.innerText = teks[Math.floor(p/25)] || "Hampir Selesai...";
+                stat.innerText = teks[Math.floor(p/30)] || "Finishing...";
 
                 if(p >= 100) {
                     clearInterval(intv);
                     document.getElementById('update-layer').style.display = 'none';
                     document.getElementById('login-layer').style.display = 'block';
                 }
-            }, 40);
+            }, 100);
         }
 
         function masuk() {
@@ -111,7 +119,7 @@
                 localStorage.setItem("hp", h);
                 window.location.href = "dashboard.html";
             } else {
-                alert("Isi data dulu ya!");
+                alert("Isi Nama dan No WA dulu ya!");
             }
         }
     </script>
