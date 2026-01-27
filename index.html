@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store</title>
+    <title>Gibran Store - Maintenance</title>
     <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
@@ -18,7 +18,7 @@
         .bar-fill { width: 0%; height: 100%; background: #ff9800; transition: 0.1s; }
         .btn-up { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
 
-        /* LAYAR 3: LOGIN (GAMBAR BACKGROUND DI SINI) */
+        /* LAYAR 3: LOGIN */
         #login-layer { display: none; width: 90%; max-width: 350px; }
         .box-login { 
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i.imgur.com/uR1k0jS.png'); 
@@ -28,7 +28,6 @@
             border-radius: 30px; 
             border: 2px solid #ff9800; 
             text-align: center; 
-            box-shadow: 0 0 30px rgba(255,152,0,0.2);
         }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ff9800; background: #fff; color: #000; box-sizing: border-box; font-size: 16px; }
         .btn-masuk { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
@@ -45,8 +44,8 @@
 
     <div id="update-layer">
         <img src="https://i.imgur.com/uR1k0jS.png" style="width:80px; border-radius:15px;">
-        <h2 id="up-title" style="color:#ff9800">MEMERIKSA DATA...</h2>
-        <p id="up-msg" style="color:#666">Tunggu sebentar ya, Bran...</p>
+        <h2 id="up-title" style="color:#ff9800">MAINTENANCE RUTIN</h2>
+        <p id="up-msg" style="color:#666">Sistem sedang diperbarui. Kami akan kembali online jam 21:00 WIB (9 Malam).</p>
         
         <button id="btnUpdate" class="btn-up" style="display:none" onclick="startDownload()">UNDUH DATA TERBARU</button>
         
@@ -66,7 +65,6 @@
     </div>
 
     <script>
-        // Start: Tampilkan Splash 2 detik
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             cekSistem();
@@ -74,18 +72,20 @@
 
         function cekSistem() {
             const sekarang = new Date();
-            // JANGAN LUPA: Ini disetel ke besok jam 8 pagi
-            const jadwalBuka = new Date('2026-01-27T08:00:00'); 
+            // SET KE JAM 9 MALAM (21:00) HARI INI
+            const jadwalBuka = new Date();
+            jadwalBuka.setHours(21, 0, 0); 
             
             document.getElementById('update-layer').style.display = 'block';
 
             if (sekarang >= jadwalBuka) {
-                document.getElementById('up-title').innerText = "UPDATE TERSEDIA";
-                document.getElementById('up-msg').innerText = "Klik tombol di bawah untuk ambil data produk baru.";
+                document.getElementById('up-title').innerText = "UPDATE SELESAI";
+                document.getElementById('up-msg').innerText = "Data produk malam ini sudah siap diunduh.";
                 document.getElementById('btnUpdate').style.display = 'block';
             } else {
-                document.getElementById('up-title').innerText = "MAINTENANCE";
-                document.getElementById('up-msg').innerText = "Sistem buka besok jam 08:00 Pagi.";
+                document.getElementById('up-title').innerText = "MAINTENANCE RUTIN";
+                document.getElementById('up-msg').innerText = "Update sedang berlangsung. Kembali jam 21:00 WIB.";
+                document.getElementById('btnUpdate').style.display = 'none';
             }
         }
 
@@ -96,19 +96,19 @@
             let p = 0;
             let bar = document.getElementById('bar');
             let stat = document.getElementById('status');
-            const teks = ["Connecting...", "Downloading...", "Syncing...", "Done!"];
+            const teks = ["Connecting...", "Syncing Database...", "Updating Assets...", "Finalizing..."];
 
             let intv = setInterval(() => {
-                p += 5; // Kecepatan download (5% per step)
+                p += 4;
                 bar.style.width = p + "%";
-                stat.innerText = teks[Math.floor(p/30)] || "Finishing...";
+                stat.innerText = teks[Math.floor(p/26)] || "Hampir Selesai...";
 
                 if(p >= 100) {
                     clearInterval(intv);
                     document.getElementById('update-layer').style.display = 'none';
                     document.getElementById('login-layer').style.display = 'block';
                 }
-            }, 100);
+            }, 50);
         }
 
         function masuk() {
@@ -119,7 +119,7 @@
                 localStorage.setItem("hp", h);
                 window.location.href = "dashboard.html";
             } else {
-                alert("Isi Nama dan No WA dulu ya!");
+                alert("Isi data dulu!");
             }
         }
     </script>
