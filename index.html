@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Gibran Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance - Gibran Store</title>
     <style>
-        body { background:#121212; color:white; text-align:center; padding-top:100px; font-family:sans-serif; }
-        .btn { background:orange; color:white; padding:15px 25px; text-decoration:none; border-radius:8px; font-weight:bold; display:inline-block; margin-top:20px; }
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
+        .timer { font-size: 24px; color: #ff9800; font-weight: bold; margin-top: 20px; }
+        .btn-masuk { display: none; background: #ff9800; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Selamat Datang di Gibran Store</h1>
-    <p>Klik tombol di bawah untuk masuk ke toko</p>
-    <a href="v2/index.html" class="btn">MASUK KE TOKO (v2)</a>
+    <h1>⚠️ TOKO SEDANG MAINTENANCE ⚠️</h1>
+    <p>Mohon maaf, toko sedang update sistem dan baru akan buka pukul 21:00 WIB.</p>
+    
+    <div id="countdown" class="timer">Menghitung waktu...</div>
+
+    <a href="v2/index.html" id="masukBtn" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
+
+    <script>
+        function updateTimer() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(21, 0, 0); // Jam 9 Malam
+
+            if (now >= target) {
+                document.getElementById('countdown').innerHTML = "TOKO SUDAH BUKA!";
+                document.getElementById('masukBtn').style.display = 'inline-block';
+                return;
+            }
+
+            const diff = target - now;
+            const jam = Math.floor(diff / (1000 * 60 * 60));
+            const menit = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const detik = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `Buka dalam: ${jam}j ${menit}m ${detik}d`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
