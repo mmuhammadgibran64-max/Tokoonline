@@ -3,110 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Gibran Store</title>
+    <title>Gibran Store - Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #ff9800; }
-        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-        .menu-info h4 { margin: 0; font-size: 16px; }
-        .menu-info p { margin: 0; color: #666; font-size: 14px; }
-        .btn-add { background: #ff9800; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .cart-section { margin-top: 30px; padding: 20px; background: #fffde7; border-radius: 12px; border: 2px dashed #ff9800; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .total { font-weight: bold; font-size: 18px; border-top: 2px solid #ff9800; padding-top: 10px; margin-top: 10px; display: flex; justify-content: space-between; }
-        .btn-bayar { background: #28a745; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; display: none; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
+        .nav-top { background: #1f1f1f; display: flex; justify-content: space-around; padding: 15px; border-bottom: 2px solid #ff9800; position: sticky; top: 0; }
+        .nav-top a { color: white; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .container { padding: 20px; }
+        .product-card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .btn-add { background: #ff9800; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+        .cart-box { background: #ff9800; color: black; padding: 15px; border-radius: 12px; margin-top: 20px; }
+        .btn-checkout { background: white; color: black; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Daftar Menu Gibran Store</h2>
-    
-    <div id="menu-list">
-        </div>
+<div class="nav-top">
+    <a href="dashboard.html" style="color:#ff9800">MENU</a>
+    <a href="riwayat.html">RIWAYAT</a>
+    <a href="pengaturan.html">PENGATURAN</a>
+</div>
 
-    <div class="cart-section" id="cart-box">
-        <h3>🛒 Keranjang Anda</h3>
-        <div id="cart-items">
-            <p style="color: #999;">Belum ada produk...</p>
-        </div>
-        <div class="total">
-            <span>Total:</span>
-            <span id="total-harga">Rp 0</span>
-        </div>
-        <button class="btn-bayar" id="btn-bayar" onclick="prosesKeBayar()">Proses ke Pembayaran</button>
+<div class="container">
+    <h2>Daftar Menu Jajanan</h2>
+    <div id="menu-list"></div>
+
+    <div class="cart-box">
+        <strong>🛒 Keranjang:</strong>
+        <div id="cart-items">Kosong</div>
+        <hr>
+        <strong>Total: <span id="total-harga">Rp 0</span></strong>
+        <button class="btn-checkout" onclick="kePembayaran()">Proses ke Pembayaran</button>
     </div>
 </div>
 
 <script>
-    const produk = [
-        { id: 1, nama: "Peye Kacang (Kecil)", harga: 5000 },
-        { id: 2, nama: "Peye Kacang (Besar)", harga: 10000 },
-        { id: 3, nama: "Slondok", harga: 20000 },
-        { id: 4, nama: "Opak", harga: 20000 },
-        { id: 5, nama: "Kacang", harga: 2000 },
-        { id: 6, nama: "Kripik Pedes", harga: 15000 },
-        { id: 7, nama: "Kue Sus Kering", harga: 15000 },
-        { id: 8, nama: "Renginang (Isi 3)", harga: 5000 },
-        { id: 9, nama: "Aqua Galon", harga: 22000 }
+    const menu = [
+        {n: "Peye Kacang (Kecil)", h: 5000}, {n: "Peye Kacang (Besar)", h: 10000},
+        {n: "Slondok", h: 20000}, {n: "Opak", h: 20000}, {n: "Kacang", h: 2000},
+        {n: "Kripik Pedes", h: 15000}, {n: "Kue Sus Kering", h: 15000},
+        {n: "Renginang (isi 3)", h: 5000}, {n: "Aqua Galon", h: 22000}
     ];
+    let cart = [];
 
-    let keranjang = [];
-
-    function tampilkanMenu() {
-        const menuList = document.getElementById('menu-list');
-        menuList.innerHTML = produk.map(p => `
-            <div class="menu-item">
-                <div class="menu-info">
-                    <h4>${p.nama}</h4>
-                    <p>Rp ${p.harga.toLocaleString()}</p>
-                </div>
-                <button class="btn-add" onclick="tambahKeKeranjang(${p.id})">Tambah</button>
+    function renderMenu() {
+        document.getElementById('menu-list').innerHTML = menu.map((m, i) => `
+            <div class="product-card">
+                <div><b>${m.n}</b><br>Rp ${m.h.toLocaleString()}</div>
+                <button class="btn-add" onclick="add(${i})">+</button>
             </div>
         `).join('');
     }
 
-    function tambahKeKeranjang(id) {
-        const item = produk.find(p => p.id === id);
-        keranjang.push(item);
-        updateKeranjang();
+    function add(i) {
+        cart.push(menu[i]);
+        updateCart();
     }
 
-    function updateKeranjang() {
-        const cartItems = document.getElementById('cart-items');
-        const totalHarga = document.getElementById('total-harga');
-        const btnBayar = document.getElementById('btn-bayar');
-
-        if (keranjang.length === 0) {
-            cartItems.innerHTML = '<p style="color: #999;">Belum ada produk...</p>';
-            btnBayar.style.display = 'none';
-            return;
-        }
-
-        cartItems.innerHTML = keranjang.map((item, index) => `
-            <div class="cart-item">
-                <span>${item.nama}</span>
-                <span>Rp ${item.harga.toLocaleString()}</span>
-            </div>
-        `).join('');
-
-        const total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-        totalHarga.innerText = `Rp ${total.toLocaleString()}`;
-        btnBayar.style.display = 'block';
+    function updateCart() {
+        const total = cart.reduce((s, m) => s + m.h, 0);
+        document.getElementById('cart-items').innerText = cart.length + " item terpilih";
+        document.getElementById('total-harga').innerText = "Rp " + total.toLocaleString();
+        localStorage.setItem('tempTotal', total);
+        localStorage.setItem('tempOrder', cart.map(c => c.n).join(', '));
     }
 
-    function prosesKeBayar() {
-        // Simpan total ke memori sebentar agar bisa dibaca di halaman pembayaran
-        const total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-        localStorage.setItem('totalBayar', total);
-        
-        // Pindah ke halaman pembayaran.html (di folder yang sama)
+    function kePembayaran() {
+        if(cart.length == 0) return alert("Keranjang kosong!");
         window.location.href = "pembayaran.html";
     }
-
-    tampilkanMenu();
+    renderMenu();
 </script>
-
 </body>
 </html>
