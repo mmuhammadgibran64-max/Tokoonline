@@ -3,31 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Maintenance</title>
+    <title>Gibran Store - Update Mode</title>
     <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* LAYAR 1: SPLASH SCREEN */
+        /* SPLASH SCREEN */
         #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .logo-img { width: 120px; border-radius: 20px; border: 2px solid #ff9800; animation: pulse 2s infinite; }
 
-        /* LAYAR 2: UPDATE/MAINTENANCE */
+        /* MAINTENANCE LAYER */
         #update-layer { display: none; text-align: center; width: 85%; max-width: 350px; }
         .bar-cont { width: 100%; background: #222; height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
         .bar-fill { width: 0%; height: 100%; background: #ff9800; transition: 0.1s; }
         .btn-up { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
 
-        /* LAYAR 3: LOGIN */
+        /* LOGIN LAYER */
         #login-layer { display: none; width: 90%; max-width: 350px; }
         .box-login { 
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i.imgur.com/uR1k0jS.png'); 
-            background-size: cover; 
-            background-position: center; 
-            padding: 40px 20px; 
-            border-radius: 30px; 
-            border: 2px solid #ff9800; 
-            text-align: center; 
+            background-size: cover; background-position: center; padding: 40px 20px; border-radius: 30px; border: 2px solid #ff9800; text-align: center; 
         }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ff9800; background: #fff; color: #000; box-sizing: border-box; font-size: 16px; }
         .btn-masuk { width: 100%; padding: 15px; background: #ff9800; color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
@@ -43,9 +38,9 @@
     </div>
 
     <div id="update-layer">
-        <img src="https://i.imgur.com/uR1k0jS.png" style="width:80px; border-radius:15px;">
+        <img src="https://i.imgur.com/uR1k0jS.png" style="width:80px; border-radius:15px; cursor:pointer;" onclick="bukaAdmin()">
         <h2 id="up-title" style="color:#ff9800">MAINTENANCE RUTIN</h2>
-        <p id="up-msg" style="color:#666">Sistem sedang diperbarui. Kami akan kembali online jam 21:00 WIB (9 Malam).</p>
+        <p id="up-msg" style="color:#666">Kami kembali jam 21:00 WIB. Klik logo di atas jika Anda Admin.</p>
         
         <button id="btnUpdate" class="btn-up" style="display:none" onclick="startDownload()">UNDUH DATA TERBARU</button>
         
@@ -65,48 +60,46 @@
     </div>
 
     <script>
+        // Splash screen jalan 2 detik
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             cekSistem();
         }, 2000);
 
+        // Fungsi Admin: Klik Sekali Langsung Muncul Login
+        function bukaAdmin() {
+            document.getElementById('update-layer').style.display = 'none';
+            document.getElementById('login-layer').style.display = 'block';
+        }
+
         function cekSistem() {
             const sekarang = new Date();
-            // SET KE JAM 9 MALAM (21:00) HARI INI
             const jadwalBuka = new Date();
-            jadwalBuka.setHours(21, 0, 0); 
+            jadwalBuka.setHours(21, 0, 0); // Jam 9 Malam
             
             document.getElementById('update-layer').style.display = 'block';
 
             if (sekarang >= jadwalBuka) {
                 document.getElementById('up-title').innerText = "UPDATE SELESAI";
-                document.getElementById('up-msg').innerText = "Data produk malam ini sudah siap diunduh.";
+                document.getElementById('up-msg').innerText = "Data baru sudah siap! Klik tombol di bawah.";
                 document.getElementById('btnUpdate').style.display = 'block';
-            } else {
-                document.getElementById('up-title').innerText = "MAINTENANCE RUTIN";
-                document.getElementById('up-msg').innerText = "Update sedang berlangsung. Kembali jam 21:00 WIB.";
-                document.getElementById('btnUpdate').style.display = 'none';
             }
         }
 
         function startDownload() {
             document.getElementById('btnUpdate').style.display = 'none';
             document.getElementById('progCont').style.display = 'block';
-            
             let p = 0;
             let bar = document.getElementById('bar');
             let stat = document.getElementById('status');
-            const teks = ["Connecting...", "Syncing Database...", "Updating Assets...", "Finalizing..."];
-
+            const teks = ["Connecting...", "Syncing...", "Done!"];
             let intv = setInterval(() => {
-                p += 4;
+                p += 5;
                 bar.style.width = p + "%";
-                stat.innerText = teks[Math.floor(p/26)] || "Hampir Selesai...";
-
+                stat.innerText = teks[Math.floor(p/40)] || "Finishing...";
                 if(p >= 100) {
                     clearInterval(intv);
-                    document.getElementById('update-layer').style.display = 'none';
-                    document.getElementById('login-layer').style.display = 'block';
+                    bukaAdmin();
                 }
             }, 50);
         }
@@ -119,7 +112,7 @@
                 localStorage.setItem("hp", h);
                 window.location.href = "dashboard.html";
             } else {
-                alert("Isi data dulu!");
+                alert("Isi data dulu ya!");
             }
         }
     </script>
