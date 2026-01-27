@@ -16,23 +16,25 @@
         <h2 style="color:#ff9800">Gibran Store v2</h2>
         <input type="text" id="user" placeholder="Username">
         <input type="password" id="pass" placeholder="Password">
-        <button onclick="cekLogin()">MASUK</button>
+        <button onclick="cekLogin()" id="btnL">MASUK</button>
     </div>
 
     <script>
         function cekLogin() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            // PAKAI URL SCRIPT LAMA KAMU
+            const btn = document.getElementById('btnL');
             const urlScript = "https://script.google.com/macros/s/AKfycbzRuPeyVzZDblhXsb1dZvQFZBkn32SElJcLiuawpB0Gz2xVQlWkgLlcToMOAVediNcQ8Q/exec";
 
+            btn.innerText = "Mengecek...";
             fetch(`${urlScript}?u=${u}&p=${p}`)
                 .then(res => res.text())
                 .then(hasil => {
                     if(hasil.trim() === "Success") {
                         window.location.href = "dashboard.html";
                     } else {
-                        alert("Gagal Login! Cek Username/Password di Sheet User.");
+                        alert("Gagal Login! Cek Sheet User.");
+                        btn.innerText = "MASUK";
                     }
                 });
         }
