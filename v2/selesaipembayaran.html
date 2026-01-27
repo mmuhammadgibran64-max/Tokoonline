@@ -3,54 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terima Kasih - Gibran Store</title>
+    <title>Selesai</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { max-width: 400px; width: 90%; background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .icon { font-size: 60px; color: #28a745; margin-bottom: 20px; }
-        h2 { color: #333; margin-bottom: 10px; }
-        p { color: #666; margin-bottom: 25px; }
-        
-        /* Gaya Rating */
-        .rating { margin-bottom: 25px; }
-        .star { font-size: 30px; cursor: pointer; color: #ccc; transition: 0.2s; }
-        .star:hover, .star.active { color: #ffca08; }
-        
-        .btn-home { background: #ff9800; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
+        .btn { background: #ff9800; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 20px; }
     </style>
 </head>
 <body>
-
-<div class="box">
-    <div class="icon">✅</div>
-    <h2>Pesanan Diterima!</h2>
-    <p>Terima kasih sudah belanja di <b>Gibran Store</b>. Pesanan kamu sedang kami proses. Tunggu kabar dari kami ya!</p>
-    
-    <div class="rating">
-        <p>Beri Rating Pengalaman Kamu:</p>
-        <span class="star" onclick="setRating(1)">★</span>
-        <span class="star" onclick="setRating(2)">★</span>
-        <span class="star" onclick="setRating(3)">★</span>
-        <span class="star" onclick="setRating(4)">★</span>
-        <span class="star" onclick="setRating(5)">★</span>
-    </div>
-
-    <a href="dashboard.html" class="btn-home">Kembali ke Dashboard</a>
-</div>
-
-<script>
-    function setRating(n) {
-        const stars = document.querySelectorAll('.star');
-        stars.forEach((star, index) => {
-            if (index < n) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
-        });
-        alert("Terima kasih atas rating " + n + " bintangnya!");
-    }
-</script>
-
+    <h1 style="color:#28a745">✅ PESANAN TERKIRIM!</h1>
+    <p>Terima kasih sudah belanja di Gibran Store.</p>
+    <a href="dashboard.html" class="btn">Balik ke Menu</a>
 </body>
 </html>
