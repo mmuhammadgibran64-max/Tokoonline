@@ -3,66 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Maintenance</title>
+    <title>Maintenance - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { width: 85%; max-width: 350px; padding: 30px; border-radius: 25px; border: 2px solid #ff9800; background: #111; box-shadow: 0 0 20px rgba(255,152,0,0.2); }
-        .logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #ff9800; margin-bottom: 20px; object-fit: cover; }
-        h2 { color: #ff9800; margin-bottom: 10px; }
-        p { color: #888; font-size: 14px; line-height: 1.5; }
-        .btn-update { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; display: none; margin-top: 20px; font-size: 16px; }
-        .progress { width: 100%; background: #222; height: 12px; border-radius: 10px; margin-top: 20px; display: none; overflow: hidden; border: 1px solid #333; }
-        .bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff9800, #ffb74d); transition: 0.1s; }
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
+        .box { border: 2px solid #ff9800; display: inline-block; padding: 30px; border-radius: 15px; }
+        #btn-download { display: none; background: #ff9800; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
-
     <div class="box">
-        <img src="https://i.ibb.co.com/mC6T49Y9/zTWVHGsp.jpg" class="logo">
-        
-        <h2 id="judul">MAINTENANCE</h2>
-        <p id="info">Lagi isi stok jajanan dan update harga nih. Sabar ya, Bran akan kembali jam 21:00 WIB!</p>
-
-        <button id="btnGas" class="btn-update" onclick="mulaiUpdate()">UNDUH DATA TERBARU</button>
-        
-        <div id="loadingBox" class="progress">
-            <div id="bar" class="bar"></div>
-        </div>
+        <h2>Toko Sedang Maintenance</h2>
+        <p>Kami sedang menyiapkan produk terbaru untuk Anda.</p>
+        <p id="timer">Buka Otomatis Jam 21:00 WIB</p>
+        <a href="v2/index.html" id="btn-download">MASUK KE TOKO (SUDAH BUKA)</a>
     </div>
 
     <script>
-        function cekWaktu() {
+        function checkTime() {
             const sekarang = new Date();
             const jam = sekarang.getHours();
-            
-            // CEK JADWAL: Jika sudah jam 21:00 (9 Malam)
+            // Jika sudah jam 9 malam (21) ke atas
             if (jam >= 21) {
-                document.getElementById('judul').innerText = "UPDATE TERSEDIA";
-                document.getElementById('info').innerText = "Versi terbaru sudah siap! Klik tombol di bawah untuk memperbarui menu.";
-                document.getElementById('btnGas').style.display = 'block';
+                document.getElementById('btn-download').style.display = 'inline-block';
+                document.getElementById('timer').innerText = "Toko Sudah Dibuka!";
             }
         }
-
-        function mulaiUpdate() {
-            document.getElementById('btnGas').style.display = 'none';
-            document.getElementById('loadingBox').style.display = 'block';
-            
-            let p = 0;
-            let interval = setInterval(() => {
-                p += 2;
-                document.getElementById('bar').style.width = p + "%";
-                
-                if(p >= 100) {
-                    clearInterval(interval);
-                    // PINDAH KE KAMAR BELAKANG (FOLDER v2)
-                    window.location.href = "v2/index.html"; 
-                }
-            }, 40); // Kecepatan loading
-        }
-
-        // Cek setiap 1 detik
-        setInterval(cekWaktu, 1000);
-        cekWaktu();
+        setInterval(checkTime, 1000);
+        checkTime();
     </script>
 </body>
 </html>
