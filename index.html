@@ -5,57 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gibran Store - Maintenance</title>
     <style>
-        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { width: 85%; max-width: 350px; padding: 30px; border-radius: 25px; border: 2px solid #ff9800; background: #111; }
-        .logo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #ff9800; margin-bottom: 15px; }
-        .btn-update { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; display: none; margin-top: 20px; }
-        .progress { width: 100%; background: #333; height: 10px; border-radius: 5px; margin-top: 20px; display: none; overflow: hidden; }
-        .bar { width: 0%; height: 100%; background: #ff9800; }
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { width: 85%; max-width: 350px; padding: 30px; border-radius: 25px; border: 2px solid #ff9800; background: #111; box-shadow: 0 0 20px rgba(255,152,0,0.2); }
+        .logo { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #ff9800; margin-bottom: 20px; object-fit: cover; }
+        h2 { color: #ff9800; margin-bottom: 10px; }
+        p { color: #888; font-size: 14px; line-height: 1.5; }
+        .btn-update { background: #ff9800; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; display: none; margin-top: 20px; font-size: 16px; }
+        .progress { width: 100%; background: #222; height: 12px; border-radius: 10px; margin-top: 20px; display: none; overflow: hidden; border: 1px solid #333; }
+        .bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff9800, #ffb74d); transition: 0.1s; }
     </style>
 </head>
 <body>
 
     <div class="box">
         <img src="https://i.ibb.co.com/mC6T49Y9/zTWVHGsp.jpg" class="logo">
-        <h2 id="judul" style="color:#ff9800">MAINTENANCE</h2>
-        <p id="info">Lagi update stok jajanan. Sabar ya Bran, rilis jam 21:00 WIB!</p>
-
-        <button id="btnGas" class="btn-update" onclick="download()">UNDUH DATA TERBARU</button>
         
-        <div id="loading" class="progress"><div id="bar" class="bar"></div></div>
+        <h2 id="judul">MAINTENANCE</h2>
+        <p id="info">Lagi isi stok jajanan dan update harga nih. Sabar ya, Bran akan kembali jam 21:00 WIB!</p>
+
+        <button id="btnGas" class="btn-update" onclick="mulaiUpdate()">UNDUH DATA TERBARU</button>
+        
+        <div id="loadingBox" class="progress">
+            <div id="bar" class="bar"></div>
+        </div>
     </div>
 
     <script>
-        function cekSistem() {
+        function cekWaktu() {
             const sekarang = new Date();
             const jam = sekarang.getHours();
             
-            // CEK APAKAH SUDAH JAM 9 MALAM (JAM 21)
+            // CEK JADWAL: Jika sudah jam 21:00 (9 Malam)
             if (jam >= 21) {
-                document.getElementById('judul').innerText = "UPDATE SIAP!";
-                document.getElementById('info').innerText = "Versi terbaru sudah tersedia. Silakan download sekarang.";
+                document.getElementById('judul').innerText = "UPDATE TERSEDIA";
+                document.getElementById('info').innerText = "Versi terbaru sudah siap! Klik tombol di bawah untuk memperbarui menu.";
                 document.getElementById('btnGas').style.display = 'block';
             }
         }
 
-        function download() {
+        function mulaiUpdate() {
             document.getElementById('btnGas').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingBox').style.display = 'block';
+            
             let p = 0;
-            let jalan = setInterval(() => {
+            let interval = setInterval(() => {
                 p += 2;
                 document.getElementById('bar').style.width = p + "%";
+                
                 if(p >= 100) {
-                    clearInterval(jalan);
-                    // INI PINTUNYA: MASUK KE KAMAR V2
+                    clearInterval(interval);
+                    // PINDAH KE KAMAR BELAKANG (FOLDER v2)
                     window.location.href = "v2/index.html"; 
                 }
-            }, 50);
+            }, 40); // Kecepatan loading
         }
 
-        setInterval(cekSistem, 1000);
-        cekSistem();
+        // Cek setiap 1 detik
+        setInterval(cekWaktu, 1000);
+        cekWaktu();
     </script>
 </body>
-</html> 
-
+</html>
