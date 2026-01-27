@@ -5,27 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
-        .timer { font-size: 24px; color: #ff9800; font-weight: bold; margin-top: 20px; }
-        .btn-masuk { display: none; background: #ff9800; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; padding-left: 20px; padding-right: 20px; }
+        .timer { font-size: 30px; color: #ff9800; font-weight: bold; margin-top: 20px; background: #1f1f1f; display: inline-block; padding: 15px 25px; border-radius: 15px; border: 1px solid #333; }
+        .btn-masuk { display: none; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin-top: 30px; font-weight: bold; font-size: 18px; box-shadow: 0 5px 15px rgba(40,167,69,0.4); }
+        .info { color: #888; margin-top: 20px; font-size: 14px; }
     </style>
 </head>
 <body>
-    <h1>⚠️ TOKO SEDANG MAINTENANCE ⚠️</h1>
-    <p>Mohon maaf, toko sedang update sistem dan baru akan buka pukul 21:00 WIB.</p>
+    <h1 style="color:#ff9800;">TOKO SEDANG UPDATE 🛠️</h1>
+    <p>Mohon maaf Bran, toko sedang disiapkan untuk rilis nanti malam.</p>
     
-    <div id="countdown" class="timer">Menghitung waktu...</div>
+    <div id="countdown" class="timer">Memuat Waktu...</div>
 
+    <br>
     <a href="v2/index.html" id="masukBtn" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
+
+    <p class="info">Rencana rilis: 21:30 atau 23:00 WIB</p>
 
     <script>
         function updateTimer() {
             const now = new Date();
             const target = new Date();
-            target.setHours(21, 0, 0); // Jam 9 Malam
+            
+            // --- GANTI JAM DI SINI ---
+            // Kalau mau jam 9.30 malam ganti jadi: target.setHours(21, 30, 0);
+            // Kalau mau jam 11.00 malam ganti jadi: target.setHours(23, 0, 0);
+            target.setHours(21, 30, 0); 
 
             if (now >= target) {
-                document.getElementById('countdown').innerHTML = "TOKO SUDAH BUKA!";
+                document.getElementById('countdown').innerHTML = "TOKO SUDAH DIBUKA!";
                 document.getElementById('masukBtn').style.display = 'inline-block';
                 return;
             }
@@ -35,8 +43,9 @@
             const menit = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const detik = Math.floor((diff % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerHTML = `Buka dalam: ${jam}j ${menit}m ${detik}d`;
+            document.getElementById('countdown').innerHTML = `${jam}j ${menit}m ${detik}d`;
         }
+
         setInterval(updateTimer, 1000);
         updateTimer();
     </script>
