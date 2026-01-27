@@ -5,154 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gibran Store - Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #000; color: #fff; margin: 0; padding-bottom: 120px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; margin: 0; padding-bottom: 150px; }
         
         /* Header */
-        .header { background: #ff9800; padding: 25px 20px; color: #000; border-radius: 0 0 30px 30px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
-        .header h2 { margin: 0; font-size: 22px; }
-        .header p { margin: 5px 0 0; font-size: 14px; opacity: 0.8; }
+        .header { background: #ff9800; padding: 25px 20px; color: #000; border-radius: 0 0 30px 30px; position: sticky; top: 0; z-index: 100; }
+        .header h2 { margin: 0; font-size: 20px; }
 
-        /* Daftar Menu */
-        .menu-container { padding: 20px; }
+        /* Menu Content */
+        .content { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Card Produk */
         .category-title { color: #ff9800; font-size: 18px; margin-bottom: 15px; border-left: 4px solid #ff9800; padding-left: 10px; }
-        
-        .card { 
-            background: #111; border: 1px solid #222; border-radius: 20px; 
-            padding: 18px; margin-bottom: 15px; display: flex; 
-            justify-content: space-between; align-items: center;
-            transition: 0.2s;
-        }
-        .card:active { transform: scale(0.97); background: #1a1a1a; }
-        
-        .info b { display: block; font-size: 16px; margin-bottom: 5px; color: #eee; }
-        .info span { color: #ff9800; font-weight: bold; font-size: 15px; }
-        
-        .btn-add { 
-            background: #ff9800; color: #000; border: none; 
-            padding: 10px 18px; border-radius: 12px; font-weight: bold; 
-            cursor: pointer; box-shadow: 0 4px 10px rgba(255,152,0,0.2);
-        }
+        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .info b { display: block; font-size: 15px; color: #eee; }
+        .info span { color: #ff9800; font-weight: bold; }
+        .btn-add { background: #ff9800; color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Floating Cart ala Gojek */
-        .cart-footer { 
-            position: fixed; bottom: 20px; left: 5%; width: 90%; 
-            background: #ff9800; color: #000; padding: 18px; 
-            border-radius: 20px; display: none; justify-content: space-between; 
-            align-items: center; z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Floating Cart (Bar Belanja) */
+        .cart-bar { 
+            position: fixed; bottom: 85px; left: 5%; width: 90%; 
+            background: #ff9800; color: #000; padding: 15px; 
+            border-radius: 18px; display: none; justify-content: space-between; 
+            align-items: center; z-index: 200; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .cart-info b { font-size: 16px; }
-        .btn-bayar { 
-            background: #000; color: #fff; border: none; 
-            padding: 12px 20px; border-radius: 12px; font-weight: bold; 
-            cursor: pointer; font-size: 14px;
-        }
+        .btn-proses { background: #000; color: #fff; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; }
 
-        /* Loading Overlay */
-        #loading { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; 
-            justify-content: center; align-items: center; 
-        }
-        .spinner { width: 45px; height: 45px; border: 5px solid #222; border-top: 5px solid #ff9800; border-radius: 50%; animation: spin 1s linear infinite; }
+        /* Navigasi Bawah (Navigasi yang kamu buat sebelumnya) */
+        .navbar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 300; }
+        .nav-item { color: #666; text-decoration: none; font-size: 11px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .nav-item.active-nav { color: #ff9800; font-weight: bold; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+        /* Spinner Loading */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; }
+        .spin { width: 40px; height: 40px; border: 4px solid #222; border-top: 4px solid #ff9800; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        <p style="color: #ff9800; margin-top: 15px; font-weight: bold;">Memproses Pesanan...</p>
-    </div>
+    <div id="loader"><div class="spin"></div><p>Sabar ya, Bran...</p></div>
 
     <div class="header">
         <h2 id="sapaan">Gibran Store</h2>
-        <p>Silakan pilih menu favorit Anda!</p>
+        <small>Pusat Jajanan & Air Galon</small>
     </div>
 
-    <div class="menu-container">
-        <div class="category-title">Daftar Menu</div>
+    <div id="menu-dashboard" class="content active">
+        <div class="category-title">Daftar Jajanan</div>
         <div id="produk-list"></div>
     </div>
 
-    <div id="cart-bar" class="cart-footer">
-        <div class="cart-info">
-            <span id="jml-item">0</span> Item | <b id="total-harga">Rp 0</b>
+    <div id="menu-riwayat" class="content">
+        <div class="category-title">Pesanan Saya</div>
+        <div id="list-riwayat" style="color: #666; text-align: center; margin-top: 50px;">
+            Belum ada riwayat pesanan.
         </div>
-        <button class="btn-bayar" onclick="kirimKePembayaran()">PROSES BAYAR</button>
+    </div>
+
+    <div id="cart-bar" class="cart-bar">
+        <div><b id="cart-count">0</b> Item | <b id="cart-total">Rp 0</b></div>
+        <button class="btn-proses" onclick="kePembayaran()">PROSES</button>
+    </div>
+
+    <div class="navbar">
+        <div class="nav-item active-nav" id="nav-home" onclick="pindahTab('dashboard')">
+            <span class="nav-icon">🏠</span>Dashboard
+        </div>
+        <div class="nav-item" id="nav-riwayat" onclick="pindahTab('riwayat')">
+            <span class="nav-icon">📜</span>Riwayat
+        </div>
     </div>
 
     <script>
-        // Data Nama dari Login
-        const namaUser = localStorage.getItem("nama") || "Pelanggan";
-        document.getElementById('sapaan').innerText = "Halo, " + namaUser + "!";
+        // Set Nama User
+        document.getElementById('sapaan').innerText = "Halo, " + (localStorage.getItem("nama") || "Pelanggan") + "!";
 
-        // Daftar Produk Sesuai Request Kamu
-        const listProduk = [
-            { id: 1, nama: "Peye Kacang (Kecil)", harga: 5000 },
-            { id: 2, nama: "Peye Kacang (Besar)", harga: 10000 },
-            { id: 3, nama: "Slondok", harga: 20000 },
-            { id: 4, nama: "Opak", harga: 20000 },
-            { id: 5, nama: "Kacang", harga: 2000 },
-            { id: 6, nama: "Kripik Pedes", harga: 15000 },
-            { id: 7, nama: "Kue Sus Kering", harga: 15000 },
-            { id: 8, nama: "Reginang (isi 3)", harga: 5000 },
-            { id: 9, nama: "Aqua Galon", harga: 22000 }
+        const produk = [
+            { n: "Peye Kacang (Kecil)", h: 5000 },
+            { n: "Peye Kacang (Besar)", h: 10000 },
+            { n: "Slondok", h: 20000 },
+            { n: "Opak", h: 20000 },
+            { n: "Kacang", h: 2000 },
+            { n: "Kripik Pedes", h: 15000 },
+            { n: "Kue Sus Kering", h: 15000 },
+            { n: "Reginang (isi 3)", h: 5000 },
+            { n: "Aqua Galon", h: 22000 }
         ];
 
         let keranjang = [];
 
-        // Fungsi Tampilkan Menu
-        function tampilkanMenu() {
-            const container = document.getElementById('produk-list');
-            container.innerHTML = listProduk.map(p => `
+        function renderMenu() {
+            document.getElementById('produk-list').innerHTML = produk.map((p, i) => `
                 <div class="card">
-                    <div class="info">
-                        <b>${p.nama}</b>
-                        <span>Rp ${p.harga.toLocaleString('id-ID')}</span>
-                    </div>
-                    <button class="btn-add" onclick="tambahItem('${p.nama}', ${p.harga})">TAMBAH</button>
+                    <div class="info"><b>${p.n}</b><span>Rp ${p.h.toLocaleString('id-ID')}</span></div>
+                    <button class="btn-add" onclick="tambah(${i})">TAMBAH</button>
                 </div>
             `).join('');
         }
 
-        // Fungsi Tambah Ke Keranjang
-        function tambahItem(nama, harga) {
-            keranjang.push({ nama: nama, harga: harga });
-            updateCartBar();
+        function tambah(idx) {
+            keranjang.push(produk[idx]);
+            updateCart();
         }
 
-        // Fungsi Update Tampilan Keranjang Bawah
-        function updateCartBar() {
+        function updateCart() {
             const bar = document.getElementById('cart-bar');
-            const jml = document.getElementById('jml-item');
-            const totalText = document.getElementById('total-harga');
-            
-            if (keranjang.length > 0) {
+            if(keranjang.length > 0) {
                 bar.style.display = 'flex';
-                jml.innerText = keranjang.length;
-                
-                const total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-                totalText.innerText = "Rp " + total.toLocaleString('id-ID');
+                const total = keranjang.reduce((s, i) => s + i.h, 0);
+                document.getElementById('cart-count').innerText = keranjang.length;
+                document.getElementById('cart-total').innerText = "Rp " + total.toLocaleString('id-ID');
             }
         }
 
-        // Fungsi Proses ke Pembayaran
-        function kirimKePembayaran() {
-            document.getElementById('loading').style.display = 'flex';
-            
-            setTimeout(() => {
-                // Simpan data belanja ke memori browser
-                localStorage.setItem("keranjang", JSON.stringify(keranjang));
-                // Pindah ke halaman pembayaran
-                window.location.href = "pembayaran.html";
-            }, 1200);
+        // FUNGSI NAVIGASI
+        function pindahTab(tab) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+
+            if(tab === 'dashboard') {
+                document.getElementById('menu-dashboard').classList.add('active');
+                document.getElementById('nav-home').classList.add('active-nav');
+                if(keranjang.length > 0) document.getElementById('cart-bar').style.display = 'flex';
+            } else {
+                document.getElementById('menu-riwayat').classList.add('active');
+                document.getElementById('nav-riwayat').classList.add('active-nav');
+                document.getElementById('cart-bar').style.display = 'none'; // Sembunyikan bar cart di riwayat
+            }
         }
 
-        // Jalankan Menu saat halaman dibuka
-        tampilkanMenu();
+        function kePembayaran() {
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => {
+                localStorage.setItem("keranjang", JSON.stringify(keranjang));
+                window.location.href = "pembayaran.html";
+            }, 1000);
+        }
+
+        renderMenu();
     </script>
 </body>
 </html>
