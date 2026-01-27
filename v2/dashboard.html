@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - Gibran Store</title>
+    <title>Dashboard - Gibran Store</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 100px; }
-        .header { background: #1f1f1f; padding: 15px; border-bottom: 2px solid #ff9800; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .header { background: #1f1f1f; padding: 15px; border-bottom: 2px solid #ff9800; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .container { padding: 15px; }
         .card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
         .info b { color: #ff9800; font-size: 16px; }
         .info span { color: #bbb; font-size: 14px; }
         .btn-plus { background: #ff9800; color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 20px; }
-        .btn-plus:active { background: #e68a00; transform: scale(0.95); }
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
         .btn-checkout { background: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-gear { text-decoration: none; font-size: 22px; filter: grayscale(0); }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <h3 id="welcome">Halo, Pelanggan!</h3>
+        <h3 id="welcome" style="margin:0;">Halo, Pelanggan!</h3>
+        <a href="pengaturan.html" class="btn-gear">⚙️</a>
     </div>
 
-    <div class="container" id="menu-list">
-        </div>
+    <div class="container" id="menu-list"></div>
 
     <div class="cart-bar">
         <span>Total: <span id="total-text">Rp 0</span></span>
@@ -31,10 +32,7 @@
     </div>
 
     <script>
-        // Ambil nama dari login sebelumnya
         document.getElementById('welcome').innerText = "Halo, " + (localStorage.getItem('userNama') || "Pelanggan");
-
-        // Daftar Menu Jajanan Gibran Store
         const menu = [
             {n: "Peye Kacang (Kecil)", h: 5000},
             {n: "Peye Kacang (Besar)", h: 10000},
@@ -45,45 +43,26 @@
             {n: "Kue Sus Kering", h: 15000},
             {n: "Reginang (isi 3)", h: 5000}
         ];
-
         let cart = [];
-
         function renderMenu() {
-            const container = document.getElementById('menu-list');
-            container.innerHTML = menu.map((item, index) => `
+            document.getElementById('menu-list').innerHTML = menu.map((item, index) => `
                 <div class="card">
-                    <div class="info">
-                        <b>${item.n}</b><br>
-                        <span>Rp ${item.h.toLocaleString('id-ID')}</span>
-                    </div>
+                    <div class="info"><b>${item.n}</b><br><span>Rp ${item.h.toLocaleString('id-ID')}</span></div>
                     <button class="btn-plus" onclick="addToCart(${index})">+</button>
                 </div>
             `).join('');
         }
-
         function addToCart(index) {
             cart.push(menu[index]);
-            updateCart();
-        }
-
-        function updateCart() {
             let total = cart.reduce((sum, item) => sum + item.h, 0);
             document.getElementById('total-text').innerText = "Rp " + total.toLocaleString('id-ID');
-            
-            // Simpan data untuk halaman pembayaran
             localStorage.setItem('tempTotal', total);
             localStorage.setItem('tempOrder', cart.map(item => item.n).join(', '));
         }
-
         function checkout() {
-            if (cart.length === 0) {
-                alert("Pilih jajanan dulu ya Bran sebelum checkout!");
-                return;
-            }
+            if (cart.length === 0) return alert("Pilih jajanan dulu!");
             window.location.href = "pembayaran.html";
         }
-
-        // Jalankan fungsi render saat halaman dibuka
         renderMenu();
     </script>
 </body>
