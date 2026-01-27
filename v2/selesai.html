@@ -3,15 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selesai</title>
+    <title>Pesanan Berhasil - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding-top: 100px; }
-        .btn { background: #ff9800; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 20px; }
+        body { 
+            font-family: sans-serif; 
+            background: #121212; 
+            color: white; 
+            text-align: center; 
+            padding: 50px 20px; 
+            margin: 0; 
+        }
+        .success-icon { font-size: 80px; color: #28a745; margin-bottom: 20px; }
+        h1 { color: #28a745; margin-bottom: 10px; }
+        p { color: #bbb; margin-bottom: 40px; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto; }
+        
+        .btn { 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 16px; 
+            transition: 0.3s;
+        }
+        
+        .btn-menu { 
+            background: #ff9800; 
+            color: black; 
+        }
+        
+        .btn-login { 
+            background: transparent; 
+            color: #ff4444; 
+            border: 2px solid #ff4444; 
+        }
+
+        .btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-    <h1 style="color:#28a745">✅ PESANAN TERKIRIM!</h1>
-    <p>Terima kasih sudah belanja di Gibran Store.</p>
-    <a href="dashboard.html" class="btn">Balik ke Menu</a>
+
+    <div class="success-icon">✅</div>
+    <h1>PESANAN TERKIRIM!</h1>
+    <p>Terima kasih sudah belanja di Gibran Store. Pesanan kamu sedang kami proses.</p>
+
+    <div class="btn-group">
+        <a href="dashboard.html" class="btn btn-menu">KEMBALI KE MENU</a>
+        
+        <a href="index.html" class="btn btn-login" onclick="logout()">BALIK KE LOGIN</a>
+    </div>
+
+    <script>
+        function logout() {
+            // Hapus data login supaya kalau balik ke login harus isi nama lagi
+            localStorage.removeItem('userNama');
+            localStorage.removeItem('userHP');
+            localStorage.removeItem('userAlamat');
+        }
+    </script>
+
 </body>
 </html>
