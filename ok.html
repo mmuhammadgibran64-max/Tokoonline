@@ -3,37 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sukses - Gibran Store</title>
+    <title>Pesanan Berhasil - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; padding: 60px 20px; }
-        .icon { font-size: 80px; color: #28a745; margin-bottom: 20px; }
-        .rating { font-size: 40px; margin: 25px 0; cursor: pointer; }
-        .star { color: #333; transition: 0.3s; }
-        .star.active { color: #ffc107; }
-        .btn { display: block; background: #28a745; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 30px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+        .container { width: 90%; max-width: 400px; padding: 30px; background: #111; border-radius: 30px; border: 2px solid #ff9800; box-shadow: 0 10px 30px rgba(255,152,0,0.2); }
+        
+        .icon-success { font-size: 60px; color: #ff9800; margin-bottom: 20px; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        h2 { color: #ff9800; margin-bottom: 10px; }
+        p { color: #888; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+
+        /* Rating Stars */
+        .rating { margin-bottom: 30px; }
+        .star { font-size: 35px; color: #333; cursor: pointer; transition: 0.3s; }
+        .star.selected { color: #ff9800; text-shadow: 0 0 10px rgba(255,152,0,0.5); }
+
+        .btn-home { background: #ff9800; color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
     </style>
 </head>
 <body>
-    <div class="icon">✔️</div>
-    <h1>Pesanan Terkirim!</h1>
-    <p>Terima kasih sudah belanja di Gibran Store.<br>Pesanan kamu segera kami proses.</p>
 
-    <div class="rating">
-        <span class="star" onclick="rate(1)">★</span>
-        <span class="star" onclick="rate(2)">★</span>
-        <span class="star" onclick="rate(3)">★</span>
-        <span class="star" onclick="rate(4)">★</span>
-        <span class="star" onclick="rate(5)">★</span>
+    <div class="container">
+        <div class="icon-success">✅</div>
+        <h2>TERIMA KASIH!</h2>
+        <p id="pesan">Pesanan kamu sudah kami terima dan sedang diproses. Mohon tunggu di rumah ya!</p>
+
+        <div class="rating">
+            <p>Beri Rating Layanan Kami:</p>
+            <span class="star" onclick="setRating(1)">★</span>
+            <span class="star" onclick="setRating(2)">★</span>
+            <span class="star" onclick="setRating(3)">★</span>
+            <span class="star" onclick="setRating(4)">★</span>
+            <span class="star" onclick="setRating(5)">★</span>
+        </div>
+
+        <button class="btn-home" onclick="kembali()">BALIK KE DASHBOARD</button>
     </div>
 
-    <a href="dashboard.html" class="btn">Kembali ke Beranda</a>
-
     <script>
-        function rate(n) {
+        // Set Nama User di Pesan
+        const nama = localStorage.getItem("nama") || "Pelanggan";
+        document.getElementById('pesan').innerText = `Halo ${nama}, pesanan kamu sudah kami terima dan sedang diproses. Mohon tunggu di rumah ya!`;
+
+        function setRating(n) {
             const stars = document.querySelectorAll('.star');
             stars.forEach((s, i) => {
-                s.classList.toggle('active', i < n);
+                if(i < n) s.classList.add('selected');
+                else s.classList.remove('selected');
             });
+            // Opsional: Kamu bisa kirim rating ini ke Sheet juga nanti
+            console.log("Rating diberikan: " + n);
+        }
+
+        function kembali() {
+            window.location.href = "dashboard.html";
         }
     </script>
 </body>
