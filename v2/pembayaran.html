@@ -8,12 +8,53 @@
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 30px; }
         .header { background: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff9800; }
         .container { padding: 20px; }
+        
+        /* Kotak Total */
         .total-box { background: #1f1f1f; padding: 20px; border-radius: 15px; border: 1px dashed #ff9800; text-align: center; margin-bottom: 25px; }
-        .total-amount { font-size: 28px; font-weight: bold; color: #ff9800; display: block; }
-        .pay-method { background: #1f1f1f; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .pay-active { border: 1px solid #ff9800; }
-        .pay-locked { opacity: 0.4; cursor: not-allowed; }
-        .btn-bayar { background: #ff9800; color: black; border: none; width: 100%; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .total-amount { font-size: 28px; font-weight: bold; color: #ff9800; display: block; margin-top: 5px; }
+
+        /* Judul Seksi */
+        .label-title { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+
+        /* Style Metode Pembayaran */
+        .method {
+            background: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        /* Aktif (CASH) */
+        .method.active { border: 1px solid #ff9800; cursor: pointer; }
+        .method.active .check-icon { color: #ff9800; font-weight: bold; font-size: 18px; }
+
+        /* Terkunci (QRIS/BANK) */
+        .method.locked { opacity: 0.4; cursor: not-allowed; background: #181818; }
+        .method.locked .lock-icon { font-size: 18px; }
+
+        .method-info h4 { margin: 0; font-size: 15px; }
+        .method-info p { margin: 4px 0 0 0; font-size: 12px; color: #777; }
+
+        /* Tombol Konfirmasi */
+        .btn-konfirmasi {
+            background: #ff9800;
+            color: black;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+        }
+        .btn-konfirmasi:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -25,71 +66,87 @@
     <div class="container">
         <div class="total-box">
             <span style="color:#888; font-size:14px;">Total Tagihan</span>
-            <span class="total-amount" id="tagihan">Rp0</span>
+            <span class="total-amount" id="displayTotal">Rp0</span>
         </div>
 
-        <p style="font-size: 12px; color: #888; margin-bottom: 10px;">PILIH METODE</p>
+        <div class="label-title">Pilih Metode Pembayaran</div>
 
-        <div class="pay-method pay-active">
-            <div>
-                <h4 style="margin:0;">Cash (Bayar di Tempat)</h4>
-                <p style="margin:4px 0 0 0; font-size:12px; color:#777;">Bayar tunai saat barang sampai</p>
+        <div class="method active">
+            <div class="method-info">
+                <h4>Cash (Bayar di Tempat)</h4>
+                <p>Bayar tunai langsung saat barang sampai</p>
             </div>
-            <span style="color:#ff9800;">✔</span>
+            <span class="check-icon">✔</span>
         </div>
 
-        <div class="pay-method pay-locked">
-            <div><h4>QRIS / E-Wallet 🔒</h4></div>
-            <span>🔒</span>
+        <div class="method locked">
+            <div class="method-info">
+                <h4>QRIS / E-Wallet 🔒</h4>
+                <p>OVO, GoPay, Dana (Segera Hadir)</p>
+            </div>
+            <span class="lock-icon">🔒</span>
         </div>
 
-        <button class="btn-bayar" id="btnKonfirmasi" onclick="selesaikanOrder()">KONFIRMASI PEMBAYARAN</button>
+        <div class="method locked">
+            <div class="method-info">
+                <h4>Transfer Bank 🔒</h4>
+                <p>BCA, BRI, Mandiri (Segera Hadir)</p>
+            </div>
+            <span class="lock-icon">🔒</span>
+        </div>
+
+        <button class="btn-konfirmasi" id="btnProses" onclick="kirimKeOrderSheet()">KONFIRMASI PESANAN</button>
+        
+        <p onclick="window.location.href='dashboard.html'" style="text-align:center; color:#555; font-size:13px; margin-top:20px; cursor:pointer;">← Kembali ke Menu</p>
     </div>
 
     <script>
+        // 1. Ambil data belanja dari HP
         const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
-        const total = keranjang.reduce((a, b) => a + b.harga, 0);
-        document.getElementById('tagihan').innerText = "Rp" + total.toLocaleString('id-ID');
+        const totalHarga = keranjang.reduce((a, b) => a + b.harga, 0);
+        document.getElementById('displayTotal').innerText = "Rp" + totalHarga.toLocaleString('id-ID');
 
-        function selesaikanOrder() {
+        function kirimKeOrderSheet() {
             if (keranjang.length === 0) {
-                alert("Keranjang kosong!");
+                alert("Keranjang kamu kosong!");
+                window.location.href = "dashboard.html";
                 return;
             }
 
-            const btn = document.getElementById('btnKonfirmasi');
-            btn.innerText = "Mengirim Pesanan...";
+            const btn = document.getElementById('btnProses');
+            btn.innerText = "Mengirim ke Admin...";
             btn.disabled = true;
 
-            const listProduk = keranjang.map(item => item.produk).join(", ");
-
+            // 2. Siapkan data sesuai kolom di Google Sheet "Order"
+            const listPesanan = keranjang.map(item => item.produk).join(", ");
             const dataFinal = {
                 tanggal: new Date().toLocaleString('id-ID'),
-                nama: localStorage.getItem('userNama') || "Tanpa Nama",
+                nama: localStorage.getItem('userNama') || "Pelanggan Gibran",
                 hp: localStorage.getItem('userHP') || "-",
-                alamat: localStorage.getItem('userAlamat') || "Tanpa Alamat",
-                pesanan: listProduk,
-                total: total.toLocaleString('id-ID')
+                alamat: localStorage.getItem('userAlamat') || "Alamat belum diatur",
+                pesanan: listPesanan,
+                total: totalHarga.toLocaleString('id-ID')
             };
 
-            // SIMPAN KE RIWAYAT HP
+            // 3. Simpan ke Riwayat HP dulu
             let riwayat = JSON.parse(localStorage.getItem('semuaPesanan')) || [];
             riwayat.push(dataFinal);
             localStorage.setItem('semuaPesanan', JSON.stringify(riwayat));
 
-            // KIRIM KE GOOGLE SHEETS (LINK BARU KAMU)
+            // 4. KIRIM KE LINK GOOGLE SCRIPT KAMU
+            // Link ini terhubung ke sheet bernama "Order"
             fetch("https://script.google.com/macros/s/AKfycbwLzlRQm0FOr8JCoD8Q4aylAgnVccH2OIv1Jefq9f49c3iqQBL7bVUe7FmFci4DDuTL8A/exec", {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(dataFinal)
             }).then(() => {
+                // Berhasil! Bersihkan keranjang
                 localStorage.removeItem('keranjang');
-                alert("Pesanan Berhasil! Data sudah masuk ke admin.");
+                alert("Pesanan Cash Berhasil Terkirim!");
                 window.location.href = "riwayat.html";
-            }).catch((err) => {
-                console.log("Error:", err);
-                // Tetap pindah ke riwayat meski fetch no-cors
-                localStorage.removeItem('keranjang');
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert("Gagal mengirim pesanan, tapi sudah tersimpan di Riwayat.");
                 window.location.href = "riwayat.html";
             });
         }
