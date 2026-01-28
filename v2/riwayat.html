@@ -3,82 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan</title>
+    <title>Dashboard - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
-        .nav-back { text-decoration: none; color: #ff9800; font-weight: bold; display: block; margin-bottom: 20px; }
-        .order-card { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; font-size: 13px; position: relative; }
-        .order-card b { color: #ff9800; }
-        .btn-hapus { position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; }
-        .btn-download { background: #28a745; color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; display: none; }
-        .no-data { text-align: center; color: #555; margin-top: 50px; }
-        .divider { border-bottom: 1px dashed #333; margin: 8px 0; }
+        /* --- CSS DASAR --- */
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
+        .container { padding: 20px; }
+        h2 { color: #ff9800; text-align: center; }
+
+        /* --- NAVIGASI BAWAH --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1f1f1f;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 2px solid #ff9800;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            text-align: center;
+            font-size: 11px;
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .nav-item.active { color: #ff9800; font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        /* Khusus Tombol Admin WA */
+        .nav-admin { color: #25D366 !important; font-weight: bold; } 
     </style>
 </head>
 <body>
 
-    <a href="dashboard.html" class="nav-back">← Kembali</a>
-    <h3>📜 Riwayat Pesanan</h3>
+    <script>
+        if (!localStorage.getItem('userNama')) {
+            window.location.href = "index.html";
+        }
+    </script>
 
-    <div id="riwayat-list"></div>
+    <div class="container">
+        <h2>Selamat Datang, <span id="userTampil" style="color: white;">User</span>!</h2>
+        <p style="text-align: center; font-size: 13px; color: #888;">Silakan pilih menu pesanan Anda di bawah ini.</p>
+        
+        <hr border="1" color="#333">
 
-    <button id="downloadBtn" class="btn-download" onclick="downloadRiwayat()">DOWNLOAD RIWAYAT (.TXT)</button>
+        <div id="produkList">
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #333;">
+                <h4 style="margin:0;">Peye Kacang</h4>
+                <p style="color:#ff9800; margin:5px 0;">Rp 15.000</p>
+                <button style="background:#ff9800; border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">Tambah ke Keranjang</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i>🏠</i>
+            <span>Beranda</span>
+        </a>
+        <a href="riwayat.html" class="nav-item">
+            <i>📜</i>
+            <span>Riwayat</span>
+        </a>
+        
+        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store%2C%20saya%20mau%20tanya..." target="_blank" class="nav-item nav-admin">
+            <i>💬</i>
+            <span>Admin</span>
+        </a>
+
+        <a href="pengaturan.html" class="nav-item">
+            <i>⚙️</i>
+            <span>Profil</span>
+        </a>
+    </div>
 
     <script>
-        function loadRiwayat() {
-            const listContainer = document.getElementById('riwayat-list');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const dataRiwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-
-            if (dataRiwayat.length === 0) {
-                listContainer.innerHTML = '<p class="no-data">Belum ada riwayat pesanan.</p>';
-                downloadBtn.style.display = 'none';
-                return;
-            }
-
-            downloadBtn.style.display = 'block';
-            listContainer.innerHTML = dataRiwayat.map((item, index) => `
-                <div class="order-card">
-                    <button class="btn-hapus" onclick="hapusSatu(${index})">HAPUS</button>
-                    <div><b>Tanggal:</b> ${item.tanggal}</div>
-                    <div class="divider"></div>
-                    <div><b>Pesanan:</b> ${item.pesanan}</div>
-                    <div><b>Total:</b> ${item.total}</div>
-                </div>
-            `).reverse().join('');
-        }
-
-        function hapusSatu(index) {
-            if(confirm("Hapus pesanan ini dari riwayat?")) {
-                let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-                riwayat.splice(index, 1);
-                localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
-                loadRiwayat();
-            }
-        }
-
-        function downloadRiwayat() {
-            const dataRiwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-            let teks = "--- RIWAYAT PESANAN GIBRAN STORE ---\n\n";
-            
-            dataRiwayat.forEach((item, i) => {
-                teks += `Pesanan #${i+1}\n`;
-                teks += `Tanggal : ${item.tanggal}\n`;
-                teks += `Nama    : ${item.nama}\n`;
-                teks += `Alamat  : ${item.alamat}\n`;
-                teks += `Barang  : ${item.pesanan}\n`;
-                teks += `Total   : ${item.total}\n`;
-                teks += `----------------------------\n\n`;
-            });
-
-            const blob = new Blob([teks], { type: "text/plain" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "Riwayat_GibranStore.txt";
-            link.click();
-        }
-
-        loadRiwayat();
+        // Tampilkan nama user dari localStorage
+        document.getElementById('userTampil').innerText = localStorage.getItem('userNama');
     </script>
+
 </body>
 </html>
