@@ -5,89 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gibran Store</title>
     <style>
-        /* --- CSS DASAR --- */
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
-        .container { padding: 20px; }
-        h2 { color: #ff9800; text-align: center; }
-
-        /* --- NAVIGASI BAWAH --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #1f1f1f;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            border-top: 2px solid #ff9800;
-            z-index: 1000;
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 90px; }
+        .header { background: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff9800; }
+        .container { padding: 15px; }
+        
+        /* Card Menu */
+        .card { 
+            background: #1f1f1f; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .info h4 { margin: 0; font-size: 16px; color: #fff; }
+        .info p { color: #ff9800; margin: 5px 0 0 0; font-weight: bold; }
+        
+        .btn-add { 
+            background: #ff9800; 
+            color: black; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 12px;
         }
 
-        .nav-item {
-            text-decoration: none;
-            color: #888;
-            text-align: center;
-            font-size: 11px;
-            transition: 0.3s;
-            flex: 1;
+        /* Navigasi Bawah */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #1f1f1f; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 10px 0; 
+            border-top: 1px solid #333; 
         }
-
-        .nav-item.active { color: #ff9800; font-weight: bold; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-
-        /* Khusus Tombol Admin WA */
-        .nav-admin { color: #25D366 !important; font-weight: bold; } 
+        .nav-item { text-decoration: none; color: #888; text-align: center; flex: 1; font-size: 11px; }
+        .nav-item.active { color: #ff9800; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-admin { color: #25D366 !important; } /* Warna Hijau WA */
     </style>
 </head>
 <body>
 
     <script>
+        // SATPAM: Jika belum login, tendang ke index
         if (!localStorage.getItem('userNama')) {
             window.location.href = "index.html";
         }
     </script>
 
-    <div class="container">
-        <h2>Selamat Datang, <span id="userTampil" style="color: white;">User</span>!</h2>
-        <p style="text-align: center; font-size: 13px; color: #888;">Silakan pilih menu pesanan Anda di bawah ini.</p>
-        
-        <hr border="1" color="#333">
+    <div class="header">
+        <h2 style="margin:0; color:#ff9800;">Gibran Store</h2>
+        <p style="margin:5px 0 0 0; font-size:12px;">Halo, <span id="namaUser">Pelanggan</span>!</p>
+    </div>
 
+    <div class="container">
+        <h3 style="border-left: 4px solid #ff9800; padding-left: 10px;">Daftar Menu</h3>
+        
         <div id="produkList">
-            <div style="background:#1f1f1f; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #333;">
-                <h4 style="margin:0;">Peye Kacang</h4>
-                <p style="color:#ff9800; margin:5px 0;">Rp 15.000</p>
-                <button style="background:#ff9800; border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">Tambah ke Keranjang</button>
+            <div class="card">
+                <div class="info"><h4>Peye Kacang (Kecil)</h4><p>Rp5.000</p></div>
+                <button class="btn-add" onclick="tambah('Peye Kacang (Kecil)', 5000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Peye Kacang (Besar)</h4><p>Rp10.000</p></div>
+                <button class="btn-add" onclick="tambah('Peye Kacang (Besar)', 10000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Slondok</h4><p>Rp20.000</p></div>
+                <button class="btn-add" onclick="tambah('Slondok', 20000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Opak</h4><p>Rp20.000</p></div>
+                <button class="btn-add" onclick="tambah('Opak', 20000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Kacang</h4><p>Rp2.000</p></div>
+                <button class="btn-add" onclick="tambah('Kacang', 2000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Kripik Pedes</h4><p>Rp15.000</p></div>
+                <button class="btn-add" onclick="tambah('Kripik Pedes', 15000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Kue Sus Kering</h4><p>Rp15.000</p></div>
+                <button class="btn-add" onclick="tambah('Kue Sus Kering', 15000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Reginang (isi 3)</h4><p>Rp5.000</p></div>
+                <button class="btn-add" onclick="tambah('Reginang (isi 3)', 5000)">Tambah</button>
+            </div>
+            <div class="card">
+                <div class="info"><h4>Aqua Galon</h4><p>Rp22.000</p></div>
+                <button class="btn-add" onclick="tambah('Aqua Galon', 22000)">Tambah</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <i>🏠</i>
-            <span>Beranda</span>
+        <a href="dashboard.html" class="nav-item active"><i>🏠</i><span>Beranda</span></a>
+        <a href="riwayat.html" class="nav-item"><i>📜</i><span>Riwayat</span></a>
+        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store" class="nav-item nav-admin" target="_blank">
+            <i>💬</i><span>Admin</span>
         </a>
-        <a href="riwayat.html" class="nav-item">
-            <i>📜</i>
-            <span>Riwayat</span>
-        </a>
-        
-        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store%2C%20saya%20mau%20tanya..." target="_blank" class="nav-item nav-admin">
-            <i>💬</i>
-            <span>Admin</span>
-        </a>
-
-        <a href="pengaturan.html" class="nav-item">
-            <i>⚙️</i>
-            <span>Profil</span>
-        </a>
+        <a href="pengaturan.html" class="nav-item"><i>⚙️</i><span>Profil</span></a>
     </div>
 
     <script>
-        // Tampilkan nama user dari localStorage
-        document.getElementById('userTampil').innerText = localStorage.getItem('userNama');
-    </script>
+        // Tampilkan Nama
+        document.getElementById('namaUser').innerText = localStorage.getItem('userNama');
 
+        // Fungsi Simpan Keranjang Sederhana
+        let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        function tambah(nama, harga) {
+            keranjang.push({ produk: nama, harga: harga });
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            alert(nama + " ditambahkan!");
+        }
+    </script>
 </body>
 </html>
