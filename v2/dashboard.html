@@ -5,92 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 100px; }
-        .header { background: #1f1f1f; padding: 15px; border-bottom: 2px solid #ff9800; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .nav-icons { display: flex; gap: 15px; }
-        .container { padding: 15px; }
-        .category-title { color: #ff9800; font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; border-left: 4px solid #ff9800; padding-left: 10px; }
-        .card { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .info b { color: #fff; font-size: 16px; }
-        .info span { color: #ff9800; font-size: 14px; font-weight: bold; }
-        .btn-plus { background: #ff9800; color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 20px; }
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #ff9800; color: black; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
-        .btn-checkout { background: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .icon-link { text-decoration: none; font-size: 20px; }
+        /* --- CSS DASAR --- */
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
+        .container { padding: 20px; }
+        h2 { color: #ff9800; text-align: center; }
+
+        /* --- NAVIGASI BAWAH --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1f1f1f;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 2px solid #ff9800;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            text-align: center;
+            font-size: 11px;
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .nav-item.active { color: #ff9800; font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        /* Khusus Tombol Admin WA */
+        .nav-admin { color: #25D366 !important; font-weight: bold; } 
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h3 id="welcome" style="margin:0;">Halo, Pelanggan!</h3>
-        <div class="nav-icons">
-            <a href="riwayat.html" class="icon-link" title="Riwayat">📜</a>
-            <a href="pengaturan.html" class="icon-link" title="Pengaturan">⚙️</a>
+    <script>
+        if (!localStorage.getItem('userNama')) {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <div class="container">
+        <h2>Selamat Datang, <span id="userTampil" style="color: white;">User</span>!</h2>
+        <p style="text-align: center; font-size: 13px; color: #888;">Silakan pilih menu pesanan Anda di bawah ini.</p>
+        
+        <hr border="1" color="#333">
+
+        <div id="produkList">
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #333;">
+                <h4 style="margin:0;">Peye Kacang</h4>
+                <p style="color:#ff9800; margin:5px 0;">Rp 15.000</p>
+                <button style="background:#ff9800; border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">Tambah ke Keranjang</button>
+            </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="category-title">Daftar Makanan</div>
-        <div id="makanan-list"></div>
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i>🏠</i>
+            <span>Beranda</span>
+        </a>
+        <a href="riwayat.html" class="nav-item">
+            <i>📜</i>
+            <span>Riwayat</span>
+        </a>
+        
+        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store%2C%20saya%20mau%20tanya..." target="_blank" class="nav-item nav-admin">
+            <i>💬</i>
+            <span>Admin</span>
+        </a>
 
-        <div class="category-title">Daftar Minuman</div>
-        <div id="minuman-list"></div>
-    </div>
-
-    <div class="cart-bar">
-        <span>Total: <span id="total-text">Rp 0</span></span>
-        <button class="btn-checkout" onclick="checkout()">Checkout</button>
+        <a href="pengaturan.html" class="nav-item">
+            <i>⚙️</i>
+            <span>Profil</span>
+        </a>
     </div>
 
     <script>
-        document.getElementById('welcome').innerText = "Halo, " + (localStorage.getItem('userNama') || "Pelanggan");
-
-        const makanan = [
-            {n: "Peye Kacang (Kecil)", h: 5000}, {n: "Peye Kacang (Besar)", h: 10000},
-            {n: "Slondok", h: 20000}, {n: "Opak", h: 20000},
-            {n: "Kacang", h: 2000}, {n: "Kripik Pedes", h: 15000},
-            {n: "Kue Sus Kering", h: 15000}, {n: "Reginang (isi 3)", h: 5000}
-        ];
-
-        const minuman = [
-            {n: "Aqua Galon", h: 22000}
-        ];
-
-        let cart = [];
-
-        function render() {
-            // Render Makanan
-            document.getElementById('makanan-list').innerHTML = makanan.map((item, index) => `
-                <div class="card">
-                    <div class="info"><b>${item.n}</b><br><span>Rp ${item.h.toLocaleString('id-ID')}</span></div>
-                    <button class="btn-plus" onclick="add('makanan', ${index})">+</button>
-                </div>`).join('');
-
-            // Render Minuman
-            document.getElementById('minuman-list').innerHTML = minuman.map((item, index) => `
-                <div class="card">
-                    <div class="info"><b>${item.n}</b><br><span>Rp ${item.h.toLocaleString('id-ID')}</span></div>
-                    <button class="btn-plus" onclick="add('minuman', ${index})">+</button>
-                </div>`).join('');
-        }
-
-        function add(type, index) {
-            const item = type === 'makanan' ? makanan[index] : minuman[index];
-            cart.push(item);
-            
-            let total = cart.reduce((sum, i) => sum + i.h, 0);
-            document.getElementById('total-text').innerText = "Rp " + total.toLocaleString('id-ID');
-            
-            localStorage.setItem('tempTotal', total);
-            localStorage.setItem('tempOrder', cart.map(i => i.n).join(', '));
-        }
-
-        function checkout() {
-            if (cart.length === 0) return alert("Pilih pesanan dulu ya!");
-            window.location.href = "pembayaran.html";
-        }
-
-        render();
+        // Tampilkan nama user dari localStorage
+        document.getElementById('userTampil').innerText = localStorage.getItem('userNama');
     </script>
+
 </body>
 </html>
