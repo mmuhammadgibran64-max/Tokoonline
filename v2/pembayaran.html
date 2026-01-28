@@ -7,27 +7,13 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 30px; }
         .header { background: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff9800; }
-        .container { padding: 15px; }
-        
-        .box-info { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
-        .total-bayar { font-size: 24px; font-weight: bold; color: #ff9800; text-align: center; display: block; margin: 10px 0; }
-
-        .metode-list { display: flex; flex-direction: column; gap: 10px; }
-        .metode-item { 
-            background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #444; 
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s;
-        }
-        .metode-item:hover { border-color: #ff9800; }
-        .metode-item.locked { opacity: 0.5; cursor: not-allowed; background: #181818; }
-        
-        .radio-circle { width: 20px; height: 20px; border: 2px solid #ff9800; border-radius: 50%; position: relative; }
-        .selected .radio-circle::after { content: ""; position: absolute; width: 10px; height: 10px; background: #ff9800; border-radius: 50%; top: 5px; left: 5px; }
-
-        .btn-konfirmasi { 
-            background: #ff9800; color: black; border: none; width: 100%; padding: 18px; 
-            border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 30px; cursor: pointer; 
-        }
-        .lock-icon { font-size: 14px; }
+        .container { padding: 20px; }
+        .total-box { background: #1f1f1f; padding: 20px; border-radius: 15px; border: 1px dashed #ff9800; text-align: center; margin-bottom: 25px; }
+        .total-amount { font-size: 28px; font-weight: bold; color: #ff9800; display: block; }
+        .pay-method { background: #1f1f1f; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .pay-active { border: 1px solid #ff9800; }
+        .pay-locked { opacity: 0.4; cursor: not-allowed; }
+        .btn-bayar { background: #ff9800; color: black; border: none; width: 100%; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -37,83 +23,75 @@
     </div>
 
     <div class="container">
-        <div class="box-info">
-            <p style="margin:0; color:#888; text-align:center;">Total yang harus dibayar:</p>
-            <span class="total-bayar" id="displayTotal">Rp0</span>
+        <div class="total-box">
+            <span style="color:#888; font-size:14px;">Total Tagihan</span>
+            <span class="total-amount" id="tagihan">Rp0</span>
         </div>
 
-        <h3 style="font-size: 14px; color: #888; text-transform: uppercase;">Pilih Metode Pembayaran</h3>
-        
-        <div class="metode-list">
-            <div class="metode-item selected" onclick="pilihMetode('Cash')">
-                <div>
-                    <h4 style="margin:0;">Cash (Bayar di Tempat)</h4>
-                    <p style="margin:5px 0 0 0; font-size:12px; color:#aaa;">Bayar saat barang sampai</p>
-                </div>
-                <div class="radio-circle"></div>
-            </div>
+        <p style="font-size: 12px; color: #888; margin-bottom: 10px;">PILIH METODE</p>
 
-            <div class="metode-item locked">
-                <div>
-                    <h4 style="margin:0;">QRIS / E-Wallet 🔒</h4>
-                    <p style="margin:5px 0 0 0; font-size:12px; color:#555;">OVO, GoPay, Dana (Segera)</p>
-                </div>
-                <span class="lock-icon">🔒</span>
+        <div class="pay-method pay-active">
+            <div>
+                <h4 style="margin:0;">Cash (Bayar di Tempat)</h4>
+                <p style="margin:4px 0 0 0; font-size:12px; color:#777;">Bayar tunai saat barang sampai</p>
             </div>
-
-            <div class="metode-item locked">
-                <div>
-                    <h4 style="margin:0;">Transfer Bank 🔒</h4>
-                    <p style="margin:5px 0 0 0; font-size:12px; color:#555;">BCA, BRI, Mandiri (Segera)</p>
-                </div>
-                <span class="lock-icon">🔒</span>
-            </div>
+            <span style="color:#ff9800;">✔</span>
         </div>
 
-        <button class="btn-konfirmasi" onclick="prosesBayar()">KONFIRMASI PESANAN</button>
-        <p onclick="window.location.href='dashboard.html'" style="text-align:center; color:#888; margin-top:20px; font-size:14px; cursor:pointer;">← Kembali ke Menu</p>
+        <div class="pay-method pay-locked">
+            <div><h4>QRIS / E-Wallet 🔒</h4></div>
+            <span>🔒</span>
+        </div>
+
+        <button class="btn-bayar" id="btnKonfirmasi" onclick="selesaikanOrder()">KONFIRMASI PEMBAYARAN</button>
     </div>
 
     <script>
-        // Ambil data keranjang dari HP
-        let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
-        let total = keranjang.reduce((sum, item) => sum + item.harga, 0);
-        document.getElementById('displayTotal').innerText = "Rp" + total.toLocaleString('id-ID');
+        const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        const total = keranjang.reduce((a, b) => a + b.harga, 0);
+        document.getElementById('tagihan').innerText = "Rp" + total.toLocaleString('id-ID');
 
-        function prosesBayar() {
+        function selesaikanOrder() {
             if (keranjang.length === 0) {
                 alert("Keranjang kosong!");
-                window.location.href = "dashboard.html";
                 return;
             }
 
-            // Siapkan Data Pesanan
-            const dataPesanan = {
+            const btn = document.getElementById('btnKonfirmasi');
+            btn.innerText = "Mengirim Pesanan...";
+            btn.disabled = true;
+
+            const listProduk = keranjang.map(item => item.produk).join(", ");
+
+            const dataFinal = {
                 tanggal: new Date().toLocaleString('id-ID'),
-                nama: localStorage.getItem('userNama'),
+                nama: localStorage.getItem('userNama') || "Tanpa Nama",
                 hp: localStorage.getItem('userHP') || "-",
-                alamat: localStorage.getItem('userAlamat'),
-                pesanan: keranjang.map(i => i.produk).join(", "),
+                alamat: localStorage.getItem('userAlamat') || "Tanpa Alamat",
+                pesanan: listProduk,
                 total: total.toLocaleString('id-ID')
             };
 
-            // 1. Simpan ke Riwayat (di memori HP)
+            // SIMPAN KE RIWAYAT HP
             let riwayat = JSON.parse(localStorage.getItem('semuaPesanan')) || [];
-            riwayat.push(dataPesanan);
+            riwayat.push(dataFinal);
             localStorage.setItem('semuaPesanan', JSON.stringify(riwayat));
 
-            // 2. Kirim ke Google Sheets Admin
-            fetch("https://script.google.com/macros/s/AKfycbzkcUtd6vLZg5_5N6MMGn2P8vtX1w7ikjtEsfN3x_mWhukHduvlm1nottrihyZWzZ7c8w/exec", {
+            // KIRIM KE GOOGLE SHEETS (LINK BARU KAMU)
+            fetch("https://script.google.com/macros/s/AKfycbwLzlRQm0FOr8JCoD8Q4aylAgnVccH2OIv1Jefq9f49c3iqQBL7bVUe7FmFci4DDuTL8A/exec", {
                 method: 'POST',
                 mode: 'no-cors',
-                body: JSON.stringify(dataPesanan)
+                body: JSON.stringify(dataFinal)
+            }).then(() => {
+                localStorage.removeItem('keranjang');
+                alert("Pesanan Berhasil! Data sudah masuk ke admin.");
+                window.location.href = "riwayat.html";
+            }).catch((err) => {
+                console.log("Error:", err);
+                // Tetap pindah ke riwayat meski fetch no-cors
+                localStorage.removeItem('keranjang');
+                window.location.href = "riwayat.html";
             });
-
-            // 3. Hapus keranjang karena sudah dibayar
-            localStorage.removeItem('keranjang');
-
-            alert("Pesanan Berhasil! Silakan cek menu Riwayat.");
-            window.location.href = "riwayat.html";
         }
     </script>
 </body>
