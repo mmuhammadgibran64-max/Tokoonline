@@ -3,82 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan - Gibran Store</title>
+    <title>Dashboard - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding: 20px; }
-        .nav-back { text-decoration: none; color: #ff9800; font-weight: bold; display: block; margin-bottom: 20px; }
-        .section { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        .section h4 { margin-top: 0; color: #ff9800; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2c2c2c; font-size: 14px; }
-        .item:last-child { border: none; }
-        .val { color: #888; text-align: right; }
-        .locked { color: #ff4444; font-size: 11px; font-style: italic; }
-        .badge { background: #333; padding: 2px 8px; border-radius: 5px; font-size: 12px; }
-        .btn-logout { background: #ff4444; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .footer-ver { text-align: center; font-size: 11px; color: #555; margin-top: 30px; }
+        /* --- CSS DASAR --- */
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 80px; }
+        .container { padding: 20px; }
+        h2 { color: #ff9800; text-align: center; }
+
+        /* --- NAVIGASI BAWAH --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1f1f1f;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 2px solid #ff9800;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            text-align: center;
+            font-size: 11px;
+            transition: 0.3s;
+            flex: 1;
+        }
+
+        .nav-item.active { color: #ff9800; font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        /* Khusus Tombol Admin WA */
+        .nav-admin { color: #25D366 !important; font-weight: bold; } 
     </style>
 </head>
 <body>
 
-    <a href="dashboard.html" class="nav-back">← Kembali ke Toko</a>
+    <script>
+        if (!localStorage.getItem('userNama')) {
+            window.location.href = "index.html";
+        }
+    </script>
 
-    <div class="section">
-        <h4>Identitas Visual</h4>
-        <div class="item">
-            <div>Nama & Logo</div>
-            <div class="val">Gibran Store <br> <span style="font-size:10px;">Brand Identity Aktif</span></div>
-        </div>
-        <div class="item">
-            <div>Deskripsi Toko</div>
-            <div class="val">Pusat Jajanan Enak & Gurih</div>
+    <div class="container">
+        <h2>Selamat Datang, <span id="userTampil" style="color: white;">User</span>!</h2>
+        <p style="text-align: center; font-size: 13px; color: #888;">Silakan pilih menu pesanan Anda di bawah ini.</p>
+        
+        <hr border="1" color="#333">
+
+        <div id="produkList">
+            <div style="background:#1f1f1f; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #333;">
+                <h4 style="margin:0;">Peye Kacang</h4>
+                <p style="color:#ff9800; margin:5px 0;">Rp 15.000</p>
+                <button style="background:#ff9800; border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">Tambah ke Keranjang</button>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h4>Operasional</h4>
-        <div class="item">
-            <div>Jam Buka - Tutup</div>
-            <div class="val">08:00 - 20:00</div>
-        </div>
-        <div class="item">
-            <div>Jadwal Update</div>
-            <div class="val">Senin - Kamis</div>
-        </div>
-    </div>
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i>🏠</i>
+            <span>Beranda</span>
+        </a>
+        <a href="riwayat.html" class="nav-item">
+            <i>📜</i>
+            <span>Riwayat</span>
+        </a>
+        
+        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store%2C%20saya%20mau%20tanya..." target="_blank" class="nav-item nav-admin">
+            <i>💬</i>
+            <span>Admin</span>
+        </a>
 
-    <div class="section">
-        <h4>Fitur & Sistem</h4>
-        <div class="item">
-            <div>Pencahayaan</div>
-            <div class="val badge">Gelap (Dark Mode)</div>
-        </div>
-        <div class="item">
-            <div>Jasa Ekspedisi</div>
-            <div class="locked">🔒 Masih Kunci (JNE, J&T, GoSend)</div>
-        </div>
-        <div class="item">
-            <div>Template Chat</div>
-            <div class="val">Auto-reply FAQ Aktif</div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h4>Akun</h4>
-        <button class="btn-logout" onclick="logout()">KELUAR (LOGOUT)</button>
-    </div>
-
-    <div class="footer-ver">
-        Aplikasi v.1.2.8<br>
-        &copy; 2024 Gibran Store Official
+        <a href="pengaturan.html" class="nav-item">
+            <i>⚙️</i>
+            <span>Profil</span>
+        </a>
     </div>
 
     <script>
-        function logout() {
-            if(confirm("Yakin mau keluar? Kamu harus isi nama lagi nanti.")) {
-                localStorage.clear();
-                window.location.href = "index.html";
-            }
-        }
+        // Tampilkan nama user dari localStorage
+        document.getElementById('userTampil').innerText = localStorage.getItem('userNama');
     </script>
 
 </body>
