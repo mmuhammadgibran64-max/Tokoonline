@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
-    <title>Gibran Store - Segera Hadir</title>
+    <title>Gibran Store - Sedang Update</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
         .container { padding: 30px; border: 2px solid #ff9800; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(255,152,0,0.2); }
@@ -12,17 +11,18 @@
         h1 { color: #ff9800; margin: 0; font-size: 24px; letter-spacing: 2px; }
         .timer { font-size: 35px; font-weight: bold; margin: 25px 0; color: #fff; font-family: monospace; }
         .status { color: #888; font-size: 14px; margin-top: 10px; line-height: 1.5; }
-        .btn-masuk { display: none; background: #ff9800; color: black; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(255,152,0,0.4); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .btn-masuk { display: none; background: #ff9800; color: black; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
     </style>
 </head>
 <body>
     <div class="container">
-       <img src="https://i.ibb.co/67THpk8y/logo.png" alt="Logo" class="logo-img">
+        <img src="https://i.ibb.co/67THpk8y/logo.png" alt="Logo" class="logo-img">
+        
         <div id="maintenance-view">
             <h1>GIBRAN STORE</h1>
-            <p class="status">Sedang Update Sistem...<br>Toko dibuka kembali pukul 13:30</p>
+            <p class="status">MAINTENANCE SISTEM<br>Penyempurnaan Fitur Login & Database</p>
             <div class="timer" id="countdown">00:00:00</div>
+            <p style="color: #ff9800; font-size: 12px;">Rencana buka: Pukul 20:00 WIB</p>
         </div>
 
         <a href="v2/index.html" id="btnMasuk" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
@@ -30,7 +30,8 @@
 
     <script>
         const targetDate = new Date();
-        targetDate.setHours(13, 30, 0, 0); 
+        // Jam 20 = 8 Malam. Ganti ke 18 kalau mau jam 6 Sore.
+        targetDate.setHours(20, 0, 0, 0); 
 
         const x = setInterval(function() {
             const now = new Date().getTime();
@@ -53,4 +54,3 @@
     </script>
 </body>
 </html>
-
