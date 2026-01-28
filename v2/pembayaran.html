@@ -3,84 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konfirmasi Pembayaran</title>
+    <title>Pembayaran - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        .box { background: #1f1f1f; padding: 20px; border-radius: 15px; border: 1px solid #ff9800; max-width: 400px; margin: auto; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #2c2c2c; color: white; box-sizing: border-box; }
-        button { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        button:disabled { background: #555; }
-        .info { background: #2c2c2c; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 30px; }
+        .header { background: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff9800; }
+        .container { padding: 15px; }
+        
+        .box-info { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
+        .total-bayar { font-size: 24px; font-weight: bold; color: #ff9800; text-align: center; display: block; margin: 10px 0; }
+
+        .metode-list { display: flex; flex-direction: column; gap: 10px; }
+        .metode-item { 
+            background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #444; 
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s;
+        }
+        .metode-item:hover { border-color: #ff9800; }
+        .metode-item.locked { opacity: 0.5; cursor: not-allowed; background: #181818; }
+        
+        .radio-circle { width: 20px; height: 20px; border: 2px solid #ff9800; border-radius: 50%; position: relative; }
+        .selected .radio-circle::after { content: ""; position: absolute; width: 10px; height: 10px; background: #ff9800; border-radius: 50%; top: 5px; left: 5px; }
+
+        .btn-konfirmasi { 
+            background: #ff9800; color: black; border: none; width: 100%; padding: 18px; 
+            border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 30px; cursor: pointer; 
+        }
+        .lock-icon { font-size: 14px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h3>Detail Pesanan</h3>
-        <div class="info">
-            <b>Pesanan:</b> <span id="ringkasan"></span><br>
-            <b>Total:</b> <span id="total-harga"></span>
-        </div>
-        
-        <label style="font-size:12px; color:orange;">Metode Pembayaran:</label>
-        <select id="metode" onchange="cekMetode()">
-            <option value="Cash">Cash (Bayar di Tempat)</option>
-            <option value="QRIS">QRIS (Maintenance)</option>
-        </select>
-        <p id="err" style="color:red; font-size:11px; display:none;">Metode sedang perbaikan, pilih Cash!</p>
 
-        <input type="text" id="nama" readonly>
-        <textarea id="alamat" readonly></textarea>
+    <div class="header">
+        <h2 style="margin:0; color:#ff9800;">Pembayaran</h2>
+    </div>
+
+    <div class="container">
+        <div class="box-info">
+            <p style="margin:0; color:#888; text-align:center;">Total yang harus dibayar:</p>
+            <span class="total-bayar" id="displayTotal">Rp0</span>
+        </div>
+
+        <h3 style="font-size: 14px; color: #888; text-transform: uppercase;">Pilih Metode Pembayaran</h3>
         
-        <button id="btnKirim" onclick="kirim()">KONFIRMASI & KIRIM</button>
+        <div class="metode-list">
+            <div class="metode-item selected" onclick="pilihMetode('Cash')">
+                <div>
+                    <h4 style="margin:0;">Cash (Bayar di Tempat)</h4>
+                    <p style="margin:5px 0 0 0; font-size:12px; color:#aaa;">Bayar saat barang sampai</p>
+                </div>
+                <div class="radio-circle"></div>
+            </div>
+
+            <div class="metode-item locked">
+                <div>
+                    <h4 style="margin:0;">QRIS / E-Wallet 🔒</h4>
+                    <p style="margin:5px 0 0 0; font-size:12px; color:#555;">OVO, GoPay, Dana (Segera)</p>
+                </div>
+                <span class="lock-icon">🔒</span>
+            </div>
+
+            <div class="metode-item locked">
+                <div>
+                    <h4 style="margin:0;">Transfer Bank 🔒</h4>
+                    <p style="margin:5px 0 0 0; font-size:12px; color:#555;">BCA, BRI, Mandiri (Segera)</p>
+                </div>
+                <span class="lock-icon">🔒</span>
+            </div>
+        </div>
+
+        <button class="btn-konfirmasi" onclick="prosesBayar()">KONFIRMASI PESANAN</button>
+        <p onclick="window.location.href='dashboard.html'" style="text-align:center; color:#888; margin-top:20px; font-size:14px; cursor:pointer;">← Kembali ke Menu</p>
     </div>
 
     <script>
-        const namaUser = localStorage.getItem('userNama');
-        const alamatUser = localStorage.getItem('userAlamat');
-        const pesananUser = localStorage.getItem('tempOrder');
-        const totalUser = localStorage.getItem('tempTotal');
+        // Ambil data keranjang dari HP
+        let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        let total = keranjang.reduce((sum, item) => sum + item.harga, 0);
+        document.getElementById('displayTotal').innerText = "Rp" + total.toLocaleString('id-ID');
 
-        document.getElementById('nama').value = namaUser;
-        document.getElementById('alamat').value = alamatUser;
-        document.getElementById('ringkasan').innerText = pesananUser;
-        document.getElementById('total-harga').innerText = "Rp " + parseInt(totalUser).toLocaleString('id-ID');
+        function prosesBayar() {
+            if (keranjang.length === 0) {
+                alert("Keranjang kosong!");
+                window.location.href = "dashboard.html";
+                return;
+            }
 
-        function cekMetode() {
-            const m = document.getElementById('metode').value;
-            document.getElementById('btnKirim').disabled = (m !== "Cash");
-            document.getElementById('err').style.display = (m !== "Cash" ? "block" : "none");
-        }
-
-        function kirim() {
-            const btn = document.getElementById('btnKirim');
-            btn.innerText = "Mengirim...";
-            btn.disabled = true;
-
-            const data = {
+            // Siapkan Data Pesanan
+            const dataPesanan = {
                 tanggal: new Date().toLocaleString('id-ID'),
-                nama: namaUser,
-                hp: localStorage.getItem('userHP'),
-                alamat: alamatUser,
-                pesanan: pesananUser + " (Metode: " + document.getElementById('metode').value + ")",
-                total: "Rp " + parseInt(totalUser).toLocaleString('id-ID')
+                nama: localStorage.getItem('userNama'),
+                hp: localStorage.getItem('userHP') || "-",
+                alamat: localStorage.getItem('userAlamat'),
+                pesanan: keranjang.map(i => i.produk).join(", "),
+                total: total.toLocaleString('id-ID')
             };
 
-            // Simpan ke Riwayat HP
-            let riwayat = JSON.parse(localStorage.getItem('riwayatPesanan')) || [];
-            riwayat.push(data);
-            localStorage.setItem('riwayatPesanan', JSON.stringify(riwayat));
+            // 1. Simpan ke Riwayat (di memori HP)
+            let riwayat = JSON.parse(localStorage.getItem('semuaPesanan')) || [];
+            riwayat.push(dataPesanan);
+            localStorage.setItem('semuaPesanan', JSON.stringify(riwayat));
 
-            // Kirim ke Google Sheets (Link Baru)
+            // 2. Kirim ke Google Sheets Admin
             fetch("https://script.google.com/macros/s/AKfycbzkcUtd6vLZg5_5N6MMGn2P8vtX1w7ikjtEsfN3x_mWhukHduvlm1nottrihyZWzZ7c8w/exec", {
                 method: 'POST',
                 mode: 'no-cors',
-                body: JSON.stringify(data)
-            }).then(() => {
-                window.location.href = "selesai.html";
-            }).catch(() => {
-                alert("Berhasil terkirim!");
-                window.location.href = "selesai.html";
+                body: JSON.stringify(dataPesanan)
             });
+
+            // 3. Hapus keranjang karena sudah dibayar
+            localStorage.removeItem('keranjang');
+
+            alert("Pesanan Berhasil! Silakan cek menu Riwayat.");
+            window.location.href = "riwayat.html";
         }
     </script>
 </body>
