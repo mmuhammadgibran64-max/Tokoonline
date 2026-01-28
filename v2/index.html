@@ -3,50 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Update Center</title>
+    <title>Login Pelanggan - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1f1f1f; padding: 30px; border-radius: 15px; border: 1px solid #ff9800; text-align: center; width: 80%; }
-        .btn { background: #ff9800; color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
-        #loading { display: none; margin-top: 20px; }
-        .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
-        .bar-fill { background: #ff9800; width: 0%; height: 100%; transition: 0.1s; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 2px solid #ff9800; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 15px rgba(255,152,0,0.3); }
+        h2 { color: #ff9800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        p { color: #888; font-size: 13px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 15px; }
+        input:focus { border-color: #ff9800; outline: none; background: #2a2a2a; }
+        .btn-masuk { width: 100%; padding: 14px; background: #ff9800; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; color: #000; transition: 0.3s; }
+        .btn-masuk:active { transform: scale(0.95); }
+        .btn-masuk:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <div id="intro">
-            <h2 style="color:#ff9800">Update Area (v2)</h2>
-            <p>Silakan pasang update untuk mencoba fitur Pembayaran Cash & Riwayat.</p>
-            <button class="btn" onclick="jalan()">UPDATE SEKARANG</button>
-        </div>
 
-        <div id="loading">
-            <p id="status">Mengunduh Sistem...</p>
-            <div class="bar-bg"><div id="fill" class="bar-fill"></div></div>
-            <p id="persen">0%</p>
-        </div>
-    </div>
+<div class="login-box">
+    <h2>MASUK USER</h2>
+    <p>Data kamu akan tersimpan di sistem kami</p>
+    
+    <input type="text" id="nama" placeholder="Nama Lengkap" required>
+    <input type="number" id="whatsapp" placeholder="Nomor WhatsApp" required>
+    <input type="text" id="alamat" placeholder="Alamat / Patokan Rumah" required>
+    
+    <button id="submitBtn" class="btn-masuk" onclick="prosesLogin()">MASUK KE TOKO</button>
+</div>
 
-    <script>
-        function jalan() {
-            document.getElementById('intro').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            let w = 0;
-            let inter = setInterval(() => {
-                if(w >= 100) {
-                    clearInterval(inter);
-                    // Langsung lempar ke dashboard setelah login palsu
-                    localStorage.setItem('userNama', 'Gibran Admin');
-                    localStorage.setItem('userAlamat', 'Kantor Pusat Gibran Store');
-                    window.location.href = "dashboard.html";
-                } else {
-                    w++;
-                    document.getElementById('fill').style.width = w + '%';
-                    document.getElementById('persen').innerText = w + '%';
-                }
-            }, 30);
+<script>
+    // Link Google Script Baru Kamu
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8EpyxOBdEbmtMZQGNihemBE0V198O0tC5_Z2MxMtLPO1F9_RdloUg3HFdxLsM5lpRWA/exec';
+
+    function prosesLogin() {
+        const nama = document.getElementById('nama').value;
+        const wa = document.getElementById('whatsapp').value;
+        const alamat = document.getElementById('alamat').value;
+        const btn = document.getElementById('submitBtn');
+
+        if(nama && wa && alamat) {
+            btn.innerText = "Mendaftarkan...";
+            btn.disabled = true;
+
+            // 1. Simpan di Memori HP (Local Storage)
+            localStorage.setItem('user_nama', nama);
+            localStorage.setItem('user_wa', wa);
+            localStorage.setItem('user_alamat', alamat);
+
+            // 2. Kirim ke Google Sheets
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "nama": nama,
+                    "whatsapp": wa,
+                    "alamat": alamat
+                })
+            }).then(() => {
+                alert('Berhasil! Selamat Datang di Gibran Store.');
+                window.location.href = 'dashboard.html'; 
+            }).catch(err => {
+                console.error(err);
+                // Tetap masuk meskipun sinyal lemot karena data sudah di localStorage
+                window.location.href = 'dashboard.html';
+            });
+
+        } else {
+            alert('Waduh Bran, lengkapi dulu semua datanya!');
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
