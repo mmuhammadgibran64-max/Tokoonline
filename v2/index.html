@@ -3,95 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Update</title>
+    <title>Gibran Store - System Update</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .box { background: #1f1f1f; padding: 25px; border-radius: 15px; border: 1px solid #ff9800; width: 100%; max-width: 350px; text-align: center; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 1px solid #ff9800; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        /* Animasi Loading */
-        .loader { border: 4px solid #333; border-top: 4px solid #ff9800; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Loading Bar Container */
+        #updateProgress { display: none; margin: 25px 0; }
+        .progress-bg { background: #333; height: 12px; border-radius: 10px; overflow: hidden; position: relative; }
+        .progress-fill { background: linear-gradient(90deg, #ff9800, #ffc107); width: 0%; height: 100%; transition: width 0.2s; }
+        #percentText { font-size: 18px; font-weight: bold; color: #ff9800; margin-bottom: 5px; }
 
-        #loginSection { display: none; text-align: left; }
-        label { font-size: 13px; color: #ff9800; display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #333; background: #121212; color: white; box-sizing: border-box; }
-        button { background: #ff9800; color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        /* Form Login (Ngumpet) */
+        #loginSection { display: none; text-align: left; animation: fadeIn 0.8s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        label { font-size: 12px; color: #ff9800; text-transform: uppercase; letter-spacing: 1px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0 15px 0; border-radius: 8px; border: 1px solid #333; background: #121212; color: white; box-sizing: border-box; }
         
-        .version { font-size: 10px; color: #555; margin-top: 15px; }
+        button { background: #ff9800; color: black; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        button:hover { background: #ffc107; transform: translateY(-2px); }
+        
+        .status-msg { font-size: 11px; color: #777; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
 
     <div class="box">
         <div id="updateSection">
-            <img src="https://i.postimg.cc/q7fMMY03/IMG-20250117-WA0032.jpg" style="width: 80px; border-radius: 50%; margin-bottom: 10px;">
-            <h2 style="color:#ff9800; margin-bottom: 5px;">Gibran Store</h2>
-            <p style="font-size: 14px; color: #bbb;">Tersedia pembaruan menu (V.1.2.9)</p>
-            
-            <div id="loader" class="loader"></div>
-            <p id="statusTxt" style="font-size: 12px; color: #888;"></p>
-            
-            <button id="btnUpdate" onclick="mulaiUpdate()">DOWNLOAD DATA TERBARU</button>
+            <img src="https://i.postimg.cc/q7fMMY03/IMG-20250117-WA0032.jpg" style="width: 100px; border-radius: 50%; border: 3px solid #ff9800; margin-bottom: 15px;">
+            <h2 style="margin: 0;">Gibran Store</h2>
+            <p style="color: #888; font-size: 14px;">Versi Terbaru V.1.3.0 Tersedia</p>
+            <button id="btnUpdate" onclick="jalankanUpdate()">UPDATE & DOWNLOAD DATA</button>
+        </div>
+
+        <div id="updateProgress">
+            <div id="percentText">0%</div>
+            <div class="progress-bg">
+                <div id="bar" class="progress-fill"></div>
+            </div>
+            <p id="statusTxt" class="status-msg">Menghubungkan ke server...</p>
         </div>
 
         <div id="loginSection">
-            <h3 style="text-align:center; color:#ff9800;">Silakan Masuk</h3>
+            <h3 style="text-align:center; color:#ff9800; margin-top: 0;">Update Selesai!</h3>
+            <p style="text-align:center; font-size: 12px; margin-bottom: 20px;">Silakan login untuk belanja</p>
             <form id="loginForm">
-                <label>Nama Pelanggan:</label>
-                <input type="text" id="nama" required>
-                <label>Nomor HP:</label>
-                <input type="tel" id="hp" required>
-                <label>Alamat Lengkap:</label>
-                <textarea id="alamat" rows="2" required></textarea>
-                <button type="submit" id="btnLogin">MASUK KE TOKO</button>
+                <label>Nama Anda</label>
+                <input type="text" id="nama" placeholder="Contoh: Gibran" required>
+                <label>Alamat Pengiriman</label>
+                <textarea id="alamat" rows="2" placeholder="Nama Jalan, No. Rumah..." required></textarea>
+                <input type="hidden" id="hp" value="08xxxxxxxx"> <button type="submit" id="btnLogin">MASUK KE DASHBOARD</button>
             </form>
         </div>
-
-        <div class="version">Build: 2026.01.28.01</div>
     </div>
 
     <script>
-        function mulaiUpdate() {
-            const btn = document.getElementById('btnUpdate');
-            const loader = document.getElementById('loader');
-            const statusTxt = document.getElementById('statusTxt');
+        function jalankanUpdate() {
+            document.getElementById('updateSection').style.display = 'none';
+            document.getElementById('updateProgress').style.display = 'block';
 
-            btn.style.display = 'none';
-            loader.style.display = 'block';
-            
-            const langkah = ["Menghubungkan ke server...", "Mengunduh menu baru...", "Sinkronisasi harga...", "Selesai!"];
-            let i = 0;
+            let bar = document.getElementById('bar');
+            let percentText = document.getElementById('percentText');
+            let statusTxt = document.getElementById('statusTxt');
+            let progress = 0;
+
+            const pesanUpdate = [
+                "Mengunduh Database Menu...",
+                "Sinkronisasi Harga Peye & Aqua...",
+                "Memperbarui Antarmuka Toko...",
+                "Menyiapkan Dashboard Anda...",
+                "Hampir Selesai..."
+            ];
 
             let interval = setInterval(() => {
-                statusTxt.innerText = langkah[i];
-                i++;
-                if (i >= langkah.length) {
+                progress += Math.floor(Math.random() * 5) + 1; // Jalan acak biar real
+                if (progress > 100) progress = 100;
+
+                bar.style.width = progress + '%';
+                percentText.innerText = progress + '%';
+
+                // Ganti pesan teks setiap kelipatan 20%
+                if(progress < 25) statusTxt.innerText = pesanUpdate[0];
+                else if(progress < 50) statusTxt.innerText = pesanUpdate[1];
+                else if(progress < 75) statusTxt.innerText = pesanUpdate[2];
+                else if(progress < 95) statusTxt.innerText = pesanUpdate[3];
+                else statusTxt.innerText = pesanUpdate[4];
+
+                if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
-                        document.getElementById('updateSection').style.display = 'none';
+                        document.getElementById('updateProgress').style.display = 'none';
                         document.getElementById('loginSection').style.display = 'block';
-                    }, 500);
+                    }, 800);
                 }
-            }, 1000);
+            }, 150); // Kecepatan loading (bisa diatur)
         }
 
+        // Script Kirim Data Login
         document.getElementById('loginForm').onsubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
-            btn.innerText = "Mendaftarkan...";
+            btn.innerText = "Memproses...";
             btn.disabled = true;
 
             const data = {
                 tanggal: new Date().toLocaleString('id-ID'),
                 nama: document.getElementById('nama').value,
-                hp: document.getElementById('hp').value,
+                hp: "08-User", 
                 alamat: document.getElementById('alamat').value,
-                pesanan: "LOG IN (Hanya Masuk)",
+                pesanan: "LOG IN (After Update)",
                 total: "-"
             };
 
             localStorage.setItem('userNama', data.nama);
-            localStorage.setItem('userHP', data.hp);
             localStorage.setItem('userAlamat', data.alamat);
 
             fetch("https://script.google.com/macros/s/AKfycbzkcUtd6vLZg5_5N6MMGn2P8vtX1w7ikjtEsfN3x_mWhukHduvlm1nottrihyZWzZ7c8w/exec", {
