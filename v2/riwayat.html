@@ -18,16 +18,19 @@
         .total-price { font-size: 16px; font-weight: bold; color: #ff9800; margin-top: 10px; display: block; border-top: 1px dashed #444; padding-top: 10px; }
 
         /* Button Action */
-        .action-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        .btn { padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
+        
         .btn-download { background: #ff9800; color: black; }
         .btn-delete { background: #cc3300; color: white; }
+        .btn-login { background: #333; color: white; border: 1px solid #555; }
+        .btn-home { background: #007bff; color: white; }
 
         /* Navigasi Bawah */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1f1f1f; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
         .nav-item { text-decoration: none; color: #888; text-align: center; flex: 1; font-size: 11px; }
         .nav-item.active { color: #ff9800; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; font-style: normal; }
         
         .empty-state { text-align: center; margin-top: 50px; color: #555; }
     </style>
@@ -51,11 +54,10 @@
     <script>
         function muatRiwayat() {
             const container = document.getElementById('riwayatContainer');
-            // Ambil data dari localStorage (asumsi data disimpan dengan key 'semuaPesanan')
             const listPesanan = JSON.parse(localStorage.getItem('semuaPesanan')) || [];
 
             if (listPesanan.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i>📭</i><p>Belum ada riwayat pesanan.</p></div>`;
+                container.innerHTML = `<div class="empty-state"><p>Belum ada riwayat pesanan.</p></div>`;
                 return;
             }
 
@@ -66,54 +68,39 @@
                 card.innerHTML = `
                     <div class="order-header">
                         <span>📅 ${order.tanggal}</span>
-                        <span>ID: #${Math.floor(Math.random()*10000)}</span>
+                        <span>ID: #${index + 101}</span>
                     </div>
                     <div class="order-body">
                         <p><b>Nama:</b> ${order.nama}</p>
-                        <p><b>HP:</b> ${order.hp}</p>
-                        <p><b>Alamat:</b> ${order.alamat}</p>
                         <p><b>Pesanan:</b><br>${order.pesanan}</p>
                         <span class="total-price">Total: Rp${order.total}</span>
                     </div>
+                    
                     <div class="action-group">
-                        <button class="btn btn-download" onclick="downloadNota(${index})">📥 Download</button>
+                        <button class="btn btn-download" onclick="downloadNota(${index})">📥 Nota</button>
                         <button class="btn btn-delete" onclick="hapusRiwayat(${index})">🗑️ Hapus</button>
+                        
+                        <a href="index.html" class="btn btn-login">👤 Ke Login</a>
+                        <a href="dashboard.html" class="btn btn-home">🏠 Beranda</a>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Fungsi Download ke File Manager (format .txt)
         function downloadNota(index) {
             const listPesanan = JSON.parse(localStorage.getItem('semuaPesanan'));
             const data = listPesanan[index];
-            const teksNota = `
-BUKTI PESANAN GIBRAN STORE
-==========================
-Tanggal : ${data.tanggal}
-Nama    : ${data.nama}
-HP      : ${data.hp}
-Alamat  : ${data.alamat}
---------------------------
-Pesanan :
-${data.pesanan}
---------------------------
-TOTAL   : Rp${data.total}
-==========================
-Terima Kasih Telah Belanja!
-            `;
-
-            const blob = new Blob([teksNota], { type: 'text/plain' });
+            const teks = `NOTA GIBRAN STORE\n================\nTanggal: ${data.tanggal}\nNama: ${data.nama}\nAlamat: ${data.alamat}\n\nPesanan: ${data.pesanan}\nTotal: Rp${data.total}\n================`;
+            const blob = new Blob([teks], { type: 'text/plain' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `Nota_GibranStore_${data.nama}_${index}.txt`;
+            link.download = `Nota_${data.nama}.txt`;
             link.click();
         }
 
-        // Fungsi Hapus Riwayat
         function hapusRiwayat(index) {
-            if (confirm("Hapus riwayat pesanan ini?")) {
+            if (confirm("Hapus data ini?")) {
                 let listPesanan = JSON.parse(localStorage.getItem('semuaPesanan'));
                 listPesanan.splice(index, 1);
                 localStorage.setItem('semuaPesanan', JSON.stringify(listPesanan));
@@ -121,7 +108,6 @@ Terima Kasih Telah Belanja!
             }
         }
 
-        // Jalankan saat halaman dibuka
         window.onload = muatRiwayat;
     </script>
 </body>
