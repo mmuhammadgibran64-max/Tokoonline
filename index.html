@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Update Sistem</title>
+    <title>Gibran Store - Maintenance</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
-        .container { padding: 30px; border: 2px solid #ff9800; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(255,152,0,0.2); }
-        .logo-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #ff9800; margin-bottom: 20px; object-fit: cover; background: white; }
-        h1 { color: #ff9800; margin: 0; font-size: 24px; letter-spacing: 2px; }
-        .timer { font-size: 35px; font-weight: bold; margin: 25px 0; color: #fff; font-family: monospace; }
-        .status { color: #888; font-size: 14px; margin-top: 10px; line-height: 1.5; }
-        .btn-masuk { display: none; background: #ff9800; color: black; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
+        .box { padding: 30px; border: 2px solid #ff3e3e; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(255, 62, 62, 0.2); }
+        h1 { color: #ff3e3e; margin-bottom: 10px; letter-spacing: 2px; }
+        p { color: #ccc; font-size: 14px; }
+        .timer { font-size: 32px; font-weight: bold; margin: 25px 0; color: #ff9800; font-family: monospace; }
+        .btn-masuk { display: none; background: #00c8ff; color: black; padding: 18px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 200, 255, 0.3); }
+        .btn-masuk:active { transform: scale(0.95); }
+        .info { margin-top: 20px; font-size: 12px; color: #555; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://i.ibb.co/67THpk8y/logo.png" alt="Logo" class="logo-img">
-        
-        <div id="maintenance-view">
-            <h1>GIBRAN STORE</h1>
-            <p class="status">SEDANG MAINTENANCE<br>Menyiapkan Fitur Upload Foto Cloud</p>
-            <div class="timer" id="countdown">00:00:00</div>
-            <p id="info-buka" style="color: #ff9800; font-size: 12px;">Rencana buka: Besok jam 08:00 WIB</p>
-        </div>
 
-        <a href="v2/index.html" id="btnMasuk" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
+    <div class="box">
+        <h1>MAINTENANCE</h1>
+        <p>Sistem sedang diperbarui. Toko akan dibuka otomatis pada:</p>
+        <h2 style="color: #00c8ff; margin: 5px 0;">Jam 17:00 WIB</h2>
+        
+        <div id="countdown" class="timer">00:00:00</div>
+        
+        <a id="btnMasuk" href="v2/index.html" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
+        
+        <div class="info">Gibran Store v.1.2.8</div>
     </div>
 
     <script>
-        // Set ke besok tanggal 30 Januari jam 08:00 pagi
-        const targetDate = new Date("Jan 30, 2026 08:00:00").getTime();
-
-        const x = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+        function updateTimer() {
+            const now = new Date();
+            const target = new Date();
             
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // SETEL JAM 5 SORE (17:00)
+            target.setHours(17, 0, 0);
+            target.setMinutes(0);
+            target.setSeconds(0);
 
-            document.getElementById("countdown").innerHTML = 
-                (hours < 10 ? "0" + hours : hours) + ":" + 
-                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
-                (seconds < 10 ? "0" + seconds : seconds);
-
-            if (distance <= 0) {
-                clearInterval(x);
-                document.getElementById("maintenance-view").style.display = "none";
-                document.getElementById("btnMasuk").style.display = "block";
+            // Jika sekarang sudah lewat jam 5 sore, targetnya jadi jam 5 sore besok (biar timer gak minus)
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
             }
-        }, 1000);
+
+            const diff = target - now;
+
+            // Jika sisa waktu tinggal dikit banget atau sudah pas jamnya, buka tokonya
+            if (diff <= 1000) {
+                document.getElementById('countdown').innerHTML = "TOKO DIBUKA!";
+                document.getElementById('btnMasuk').style.display = "inline-block";
+                return;
+            }
+
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                (h < 10 ? "0"+h : h) + ":" + (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
+        }
+
+        // Jalankan timer tiap detik
+        setInterval(updateTimer, 1000);
+        updateTimer();
     </script>
 </body>
 </html>
