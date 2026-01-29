@@ -21,7 +21,9 @@
         .calc-box { margin-top: 10px; display: none; background: #333; padding: 10px; border-radius: 10px; }
         .calc-display { width: 100%; padding: 10px; margin-bottom: 5px; background: #121212; border: 1px solid #444; color: #00c8ff; text-align: right; border-radius: 5px; font-family: monospace; }
         .calc-btn { width: 22%; padding: 10px; margin: 1%; background: #444; border: none; color: white; border-radius: 5px; cursor: pointer; }
-        .calc-btn:active { background: #00c8ff; color: black; }
+        
+        /* Dropdown Style untuk Pilihan Tampilan */
+        select { width: 100%; padding: 8px; margin-top: 5px; background: #121212; color: white; border: 1px solid #444; border-radius: 5px; }
 
         .footer { text-align: center; color: #555; font-size: 11px; margin-top: 20px; }
     </style>
@@ -54,8 +56,7 @@
             </div>
 
             <div class="item terkunci">
-                <b>📦 Kebijakan Refund:</b><br>
-                <span>Syarat & ketentuan pengembalian barang.</span>
+                <b>📦 Kebijakan Refund:</b><br><span>Syarat & ketentuan pengembalian barang.</span>
             </div>
 
             <div class="item" style="cursor: pointer;" onclick="window.location.href='https://www.google.com/maps'">
@@ -65,7 +66,6 @@
             <div class="item">
                 <b class="biru">🧮 Kalkulator Toko:</b><br>
                 <button onclick="toggleCalc()" style="display:block; width:100%; margin-top:5px; background:#444; color:white; border:1px solid #00c8ff; border-radius:5px; padding:5px; cursor:pointer;">Buka/Tutup Kalkulator</button>
-                
                 <div id="calculator" class="calc-box">
                     <input type="text" id="display" class="calc-display" disabled>
                     <br>
@@ -90,10 +90,21 @@
                     <button class="calc-btn" onclick="appendToDisplay('+')" style="background:#ff9800">+</button>
                 </div>
             </div>
+
+            <div class="item">
+                <b class="biru">📱 Tampilan Aplikasi:</b><br>
+                <small>Pilih mode perangkat Anda:</small>
+                <select onchange="alert('Tampilan telah dioptimalkan untuk mode ' + this.value)">
+                    <option value="Handphone">Mode Handphone (Default)</option>
+                    <option value="Tablet">Mode Tablet</option>
+                    <option value="Desktop">Mode Desktop / PC</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
         </div>
 
         <div class="footer">
-            Aplikasi v.1.2.9 <br>
+            Aplikasi v.2.9.10 <br>
             <a href="index.html" style="color:#888; text-decoration:none;">⬅ Kembali</a>
         </div>
     </div>
