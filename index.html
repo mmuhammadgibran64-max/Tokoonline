@@ -1,47 +1,96 @@
-<script>
-    // --- PENTING: Ganti versi ini kalau lo mau ada update lagi besok-besok ---
-    const VERSI_SEKARANG = "1.2.9"; 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gibran Store - Update Center</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
+        .box { padding: 30px; border: 2px solid #00c8ff; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(0, 200, 255, 0.2); }
+        h1 { color: #00c8ff; font-size: 22px; margin-bottom: 10px; }
+        #downloadSection { display: none; margin-top: 20px; }
+        .progress-container { background: #333; border-radius: 10px; height: 15px; width: 100%; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
+        .progress-bar { background: linear-gradient(90deg, #25d366, #00c8ff); width: 0%; height: 100%; transition: width 0.4s ease; }
+        .status-text { font-size: 13px; color: #aaa; margin-bottom: 5px; min-height: 20px; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 16px; margin-top: 10px; display: block; box-sizing: border-box; }
+        .btn-download { background: #ff9800; color: black; }
+        .btn-masuk { background: #00c8ff; color: black; display: none; }
+        .version { margin-top: 20px; font-size: 10px; color: #555; }
+    </style>
+</head>
+<body>
 
-    window.onload = function() {
-        // Cek apakah user sudah pernah download versi ini sebelumnya
-        const sudahUpdate = localStorage.getItem("statusUpdate");
-
-        if (sudahUpdate === VERSI_SEKARANG) {
-            // Kalau sudah pernah download versi yang sama, langsung pindah ke v2
-            window.location.href = "v2/index.html";
-        }
-    };
-
-    function startSync() {
-        document.getElementById('btnDownload').style.display = "none";
-        document.getElementById('downloadSection').style.display = "block";
+    <div class="box" id="mainBox">
+        <h1>GIBRAN STORE</h1>
+        <p id="desc" style="font-size: 14px; color:#00c8ff;">Update Versi 1.2.9 Tersedia</p>
         
-        const bar = document.getElementById('bar');
-        const status = document.getElementById('statusUpdate');
-        const percent = document.getElementById('percent');
-        
-        const steps = [
-            { p: 20, t: "Sinkronisasi Akun...", s: 800 },
-            { p: 50, t: "Memasang Fitur v." + VERSI_SEKARANG + "...", s: 1200 },
-            { p: 80, t: "Menyimpan Data ke Sistem...", s: 1000 },
-            { p: 100, t: "Update Berhasil!", s: 500 }
-        ];
+        <button id="btnDownload" class="btn btn-download" onclick="startSync()">DOWNLOAD DATA TERBARU</button>
 
-        let i = 0;
-        function runStep() {
-            if (i < steps.length) {
-                bar.style.width = steps[i].p + "%";
-                percent.innerHTML = steps[i].p + "%";
-                status.innerHTML = steps[i].t;
-                setTimeout(() => { i++; runStep(); }, steps[i-1] ? steps[i].s : 500);
-            } else {
-                // SIMPAN MEMORI: Tandai kalau versi ini sudah di-download
-                localStorage.setItem("statusUpdate", VERSI_SEKARANG);
-                
-                document.getElementById('btnMasuk').style.display = "block";
-                status.style.color = "#25d366";
+        <div id="downloadSection">
+            <div id="statusUpdate" class="status-text">Menyiapkan...</div>
+            <div class="progress-container">
+                <div id="bar" class="progress-bar"></div>
+            </div>
+            <span id="percent" style="font-weight:bold;">0%</span>
+        </div>
+
+        <a id="btnMasuk" href="v2/index.html" class="btn btn-masuk">MASUK KE DASHBOARD</a>
+        
+        <div class="version">Secure System v.1.2.9</div>
+    </div>
+
+    <script>
+        // Kunci Versi: Kalau lo ganti ini besok, tombol download muncul lagi
+        const VERSI_SEKARANG = "1.2.9"; 
+
+        // Cek Memori Otomatis
+        window.onload = function() {
+            const statusLama = localStorage.getItem("statusUpdate");
+            if (statusLama === VERSI_SEKARANG) {
+                // Jika sudah pernah download versi ini, langsung lempar ke dalam
+                window.location.href = "v2/index.html";
             }
+        };
+
+        function startSync() {
+            document.getElementById('btnDownload').style.display = "none";
+            document.getElementById('downloadSection').style.display = "block";
+            
+            const bar = document.getElementById('bar');
+            const status = document.getElementById('statusUpdate');
+            const percent = document.getElementById('percent');
+            
+            // Urutan loading data fitur lo
+            const steps = [
+                { p: 10, t: "Menghubungkan ke server...", s: 500 },
+                { p: 30, t: "Sinkronisasi Database Register...", s: 1000 },
+                { p: 60, t: "Memuat Fitur Refund & Login...", s: 1500 },
+                { p: 85, t: "Optimasi Tampilan HP/Tablet...", s: 800 },
+                { p: 100, t: "Update Berhasil Dipasang!", s: 500 }
+            ];
+
+            let i = 0;
+            function runStep() {
+                if (i < steps.length) {
+                    bar.style.width = steps[i].p + "%";
+                    percent.innerHTML = steps[i].p + "%";
+                    status.innerHTML = steps[i].t;
+                    
+                    let speed = steps[i].s;
+                    setTimeout(() => {
+                        i++;
+                        runStep();
+                    }, speed);
+                } else {
+                    // Simpan ke memori browser kalau dia sudah selesai download
+                    localStorage.setItem("statusUpdate", VERSI_SEKARANG);
+                    
+                    document.getElementById('btnMasuk').style.display = "block";
+                    status.style.color = "#25d366";
+                }
+            }
+            runStep();
         }
-        runStep();
-    }
-</script>
+    </script>
+</body>
+</html>
