@@ -16,6 +16,13 @@
         .terkunci { opacity: 0.6; position: relative; }
         .terkunci::after { content: "🔒"; position: absolute; right: 10px; top: 15px; }
         .btn-wa { background: #25d366; color: white; padding: 12px; border-radius: 10px; text-decoration: none; display: block; text-align: center; font-weight: bold; margin-top: 10px; font-size: 14px; }
+        
+        /* Gaya Kalkulator Simpel */
+        .calc-box { margin-top: 10px; display: none; background: #333; padding: 10px; border-radius: 10px; }
+        .calc-display { width: 100%; padding: 10px; margin-bottom: 5px; background: #121212; border: 1px solid #444; color: #00c8ff; text-align: right; border-radius: 5px; font-family: monospace; }
+        .calc-btn { width: 22%; padding: 10px; margin: 1%; background: #444; border: none; color: white; border-radius: 5px; cursor: pointer; }
+        .calc-btn:active { background: #00c8ff; color: black; }
+
         .footer { text-align: center; color: #555; font-size: 11px; margin-top: 20px; }
     </style>
 </head>
@@ -24,14 +31,8 @@
     <div class="container">
         <div class="box">
             <h3>🆔 IDENTITAS TOKO</h3>
-            <div class="item">
-                <b class="biru">Nama & Logo Toko:</b><br>
-                Identitas visual brand Anda.
-            </div>
-            <div class="item">
-                <b class="biru">Deskripsi Toko:</b><br>
-                Penjelasan singkat mengenai apa yang Anda jual.
-            </div>
+            <div class="item"><b class="biru">Nama & Logo Toko:</b><br>Identitas visual brand Anda.</div>
+            <div class="item"><b class="biru">Deskripsi Toko:</b><br>Penjelasan singkat mengenai apa yang Anda jual.</div>
         </div>
 
         <div class="box">
@@ -40,43 +41,75 @@
                 <span>Jam Buka: <b class="kuning">08:00</b></span>
                 <span>Jam Tutup: <b class="kuning">20:00</b></span>
             </div>
-            <div class="item flex">
-                <span>Pencahayaan:</span>
-                <span class="biru">Mode Gelap</span>
-            </div>
+            <div class="item flex"><span>Pencahayaan:</span><span class="biru">Mode Gelap</span></div>
         </div>
 
         <div class="box">
             <h3>🚚 LOGISTIK & LAYANAN</h3>
-            <div class="item terkunci">
-                <b>Jasa Ekspedisi:</b><br>
-                Pilih kurir yang tersedia di area kamu (JNE, J&T, SiCepat, GoSend, dll).
-            </div>
+            <div class="item terkunci"><b>Jasa Ekspedisi:</b><br>Pilih kurir (JNE, J&T, SiCepat, GoSend, dll).</div>
             
             <div class="item">
-                <b>Template Chat:</b><br>
-                Siapkan balasan otomatis (Auto-reply) untuk pertanyaan yang sering muncul (FAQ).
-                <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store" class="btn-wa">HUBUNGI ADMIN</a>
+                <b>Template Chat:</b><br>Auto-reply FAQ.
+                <a href="https://wa.me/6285123332018?text=Halo%20Admin" class="btn-wa">HUBUNGI ADMIN</a>
             </div>
 
-            <div class="item" style="cursor: pointer;" onclick="alert('📜 KEBIJAKAN REFUND:\n1. Video unboxing wajib.\n2. Maksimal 1x24 jam.\n3. Chat admin untuk proses.')">
-                <b>📦 Kebijakan Refund:</b><br>
-                <span class="biru">Klik untuk lihat syarat & ketentuan.</span>
+            <div class="item" style="cursor: pointer;" onclick="alert('📜 KEBIJAKAN REFUND:\n1. Video unboxing wajib.\n2. Maksimal 1x24 jam.')">
+                <b>📦 Kebijakan Refund:</b><br><span class="biru">Klik untuk lihat syarat & ketentuan.</span>
             </div>
 
             <div class="item" style="cursor: pointer;" onclick="window.location.href='https://www.google.com/maps'">
-                <b>📍 Lokasi Toko:</b><br>
-                <span class="biru">Klik untuk melihat lokasi Gibran Store di Maps.</span>
+                <b>📍 Lokasi Toko:</b><br><span class="biru">Klik untuk melihat lokasi di Maps.</span>
+            </div>
+
+            <div class="item">
+                <b class="biru">🧮 Kalkulator Toko:</b><br>
+                <small>Hitung total belanjaan di sini.</small>
+                <button onclick="toggleCalc()" style="display:block; width:100%; margin-top:5px; background:#444; color:white; border:1px solid #00c8ff; border-radius:5px; padding:5px; cursor:pointer;">Buka/Tutup Kalkulator</button>
+                
+                <div id="calculator" class="calc-box">
+                    <input type="text" id="display" class="calc-display" disabled>
+                    <br>
+                    <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                    <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                    <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                    <button class="calc-btn" onclick="appendToDisplay('/')" style="background:#ff9800">/</button>
+                    <br>
+                    <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                    <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                    <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                    <button class="calc-btn" onclick="appendToDisplay('*')" style="background:#ff9800">*</button>
+                    <br>
+                    <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                    <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                    <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                    <button class="calc-btn" onclick="appendToDisplay('-')" style="background:#ff9800">-</button>
+                    <br>
+                    <button class="calc-btn" onclick="clearDisplay()" style="background:#ff3e3e">C</button>
+                    <button class="calc-btn" onclick="appendToDisplay('0')">0</button>
+                    <button class="calc-btn" onclick="calculateResult()" style="background:#25d366">=</button>
+                    <button class="calc-btn" onclick="appendToDisplay('+')" style="background:#ff9800">+</button>
+                </div>
             </div>
         </div>
 
         <div class="footer">
             Aplikasi v.1.2.9 <br>
-            © Gibran Store - Senin s/d Kamis (08:00 - 20:00)
-            <br><br>
-            <a href="index.html" style="color:#888; text-decoration:none;">⬅ Kembali ke Login</a>
+            <a href="index.html" style="color:#888; text-decoration:none;">⬅ Kembali</a>
         </div>
     </div>
+
+    <script>
+        function toggleCalc() {
+            const x = document.getElementById("calculator");
+            x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none";
+        }
+        function appendToDisplay(value) { document.getElementById("display").value += value; }
+        function clearDisplay() { document.getElementById("display").value = ""; }
+        function calculateResult() {
+            try { document.getElementById("display").value = eval(document.getElementById("display").value); }
+            catch(err) { document.getElementById("display").value = "Error"; }
+        }
+    </script>
 
 </body>
 </html>
