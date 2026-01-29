@@ -5,118 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding-bottom: 90px; }
-        .header { background: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff9800; }
-        .container { padding: 15px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 380px; }
+        .header { text-align: center; padding: 25px; background: #1f1f1f; border-radius: 20px; border: 2px solid #00c8ff; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 200, 255, 0.2); }
+        .header h3 { margin: 0; color: #00c8ff; letter-spacing: 1px; }
         
-        .section-title { color: #ff9800; font-size: 14px; font-weight: bold; margin: 20px 0 10px 5px; text-transform: uppercase; display: flex; align-items: center; }
-        .section-title i { margin-right: 8px; }
-
-        .item { background: #1f1f1f; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .item-info h4 { margin: 0; font-size: 14px; color: #eee; }
-        .item-info p { margin: 5px 0 0 0; font-size: 12px; color: #888; }
+        .menu-item { 
+            background: #1f1f1f; 
+            padding: 20px; 
+            margin-bottom: 12px; 
+            border-radius: 15px; 
+            border: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+        .menu-item:active { background: #2a2a2a; transform: scale(0.96); border-color: #00c8ff; }
+        .menu-item span { font-weight: 600; font-size: 15px; }
+        .icon-arrow { color: #00c8ff; font-weight: bold; }
         
-        .badge { background: #333; color: #ff9800; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; border: 1px solid #ff9800; }
-        .locked { background: #222; color: #555; border: 1px solid #444; } /* Untuk fitur terkunci */
-
-        /* Navigasi Bawah */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1f1f1f; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
-        .nav-item { text-decoration: none; color: #888; text-align: center; flex: 1; font-size: 11px; }
-        .nav-item.active { color: #ff9800; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+        .footer-link { text-align: center; margin-top: 30px; }
+        .btn-back { color: #888; text-decoration: none; font-size: 14px; padding: 10px 20px; border-radius: 10px; background: #1f1f1f; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2 style="margin:0; color:#ff9800;">Pengaturan Toko</h2>
-        <p style="margin:5px 0 0 0; font-size:12px; color:#888;">Kelola identitas dan sistem aplikasi</p>
-    </div>
-
     <div class="container">
-        
-        <div class="section-title">🏠 Identitas Toko</div>
-        <div class="item">
-            <div class="item-info">
-                <h4>Nama & Logo Toko</h4>
-                <p>Gibran Store - Identitas visual brand Anda</p>
-            </div>
-            <span class="badge">Aktif</span>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <h4>Deskripsi Toko</h4>
-                <p>Penjelasan singkat mengenai apa yang Anda jual.</p>
-            </div>
+        <div class="header">
+            <h3>PENGATURAN & LAYANAN</h3>
         </div>
 
-        <div class="section-title">⏰ Jam Operasional</div>
-        <div class="item">
-            <div class="item-info">
-                <h4>Jadwal Buka</h4>
-                <p>Senin - Kamis</p>
-            </div>
-            <span class="badge">08:00 - 20:00</span>
+        <div class="menu-item" onclick="bukaRefund()">
+            <span>📦 Kebijakan Refund</span>
+            <div class="icon-arrow">➔</div>
         </div>
 
-        <div class="section-title">⚙️ Sistem & Tampilan</div>
-        <div class="item">
-            <div class="item-info">
-                <h4>Pencahayaan</h4>
-                <p>Mode Gelap (Dark Mode)</p>
-            </div>
-            <span class="badge">Default</span>
-        </div>
-        <div class="item">
-            <div class="item-info">
-                <h4>Versi Aplikasi</h4>
-                <p>Update Terakhir: 28 Jan 2026</p>
-            </div>
-            <span class="badge">V.1.2.8</span>
+        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store,%20saya%20mau%20tanya%20mengenai%20produk" class="menu-item">
+            <span>💬 Template Chat (Auto-reply)</span>
+            <div class="icon-arrow">➔</div>
         </div>
 
-        <div class="section-title">🔒 Fitur Coming Soon (Terkunci)</div>
-        
-        <div class="item locked">
-            <div class="item-info">
-                <h4>Manajemen Stok & SKU</h4>
-                <p>Otomatis kurangi stok saat order.</p>
-            </div>
-            <span class="badge locked">🔒</span>
+        <div class="footer-link">
+            <a href="index.html" class="btn-back">⬅ Kembali ke Login</a>
         </div>
-
-        <div class="item locked">
-            <div class="item-info">
-                <h4>Jasa Ekspedisi & Logistik</h4>
-                <p>JNE, J&T, SiCepat, GoSend (Berat & Dimensi).</p>
-            </div>
-            <span class="badge locked">🔒</span>
-        </div>
-
-        <div class="item locked">
-            <div class="item-info">
-                <h4>Metode Pembayaran</h4>
-                <p>Transfer Otomatis, QRIS, E-Wallet, Kartu Kredit.</p>
-            </div>
-            <span class="badge locked">🔒</span>
-        </div>
-
-        <div class="item locked">
-            <div class="item-info">
-                <h4>Layanan Pelanggan</h4>
-                <p>Template Chat (Auto-reply), Kebijakan Refund.</p>
-            </div>
-            <span class="badge locked">🔒</span>
-        </div>
-
     </div>
 
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item"><i>🏠</i><span>Beranda</span></a>
-        <a href="riwayat.html" class="nav-item"><i>📜</i><span>Riwayat</span></a>
-        <a href="https://wa.me/6285123332018" class="nav-item" style="color: #25D366;"><i>💬</i><span>Admin</span></a>
-        <a href="pengaturan.html" class="nav-item active"><i>⚙️</i><span>Profil</span></a>
-    </div>
+    <script>
+        function bukaRefund() {
+            alert("📜 KEBIJAKAN REFUND GIBRAN STORE:\n\n1. Wajib menyertakan video unboxing tanpa jeda.\n2. Komplain maksimal 1x24 jam setelah status diterima.\n3. Refund hanya berlaku jika kesalahan dari pihak toko.\n\nTerima kasih atas pengertiannya!");
+        }
+    </script>
 
 </body>
 </html>
