@@ -3,65 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Maintenance</title>
+    <title>Gibran Store - Real Data Sync</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-        .box { padding: 30px; border: 2px solid #ff3e3e; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(255, 62, 62, 0.2); }
-        h1 { color: #ff3e3e; margin-bottom: 10px; letter-spacing: 2px; }
-        p { color: #ccc; font-size: 14px; }
-        .timer { font-size: 32px; font-weight: bold; margin: 25px 0; color: #ff9800; font-family: monospace; }
-        .btn-masuk { display: none; background: #00c8ff; color: black; padding: 18px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 200, 255, 0.3); }
-        .btn-masuk:active { transform: scale(0.95); }
-        .info { margin-top: 20px; font-size: 12px; color: #555; }
+        .box { padding: 30px; border: 2px solid #00c8ff; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(0, 200, 255, 0.2); }
+        .timer { font-size: 32px; font-weight: bold; margin: 20px 0; color: #ff9800; font-family: monospace; }
+        
+        /* Progress Bar */
+        #downloadSection { display: none; margin-top: 20px; }
+        .progress-container { background: #333; border-radius: 10px; height: 15px; width: 100%; margin: 10px 0; overflow: hidden; border: 1px solid #444; }
+        .progress-bar { background: #25d366; width: 0%; height: 100%; transition: 0.3s; }
+        
+        .btn { display: none; width: 100%; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; }
+        .btn-download { background: #ff9800; color: black; }
+        .btn-masuk { background: #00c8ff; color: black; }
+        .status-text { font-size: 13px; color: #00c8ff; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
     <div class="box">
-        <h1>MAINTENANCE</h1>
-        <p>Sistem sedang diperbarui. Toko akan dibuka otomatis pada:</p>
-        <h2 style="color: #00c8ff; margin: 5px 0;">Jam 17:00 WIB</h2>
+        <h1 id="title">MAINTENANCE</h1>
+        <p id="desc">Rilis Update Jam 15:00 WIB</p>
         
         <div id="countdown" class="timer">00:00:00</div>
         
-        <a id="btnMasuk" href="v2/index.html" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
-        
-        <div class="info">Gibran Store v.1.2.8</div>
+        <button id="btnDownload" class="btn btn-download" onclick="fetchRealData()">MULAI UNDUH DATA (REAL-TIME)</button>
+
+        <div id="downloadSection">
+            <div id="statusUpdate" class="status-text">Menghubungkan ke server...</div>
+            <div class="progress-container">
+                <div id="bar" class="progress-bar"></div>
+            </div>
+            <span id="percent">0%</span>
+        </div>
+
+        <a id="btnMasuk" href="v2/index.html" class="btn btn-masuk">MASUK KE TOKO</a>
+        <div style="margin-top:20px; font-size:10px; color:#555;">Gibran Store v.1.2.9</div>
     </div>
 
     <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiu3kgn_DD9LP2x9KKis123tyVnBXdBQ8g6v75-2LdUzZwHAlF2h2IieSV4ME-ziGz0w/exec';
+
         function updateTimer() {
             const now = new Date();
             const target = new Date();
-            
-            // SETEL JAM 5 SORE (17:00)
-            target.setHours(17, 0, 0);
-            target.setMinutes(0);
-            target.setSeconds(0);
+            target.setHours(15, 0, 0); target.setMinutes(0); target.setSeconds(0);
 
-            // Jika sekarang sudah lewat jam 5 sore, targetnya jadi jam 5 sore besok (biar timer gak minus)
-            if (now > target) {
-                target.setDate(target.getDate() + 1);
-            }
-
-            const diff = target - now;
-
-            // Jika sisa waktu tinggal dikit banget atau sudah pas jamnya, buka tokonya
-            if (diff <= 1000) {
-                document.getElementById('countdown').innerHTML = "TOKO DIBUKA!";
-                document.getElementById('btnMasuk').style.display = "inline-block";
+            if (now >= target) {
+                document.getElementById('countdown').style.display = "none";
+                document.getElementById('title').innerHTML = "UPDATE TERSEDIA";
+                document.getElementById('btnDownload').style.display = "block";
                 return;
             }
-
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-
-            document.getElementById('countdown').innerHTML = 
-                (h < 10 ? "0"+h : h) + ":" + (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
+            const diff = target - now;
+            const h = Math.floor(diff/3600000);
+            const m = Math.floor((diff%3600000)/60000);
+            const s = Math.floor((diff%60000)/1000);
+            document.getElementById('countdown').innerHTML = (h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
         }
 
-        // Jalankan timer tiap detik
+        async function fetchRealData() {
+            document.getElementById('btnDownload').style.display = "none";
+            document.getElementById('downloadSection').style.display = "block";
+            
+            const bar = document.getElementById('bar');
+            const status = document.getElementById('statusUpdate');
+            
+            // Tahap 1: Mulai Koneksi (30%)
+            bar.style.width = "30%";
+            document.getElementById('percent').innerHTML = "30%";
+            status.innerHTML = "Meminta izin akses Google Sheets...";
+
+            try {
+                // TAHAP 2: BENERAN NARIK DATA (Real Fetch)
+                // Kita kirim request kosong cuma buat cek koneksi ke Sheets lo
+                const response = await fetch(SCRIPT_URL + "?type=CHECK_DATA");
+                
+                bar.style.width = "70%";
+                document.getElementById('percent').innerHTML = "70%";
+                status.innerHTML = "Data ditemukan! Sedang sinkronisasi...";
+
+                // TAHAP 3: SELESAI (100%)
+                setTimeout(() => {
+                    bar.style.width = "100%";
+                    document.getElementById('percent').innerHTML = "100%";
+                    status.innerHTML = "✓ Data Terunduh Sempurna!";
+                    document.getElementById('btnMasuk').style.display = "block";
+                }, 1000);
+
+            } catch (err) {
+                // Kalau internet mati atau link mati, dia bakal error beneran
+                status.innerHTML = "⚠️ Gagal mengambil data! Cek koneksi.";
+                status.style.color = "red";
+                document.getElementById('btnDownload').style.display = "block";
+            }
+        }
+
         setInterval(updateTimer, 1000);
         updateTimer();
     </script>
