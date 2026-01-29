@@ -3,77 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Pelanggan - Gibran Store</title>
+    <title>Daftar - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1f1f1f; padding: 30px; border-radius: 25px; border: 2px solid #ff9800; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 15px rgba(255, 152, 0, 0.2); }
-        h2 { color: #ff9800; letter-spacing: 2px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #ff9800; }
-        .btn { width: 100%; padding: 15px; background: #ff9800; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); }
-        .link-balik { margin-top: 25px; font-size: 14px; color: #888; border-top: 1px solid #333; padding-top: 20px; }
-        .link-balik a { color: #ff9800; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; margin-top: 5px; }
+        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 2px solid #ff9800; width: 85%; max-width: 350px; text-align: center; }
+        h2 { color: #ff9800; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: #ff9800; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .link { margin-top: 15px; font-size: 14px; }
+        .link a { color: #ff9800; text-decoration: none; }
     </style>
 </head>
 <body>
-
     <div class="box">
-        <h2>PENDAFTARAN</h2>
-        
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="number" id="wa" placeholder="Nomor WhatsApp">
-        <input type="text" id="alamat" placeholder="Alamat Lengkap">
-        
-        <button id="btnReg" class="btn" onclick="prosesRegister()">DAFTAR SEKARANG</button>
-
-        <div class="link-balik">
-            Sudah punya akun? <br>
-            <a href="index.html">LOGIN DI SINI</a>
+        <h2>DAFTAR AKUN</h2>
+        <input type="text" id="regNama" placeholder="Nama Lengkap">
+        <input type="number" id="regWa" placeholder="Nomor WhatsApp">
+        <input type="text" id="regAlamat" placeholder="Alamat Lengkap">
+        <button class="btn" onclick="prosesDaftar()">DAFTAR SEKARANG</button>
+        <div class="link">
+            Sudah punya akun? <a href="index.html">Login di sini</a>
         </div>
     </div>
 
     <script>
-        // Ganti URL ini dengan URL Script Google kamu jika berbeda
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiu3kgn_DD9LP2x9KKis123tyVnBXdBQ8g6v75-2LdUzZwHAlF2h2IieSV4ME-ziGz0w/exec';
 
-        async function prosesRegister() {
-            const btn = document.getElementById('btnReg');
-            const nama = document.getElementById('nama').value;
-            const wa = document.getElementById('wa').value;
-            const alamat = document.getElementById('alamat').value;
+        async function prosesDaftar() {
+            const nama = document.getElementById('regNama').value;
+            const wa = document.getElementById('regWa').value;
+            const alamat = document.getElementById('regAlamat').value;
 
-            if(!nama || !wa || !alamat) {
-                alert("Waduh, isi semua datanya dulu ya!");
-                return;
-            }
+            if(!nama || !wa || !alamat) return alert("Isi semua data!");
 
-            btn.innerText = "Sedang Mendaftar...";
-            btn.disabled = true;
-
-            const payload = {
-                type: "REGISTER",
-                nama: nama,
-                whatsapp: wa,
-                alamat: alamat
-            };
+            const payload = { type: "REGISTER", nama: nama, whatsapp: wa, alamat: alamat };
 
             try {
-                await fetch(SCRIPT_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: JSON.stringify(payload) 
-                });
-                
-                alert("Pendaftaran Berhasil! Silakan Login.");
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                alert("Pendaftaran Berhasil! Data sudah masuk ke Sheet.");
                 window.location.href = 'index.html';
             } catch (err) {
-                alert("Ada masalah koneksi, coba lagi ya!");
-                btn.innerText = "DAFTAR SEKARANG";
-                btn.disabled = false;
+                alert("Gagal mendaftar!");
             }
         }
     </script>
-
 </body>
 </html>
