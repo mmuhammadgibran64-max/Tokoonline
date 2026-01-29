@@ -3,61 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Pelanggan - Gibran Store</title>
+    <title>Toko Online Muhammad Gibran - v2</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1f1f1f; padding: 30px; border-radius: 25px; border: 2px solid #00c8ff; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 15px rgba(0, 200, 255, 0.2); }
-        h2 { color: #00c8ff; letter-spacing: 2px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 15px; background: #00c8ff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; color: black; }
-        .link-reg { margin-top: 25px; font-size: 14px; color: #888; border-top: 1px solid #333; padding-top: 20px; }
-        .link-reg a { color: #00c8ff; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; margin-top: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f0f2f5; color: #333; }
+        header { background: #232f3e; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .container { width: 90%; max-width: 1000px; margin: auto; padding: 20px; }
+        
+        /* Katalog Produk */
+        h2 { border-bottom: 2px solid #232f3e; padding-bottom: 10px; display: inline-block; }
+        .produk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { max-width: 100%; border-radius: 8px; margin-bottom: 15px; }
+        .card h3 { margin: 10px 0; font-size: 1.2em; }
+        .harga { color: #b12704; font-size: 1.3em; font-weight: bold; margin: 10px 0; }
+        .btn-beli { background: #ff9900; color: #111; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 25px; font-weight: bold; font-size: 1em; }
+        .btn-beli:hover { background: #e68a00; }
+
+        /* Pengaturan: Refund & Chat */
+        .info-section { background: #fff; margin-top: 50px; padding: 25px; border-radius: 12px; border-left: 8px solid #ff9900; }
+        .template-chat { background: #e7f3ff; padding: 20px; border-radius: 12px; border-left: 8px solid #007bff; margin-top: 25px; }
+        .kode-copy { background: #fff; padding: 15px; border-radius: 8px; border: 1px dashed #007bff; display: block; font-family: monospace; margin-top: 10px; }
+        
+        footer { text-align: center; padding: 40px 20px; color: #666; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>LOGIN USER</h2>
-        
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="number" id="wa" placeholder="Nomor WhatsApp">
-        <input type="text" id="rumah" placeholder="Nomor Rumah">
-        
-        <button id="btnLogin" class="btn" onclick="prosesLogin()">MASUK KE TOKO</button>
+<header>
+    <h1>Toko Online Gibran</h1>
+    <p>Belanja Mudah, Aman, dan Amanah</p>
+</header>
 
-        <div class="link-reg">
-            Belum punya akun? <br>
-            <a href="register.html">KLIK DAFTAR DI SINI</a>
+<div class="container">
+    <h2>Katalog Unggulan</h2>
+    <div class="produk-grid">
+        <div class="card">
+            <img src="https://via.placeholder.com/200" alt="Produk 1">
+            <h3>Produk Unggulan 1</h3>
+            <p class="harga">Rp 100.000</p>
+            <button class="btn-beli" onclick="kirimChat('Produk Unggulan 1')">Pesan Sekarang</button>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/200" alt="Produk 2">
+            <h3>Produk Unggulan 2</h3>
+            <p class="harga">Rp 250.000</p>
+            <button class="btn-beli" onclick="kirimChat('Produk Unggulan 2')">Pesan Sekarang</button>
         </div>
     </div>
 
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiu3kgn_DD9LP2x9KKis123tyVnBXdBQ8g6v75-2LdUzZwHAlF2h2IieSV4ME-ziGz0w/exec';
+    <div class="info-section">
+        <h3>🛡️ Kebijakan Pengembalian (Refund)</h3>
+        <p>Demi kenyamanan bersama, mohon perhatikan aturan pengembalian barang kami:</p>
+        <ul>
+            <li><strong>Wajib Video Unboxing:</strong> Rekam video saat membuka paket tanpa jeda/cut. Tanpa video, klaim tidak dapat kami proses.</li>
+            <li><strong>Batas Klaim:</strong> Maksimal 2 hari setelah barang diterima berdasarkan resi kurir.</li>
+            <li><strong>Kondisi Barang:</strong> Harus dalam keadaan utuh, belum dicuci, dan label merek tidak dilepas.</li>
+        </ul>
+    </div>
 
-        async function prosesLogin() {
-            const btn = document.getElementById('btnLogin');
-            const payload = {
-                type: "LOGIN",
-                nama: document.getElementById('nama').value,
-                whatsapp: document.getElementById('wa').value,
-                nomorRumah: document.getElementById('rumah').value
-            };
+    <div class="template-chat">
+        <h3>💬 Template Chat (Auto-Reply)</h3>
+        <p>Gunakan format ini untuk tanya stok atau konsultasi cepat:</p>
+        <span class="kode-copy">
+            "Halo Admin Gibran! Saya tertarik dengan [Nama Produk]. Apakah masih tersedia? Mohon informasinya, terima kasih."
+        </span>
+        <p><small>*Jam Operasional: 09:00 - 18:00 WIB</small></p>
+    </div>
+</div>
 
-            if(!payload.nama || !payload.whatsapp || !payload.nomorRumah) return alert("Isi data login dulu!");
+<footer>
+    &copy; 2026 Toko Online Muhammad Gibran. Dibuat dengan bangga.
+</footer>
 
-            btn.innerText = "Memverifikasi...";
-            btn.disabled = true;
+<script>
+    function kirimChat(namaProduk) {
+        // Nomor WA kamu sudah terpasang otomatis
+        const noWA = "6285123332018"; 
+        const pesan = "Halo Admin Gibran, saya mau tanya/beli produk: " + namaProduk + ". Apakah stoknya masih ada?";
+        const linkWA = "https://wa.me/" + noWA + "?text=" + encodeURIComponent(pesan);
+        window.open(linkWA, "_blank");
+    }
+</script>
 
-            try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'dashboard.html';
-            } catch (err) {
-                alert("Gagal koneksi!");
-                btn.innerText = "MASUK KE TOKO";
-                btn.disabled = false;
-            }
-        }
-    </script>
 </body>
 </html>
