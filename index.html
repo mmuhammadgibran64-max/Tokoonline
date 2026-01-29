@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Store - Siap Rilis</title>
+    <title>Gibran Store - Update Sistem</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
         .container { padding: 30px; border: 2px solid #ff9800; border-radius: 25px; background: #1f1f1f; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(255,152,0,0.2); }
@@ -11,8 +11,7 @@
         h1 { color: #ff9800; margin: 0; font-size: 24px; letter-spacing: 2px; }
         .timer { font-size: 35px; font-weight: bold; margin: 25px 0; color: #fff; font-family: monospace; }
         .status { color: #888; font-size: 14px; margin-top: 10px; line-height: 1.5; }
-        .btn-masuk { display: none; background: #ff9800; color: black; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(255,152,0,0.4); transition: 0.3s; }
-        .btn-masuk:active { transform: scale(0.95); }
+        .btn-masuk { display: none; background: #ff9800; color: black; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
     </style>
 </head>
 <body>
@@ -21,22 +20,22 @@
         
         <div id="maintenance-view">
             <h1>GIBRAN STORE</h1>
-            <p class="status">MENUJU RILIS TERBARU<br>Sistem Login & Database Siap!</p>
+            <p class="status">SEDANG MAINTENANCE<br>Menyiapkan Fitur Upload Foto Cloud</p>
             <div class="timer" id="countdown">00:00:00</div>
-            <p style="color: #ff9800; font-size: 12px;">Buka otomatis pukul 14:30 WIB</p>
+            <p id="info-buka" style="color: #ff9800; font-size: 12px;">Rencana buka: Besok jam 08:00 WIB</p>
         </div>
 
         <a href="v2/index.html" id="btnMasuk" class="btn-masuk">MASUK KE TOKO SEKARANG</a>
     </div>
 
     <script>
-        const targetDate = new Date();
-        // Set jam buka ke 14:30 (02:30 siang)
-        targetDate.setHours(14, 30, 0, 0); 
+        // Set ke besok tanggal 30 Januari jam 08:00 pagi
+        const targetDate = new Date("Jan 30, 2026 08:00:00").getTime();
 
         const x = setInterval(function() {
             const now = new Date().getTime();
             const distance = targetDate - now;
+            
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
