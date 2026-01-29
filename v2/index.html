@@ -5,73 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Pelanggan - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 2px solid #ff9800; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 15px rgba(255,152,0,0.3); }
-        h2 { color: #ff9800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        p { color: #888; font-size: 13px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 15px; }
-        input:focus { border-color: #ff9800; outline: none; background: #2a2a2a; }
-        .btn-masuk { width: 100%; padding: 14px; background: #ff9800; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; color: #000; transition: 0.3s; }
-        .btn-masuk:active { transform: scale(0.95); }
-        .btn-masuk:disabled { background: #555; cursor: not-allowed; }
+        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 2px solid #00c8ff; width: 85%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; }
+        .btn { width: 100%; padding: 14px; background: #00c8ff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: black; }
     </style>
 </head>
 <body>
+    <div class="box">
+        <h2 style="color: #00c8ff;">LOGIN USER</h2>
+        <input type="text" id="nama" placeholder="Nama Lengkap">
+        <input type="number" id="wa" placeholder="Nomor WhatsApp">
+        <input type="text" id="rumah" placeholder="Nomor Rumah">
+        <button id="btnLogin" class="btn" onclick="prosesLogin()">MASUK KE TOKO</button>
+    </div>
 
-<div class="login-box">
-    <h2>MASUK USER</h2>
-    <p>Data kamu akan tersimpan di sistem kami</p>
-    
-    <input type="text" id="nama" placeholder="Nama Lengkap" required>
-    <input type="number" id="whatsapp" placeholder="Nomor WhatsApp" required>
-    <input type="text" id="alamat" placeholder="Alamat / Patokan Rumah" required>
-    
-    <button id="submitBtn" class="btn-masuk" onclick="prosesLogin()">MASUK KE TOKO</button>
-</div>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiu3kgn_DD9LP2x9KKis123tyVnBXdBQ8g6v75-2LdUzZwHAlF2h2IieSV4ME-ziGz0w/exec';
 
-<script>
-    // Link Google Script Baru Kamu
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8EpyxOBdEbmtMZQGNihemBE0V198O0tC5_Z2MxMtLPO1F9_RdloUg3HFdxLsM5lpRWA/exec';
+        async function prosesLogin() {
+            const btn = document.getElementById('btnLogin');
+            const payload = {
+                type: "LOGIN",
+                nama: document.getElementById('nama').value,
+                whatsapp: document.getElementById('wa').value,
+                nomorRumah: document.getElementById('rumah').value
+            };
 
-    function prosesLogin() {
-        const nama = document.getElementById('nama').value;
-        const wa = document.getElementById('whatsapp').value;
-        const alamat = document.getElementById('alamat').value;
-        const btn = document.getElementById('submitBtn');
+            if(!payload.nama || !payload.whatsapp || !payload.nomorRumah) return alert("Isi data login dengan benar!");
 
-        if(nama && wa && alamat) {
-            btn.innerText = "Mendaftarkan...";
+            btn.innerText = "Memverifikasi...";
             btn.disabled = true;
 
-            // 1. Simpan di Memori HP (Local Storage)
-            localStorage.setItem('user_nama', nama);
-            localStorage.setItem('user_wa', wa);
-            localStorage.setItem('user_alamat', alamat);
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            
+            // Simpan sesi login sederhana
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userNama', payload.nama);
 
-            // 2. Kirim ke Google Sheets
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "nama": nama,
-                    "whatsapp": wa,
-                    "alamat": alamat
-                })
-            }).then(() => {
-                alert('Berhasil! Selamat Datang di Gibran Store.');
-                window.location.href = 'dashboard.html'; 
-            }).catch(err => {
-                console.error(err);
-                // Tetap masuk meskipun sinyal lemot karena data sudah di localStorage
-                window.location.href = 'dashboard.html';
-            });
-
-        } else {
-            alert('Waduh Bran, lengkapi dulu semua datanya!');
+            window.location.href = 'dashboard.html';
         }
-    }
-</script>
-
+    </script>
 </body>
 </html>
