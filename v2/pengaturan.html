@@ -3,62 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan - Gibran Store</title>
+    <title>Pengaturan Update - Gibran Store</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 380px; }
-        .header { text-align: center; padding: 25px; background: #1f1f1f; border-radius: 20px; border: 2px solid #00c8ff; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 200, 255, 0.2); }
-        .header h3 { margin: 0; color: #00c8ff; letter-spacing: 1px; }
-        
-        .menu-item { 
-            background: #1f1f1f; 
-            padding: 20px; 
-            margin-bottom: 12px; 
-            border-radius: 15px; 
-            border: 1px solid #333; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            color: white;
-        }
-        .menu-item:active { background: #2a2a2a; transform: scale(0.96); border-color: #00c8ff; }
-        .menu-item span { font-weight: 600; font-size: 15px; }
-        .icon-arrow { color: #00c8ff; font-weight: bold; }
-        
-        .footer-link { text-align: center; margin-top: 30px; }
-        .btn-back { color: #888; text-decoration: none; font-size: 14px; padding: 10px 20px; border-radius: 10px; background: #1f1f1f; border: 1px solid #333; }
+        body { font-family: sans-serif; background: #121212; color: white; padding: 15px; margin: 0; }
+        .box { background: #1f1f1f; padding: 20px; border-radius: 20px; border: 1px solid #333; margin-bottom: 15px; }
+        h3 { color: #00c8ff; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .item { background: #2a2a2a; padding: 15px; margin: 10px 0; border-radius: 12px; font-size: 14px; border: 1px solid #444; }
+        .flex { display: flex; justify-content: space-between; align-items: center; }
+        .biru { color: #00c8ff; font-weight: bold; }
+        .btn-aktif { background: #00c8ff; color: black; padding: 10px; border-radius: 8px; text-decoration: none; display: block; text-align: center; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .status-jam { background: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #ff9800; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h3>PENGATURAN & LAYANAN</h3>
+    <div class="box">
+        <h3>🆔 IDENTITAS TOKO</h3>
+        <div class="item">
+            <b>Nama & Logo Toko:</b> <br> <span class="biru">Gibran Store - Identitas Visual Brand Anda</span>
         </div>
-
-        <div class="menu-item" onclick="bukaRefund()">
-            <span>📦 Kebijakan Refund</span>
-            <div class="icon-arrow">➔</div>
-        </div>
-
-        <a href="https://wa.me/6285123332018?text=Halo%20Admin%20Gibran%20Store,%20saya%20mau%20tanya%20mengenai%20produk" class="menu-item">
-            <span>💬 Template Chat (Auto-reply)</span>
-            <div class="icon-arrow">➔</div>
-        </div>
-
-        <div class="footer-link">
-            <a href="index.html" class="btn-back">⬅ Kembali ke Login</a>
+        <div class="item">
+            <b>Deskripsi Toko:</b> <br> Penjelasan singkat mengenai apa yang Anda jual.
         </div>
     </div>
 
-    <script>
-        function bukaRefund() {
-            alert("📜 KEBIJAKAN REFUND GIBRAN STORE:\n\n1. Wajib menyertakan video unboxing tanpa jeda.\n2. Komplain maksimal 1x24 jam setelah status diterima.\n3. Refund hanya berlaku jika kesalahan dari pihak toko.\n\nTerima kasih atas pengertiannya!");
-        }
-    </script>
+    <div class="box">
+        <h3>⏰ JADWAL UPDATE (Senin - Kamis)</h3>
+        <div class="flex item">
+            <span>Jam Buka: <b class="biru">08:00</b></span>
+            <span>Jam Tutup: <b class="biru">20:00</b></span>
+        </div>
+        <div class="item">
+            <b>Pencahayaan:</b> <span class="status-jam">Mode Gelap</span>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3>🚚 LOGISTIK & LAYANAN</h3>
+        <div class="item">
+            <b>Jasa Ekspedisi:</b> <br> JNE, J&T, SiCepat, GoSend, dll.
+        </div>
+        
+        <div class="item">
+            <b>Template Chat (FAQ):</b> <br>
+            <small>Siapkan balasan otomatis untuk pertanyaan pelanggan.</small>
+            <a href="https://wa.me/6285123332018?text=Halo%20Admin,%20saya%20mau%20tanya%20FAQ%20stok" class="btn-aktif">BUKA CHAT AUTO-REPLY</a>
+        </div>
+
+        <div class="item" onclick="alert('📜 KEBIJAKAN REFUND:\n1. Video unboxing wajib.\n2. Maksimal 1x24 jam.\n3. Chat admin untuk proses.')">
+            <b>📦 Kebijakan Refund:</b> <br>
+            <span class="biru">Klik untuk lihat syarat & ketentuan (AKTIF)</span>
+        </div>
+    </div>
+
+    <div class="box" style="text-align:center;">
+        <small style="color:#888;">Aplikasi v.1.2.8</small> <br>
+        <a href="index.html" style="color:#00c8ff; text-decoration:none; font-size:12px;">⬅ Kembali ke Login</a>
+    </div>
 
 </body>
 </html>
