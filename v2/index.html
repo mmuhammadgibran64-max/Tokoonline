@@ -5,33 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Pelanggan - Gibran Store</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1f1f1f; padding: 30px; border-radius: 20px; border: 2px solid #00c8ff; width: 85%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; }
-        .btn { width: 100%; padding: 14px; background: #00c8ff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: black; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1f1f1f; padding: 30px; border-radius: 25px; border: 2px solid #00c8ff; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 0 15px rgba(0, 200, 255, 0.2); }
+        h2 { color: #00c8ff; letter-spacing: 2px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 15px; background: #00c8ff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; color: black; }
+        .link-reg { margin-top: 25px; font-size: 14px; color: #888; border-top: 1px solid #333; padding-top: 20px; }
+        .link-reg a { color: #00c8ff; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; margin-top: 5px; }
     </style>
 </head>
 <body>
+
     <div class="box">
-        <h2 style="color: #00c8ff;">LOGIN USER</h2>
+        <h2>LOGIN USER</h2>
+        
         <input type="text" id="nama" placeholder="Nama Lengkap">
         <input type="number" id="wa" placeholder="Nomor WhatsApp">
         <input type="text" id="rumah" placeholder="Nomor Rumah">
-        <button id="btnLogin" class="btn" onclick="prosesLogin()">MASUK KE TOKO</button>
-    </<div class="box">
-        <h2 style="color: #00c8ff;">LOGIN USER</h2>
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="number" id="wa" placeholder="Nomor WhatsApp">
-        <input type="text" id="rumah" placeholder="Nomor Rumah">
+        
         <button id="btnLogin" class="btn" onclick="prosesLogin()">MASUK KE TOKO</button>
 
-        <p style="margin-top: 20px; font-size: 14px; color: #888;">
+        <div class="link-reg">
             Belum punya akun? <br>
-            <a href="register.html" style="color: #00c8ff; text-decoration: none; font-weight: bold; font-size: 16px;">
-                KLIK DAFTAR DI SINI
-            </a>
-        </p>
-    </div>>
+            <a href="register.html">KLIK DAFTAR DI SINI</a>
+        </div>
+    </div>
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiu3kgn_DD9LP2x9KKis123tyVnBXdBQ8g6v75-2LdUzZwHAlF2h2IieSV4ME-ziGz0w/exec';
@@ -45,20 +43,21 @@
                 nomorRumah: document.getElementById('rumah').value
             };
 
-            if(!payload.nama || !payload.whatsapp || !payload.nomorRumah) return alert("Isi data login dengan benar!");
+            if(!payload.nama || !payload.whatsapp || !payload.nomorRumah) return alert("Isi data login dulu!");
 
             btn.innerText = "Memverifikasi...";
             btn.disabled = true;
 
-            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-            
-            // Simpan sesi login sederhana
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userNama', payload.nama);
-
-            window.location.href = 'dashboard.html';
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'dashboard.html';
+            } catch (err) {
+                alert("Gagal koneksi!");
+                btn.innerText = "MASUK KE TOKO";
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
 </html>
-
