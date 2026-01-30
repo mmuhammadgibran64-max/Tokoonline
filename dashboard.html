@@ -1,160 +1,197 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Gibran Store</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; }
-        
-        /* Header */
-        .header { background: #ff9800; padding: 25px 20px; color: #000; border-radius: 0 0 30px 30px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
-        .header h2 { margin: 0; font-size: 20px; }
-
-        /* Konten Halaman */
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-        .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Card Produk */
-        .category-title { color: #ff9800; font-size: 18px; margin-bottom: 15px; border-left: 4px solid #ff9800; padding-left: 10px; font-weight: bold; }
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .info b { display: block; font-size: 15px; color: #eee; margin-bottom: 4px; }
-        .info span { color: #ff9800; font-weight: bold; }
-        .btn-add { background: #ff9800; color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-
-        /* Bar Keranjang Melayang */
-        .cart-bar { 
-            position: fixed; bottom: 85px; left: 5%; width: 90%; 
-            background: #ff9800; color: #000; padding: 15px; 
-            border-radius: 20px; display: none; justify-content: space-between; 
-            align-items: center; z-index: 200; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(50px); } to { transform: translateY(0); } }
-        .btn-checkout { background: #000; color: #fff; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-
-        /* Navigasi Bawah */
-        .navbar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 300; }
-        .nav-item { color: #555; text-decoration: none; font-size: 11px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .nav-item.active-nav { color: #ff9800; font-weight: bold; }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-
-        /* Loader */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; }
-        .spin { width: 35px; height: 35px; border: 4px solid #222; border-top: 4px solid #ff9800; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body>
-
-    <div id="loader"><div class="spin"></div><p style="color:#ff9800">Menyiapkan Pesanan...</p></div>
-
-    <div class="header">
-        <h2 id="txtSapaan">Gibran Store</h2>
-        <small>Pusat Jajanan & Air Galon</small>
-    </div>
-
-    <div id="page-dashboard" class="page active-page">
-        <div class="category-title">Menu Jajanan</div>
-        <div id="produk-list"></div>
-    </div>
-
-    <div id="page-riwayat" class="page">
-        <div class="category-title">Pesanan Saya</div>
-        <div style="text-align: center; margin-top: 50px; color: #444;">
-            <span style="font-size: 50px;">📜</span>
-            <p>Belum ada transaksi saat ini.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard • Portofolio Gibran</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <div class="brand__logo">G</div>
+          <div class="brand__text">
+            <div class="brand__name">Dashboard</div>
+            <div class="brand__tag">Portofolio App</div>
+          </div>
         </div>
-    </div>
+        <nav class="nav">
+          <a class="nav__link" href="./index.html">Landing</a>
+          <button id="logoutBtn" class="btn btn--ghost" type="button">Keluar</button>
+        </nav>
+      </div>
+    </header>
 
-    <div id="cart-bar" class="cart-bar">
-        <div><span id="cart-count">0</span> Item | <b id="cart-total">Rp 0</b></div>
-        <button class="btn-checkout" onclick="goBayar()">BELI</button>
-    </div>
-
-    <div class="navbar">
-        <div class="nav-item active-nav" id="nav-dash" onclick="pindah('dashboard')">
-            <span class="nav-icon">🏠</span>Dashboard
+    <main class="dashboard">
+      <div class="container">
+        <div class="dash-head">
+          <div>
+            <div class="pill">Akun</div>
+            <h1 class="dash-title" id="welcomeTitle">Selamat datang</h1>
+            <div class="dash-sub" id="welcomeSub">-</div>
+          </div>
+          <div class="clock">
+            <div class="clock__label">Jam Bergerak</div>
+            <div class="clock__time" id="clockTime">--:--:--</div>
+            <div class="clock__date" id="clockDate">-</div>
+          </div>
         </div>
-        <div class="nav-item" id="nav-riw" onclick="pindah('riwayat')">
-            <span class="nav-icon">📜</span>Riwayat
-        </div>
-        <div class="nav-item" onclick="window.location.href='pengaturan.html'">
-            <span class="nav-icon">⚙️</span>Pengaturan
-        </div>
-    </div>
 
-    <script>
-        // Data Nama
-        document.getElementById('txtSapaan').innerText = "Halo, " + (localStorage.getItem("nama") || "Pelanggan") + "!";
-
-        // Daftar Menu Gibran
-        const menuData = [
-            { n: "Peye Kacang (Kecil)", h: 5000 },
-            { n: "Peye Kacang (Besar)", h: 10000 },
-            { n: "Slondok", h: 20000 },
-            { n: "Opak", h: 20000 },
-            { n: "Kacang", h: 2000 },
-            { n: "Kripik Pedes", h: 15000 },
-            { n: "Kue Sus Kering", h: 15000 },
-            { n: "Reginang (isi 3)", h: 5000 },
-            { n: "Aqua Galon", h: 22000 }
-        ];
-
-        let keranjang = [];
-
-        // Render Menu Jajanan
-        function loadMenu() {
-            const container = document.getElementById('produk-list');
-            container.innerHTML = menuData.map((item, i) => `
-                <div class="card">
-                    <div class="info">
-                        <b>${item.n}</b>
-                        <span>Rp ${item.h.toLocaleString('id-ID')}</span>
-                    </div>
-                    <button class="btn-add" onclick="tambah(${i})">TAMBAH</button>
+        <section class="section-card">
+          <div class="section-card__head">
+            <div>
+              <div class="section-card__title">Absen Muka (Kamera)</div>
+              <div class="section-card__muted">Ambil foto saat masuk. Disimpan sebagai riwayat absensi.</div>
+            </div>
+            <div class="row">
+              <button id="startCamBtn" class="btn btn--ghost" type="button">Aktifkan Kamera</button>
+              <button id="captureBtn" class="btn btn--primary" type="button" disabled>Ambil Foto</button>
+            </div>
+          </div>
+          <div class="section-card__body">
+            <div class="grid grid--2">
+              <div class="camera">
+                <video id="video" class="camera__video" autoplay playsinline muted></video>
+                <canvas id="canvas" class="camera__canvas" width="640" height="480"></canvas>
+                <div class="tiny">
+                  Jika browser minta izin kamera, klik <b>Allow</b>.
                 </div>
-            `).join('');
-        }
+              </div>
+              <div>
+                <div class="mini-title">Riwayat Absen</div>
+                <div id="attendanceList" class="listbox"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        // Fungsi Tambah Barang
-        function tambah(idx) {
-            keranjang.push(menuData[idx]);
-            const bar = document.getElementById('cart-bar');
-            bar.style.display = 'flex';
-            
-            const total = keranjang.reduce((s, item) => s + item.h, 0);
-            document.getElementById('cart-count').innerText = keranjang.length;
-            document.getElementById('cart-total').innerText = "Rp " + total.toLocaleString('id-ID');
-        }
+        <section class="section-card">
+          <div class="section-card__head">
+            <div>
+              <div class="section-card__title">Ruangan Upload Berkas Portofolio</div>
+              <div class="section-card__muted">Upload file/foto/video. Disimpan sebagai daftar portofolio.</div>
+            </div>
+          </div>
+          <div class="section-card__body">
+            <form id="uploadForm" class="form form--inline">
+              <label class="field">
+                <span class="field__label">Judul</span>
+                <input class="input" name="title" type="text" placeholder="Contoh: Poster Event" required />
+              </label>
+              <label class="field">
+                <span class="field__label">Kategori</span>
+                <select class="input" name="category" required>
+                  <option value="" selected disabled>Pilih...</option>
+                  <option>Desain Grafis</option>
+                  <option>Content Creator</option>
+                  <option>Video Editing</option>
+                  <option>Animasi</option>
+                  <option>Fotografi</option>
+                  <option>Dokumen</option>
+                  <option>Lainnya</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field__label">File</span>
+                <input class="input" name="file" type="file" required />
+                <span class="field__hint">File tidak diupload ke internet (offline). Hanya dipakai untuk preview.</span>
+              </label>
+              <div class="row">
+                <button class="btn btn--primary" type="submit">Simpan ke Portofolio</button>
+              </div>
+              <div id="uploadMsg" class="msg" aria-live="polite"></div>
+            </form>
 
-        // Fungsi Pindah Tab
-        function pindah(t) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            <div class="divider"></div>
+            <div class="mini-title">Berkas Portofolio</div>
+            <div id="portfolioGrid" class="portfolio-grid"></div>
+          </div>
+        </section>
 
-            if(t === 'dashboard') {
-                document.getElementById('page-dashboard').classList.add('active-page');
-                document.getElementById('nav-dash').classList.add('active-nav');
-                if(keranjang.length > 0) document.getElementById('cart-bar').style.display = 'flex';
-            } else {
-                document.getElementById('page-riwayat').classList.add('active-page');
-                document.getElementById('nav-riw').classList.add('active-nav');
-                document.getElementById('cart-bar').style.display = 'none';
-            }
-        }
+        <section class="section-card">
+          <div class="section-card__head">
+            <div>
+              <div class="section-card__title">Meet Room</div>
+              <div class="section-card__muted">Klik untuk membuka Google Meet.</div>
+            </div>
+          </div>
+          <div class="section-card__body">
+            <div class="meet-grid">
+              <a class="meet" target="_blank" rel="noreferrer" href="https://meet.google.com/fxn-kcww-wep"
+                >Meet 1<br /><span>fxn-kcww-wep</span></a
+              >
+              <a class="meet" target="_blank" rel="noreferrer" href="https://meet.google.com/qao-rbwb-bnq"
+                >Meet 2<br /><span>qao-rbwb-bnq</span></a
+              >
+              <a class="meet" target="_blank" rel="noreferrer" href="https://meet.google.com/toi-gquc-yav"
+                >Meet 3<br /><span>toi-gquc-yav</span></a
+              >
+              <a class="meet" target="_blank" rel="noreferrer" href="https://meet.google.com/ujb-anhk-czm"
+                >Meet 4<br /><span>ujb-anhk-czm</span></a
+              >
+            </div>
+          </div>
+        </section>
 
-        // Proses ke Halaman Pembayaran
-        function goBayar() {
-            document.getElementById('loader').style.display = 'flex';
-            setTimeout(() => {
-                localStorage.setItem("keranjang", JSON.stringify(keranjang));
-                window.location.href = "pembayaran.html";
-            }, 1000);
-        }
+        <section class="section-card">
+          <div class="section-card__head">
+            <div>
+              <div class="section-card__title">Ruangan Ngobrol</div>
+              <div class="section-card__muted">Chat sederhana (tersimpan di browser).</div>
+            </div>
+          </div>
+          <div class="section-card__body">
+            <div id="chatBox" class="chatbox"></div>
+            <form id="chatForm" class="form form--inline">
+              <label class="field">
+                <span class="field__label">Pesan</span>
+                <input class="input" name="message" type="text" placeholder="Tulis pesan..." required />
+              </label>
+              <div class="row">
+                <button class="btn btn--primary" type="submit">Kirim</button>
+                <button id="clearChatBtn" class="btn btn--danger" type="button">Hapus Chat</button>
+              </div>
+            </form>
+          </div>
+        </section>
 
-        loadMenu();
+        <section class="section-card">
+          <div class="section-card__head">
+            <div>
+              <div class="section-card__title">Pesan Makan & Lainnya</div>
+              <div class="section-card__muted">Form order sederhana + riwayat.</div>
+            </div>
+          </div>
+          <div class="section-card__body">
+            <form id="orderForm" class="form form--inline">
+              <label class="field">
+                <span class="field__label">Pesanan</span>
+                <input class="input" name="item" type="text" placeholder="Contoh: Nasi goreng" required />
+              </label>
+              <label class="field">
+                <span class="field__label">Catatan</span>
+                <input class="input" name="note" type="text" placeholder="Contoh: pedas sedang" />
+              </label>
+              <div class="row">
+                <button class="btn btn--primary" type="submit">Simpan Pesanan</button>
+                <button id="clearOrdersBtn" class="btn btn--danger" type="button">Hapus Riwayat</button>
+              </div>
+            </form>
+            <div class="divider"></div>
+            <div class="mini-title">Riwayat Pesanan</div>
+            <div id="ordersList" class="listbox"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="./assets/app.js"></script>
+    <script>
+      window.App.ensureStorage();
+      window.App.requireAuthOrRedirect();
+      window.App.wireDashboardPage();
     </script>
-</body>
+  </body>
 </html>
+
